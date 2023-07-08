@@ -8,6 +8,8 @@ import { Location } from './locations/entities/location.entity'
 import { LocationsModule } from './locations/locations.module'
 import { User } from './users/entities/user.entity'
 import { UserModule } from './users/user.module'
+import { SubscriptionModule } from './subscription/subscription.module'
+import { Subscription } from './subscription/entities/subscription.entity'
 
 
 @Module({
@@ -27,7 +29,8 @@ import { UserModule } from './users/user.module'
 			models: [
 				User, 
 				BusinessAccount, 
-				Location
+				Location,
+				Subscription
 			],
       autoLoadModels: true,
       synchronize: true,
@@ -36,6 +39,7 @@ import { UserModule } from './users/user.module'
 		UserModule,
 		BusinessAccountModule,
 		LocationsModule,
+		SubscriptionModule,
 	]
 })
 
