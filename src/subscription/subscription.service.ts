@@ -2,7 +2,8 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { InjectModel } from '@nestjs/sequelize';
 import { User } from 'src/users/entities/user.entity';
 import { Subscription } from './entities/subscription.entity';
-import { SubscriptionDto } from './dto/subscription.dto';
+import { CreateSubscriptionDto } from './dto/create-subscription.dto';
+import { SubscriptionResponseDto } from './dto/subscription-response.dto';
 
 @Injectable()
 export class SubscriptionService {
@@ -13,8 +14,10 @@ export class SubscriptionService {
     private subscriptionRepository: typeof Subscription,
   ) {}
 
-  async subscribe(subscriptionDto: SubscriptionDto): Promise<Subscription> {
-    const { subscriberId, subscribesToId } = subscriptionDto;
+  async subscribe(
+    createSubscriptionDto: CreateSubscriptionDto,
+  ): Promise<Subscription> {
+    const { subscriberId, subscribesToId } = createSubscriptionDto;
     if (subscriberId === subscribesToId) {
       throw new BadRequestException('Cannot subscribe from yourself');
     }
@@ -27,12 +30,12 @@ export class SubscriptionService {
     }
 
     const subscription = await this.subscriptionRepository.create(
-      subscriptionDto,
+      createSubscriptionDto,
     );
     return subscription;
   }
 
-  async findSubscribersOf(userId: number): Promise<User[]> {
+  async findSubscribersOf(userId: number): Promise<SubscriptionResponseDto[]> {
     const subscriptions = await this.subscriptionRepository.findAll({
       where: {
         subscribesToId: userId,

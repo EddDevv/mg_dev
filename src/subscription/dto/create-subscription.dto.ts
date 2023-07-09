@@ -1,8 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber } from 'class-validator';
 
-export class SubscriptionDto {
-
+export class CreateSubscriptionDto {
   @ApiProperty({ example: 2, description: 'The user id that subscribes' })
   @IsNotEmpty()
   @IsNumber()

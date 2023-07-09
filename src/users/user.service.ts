@@ -52,7 +52,7 @@ export class UserService {
 
   async remove(id: number): Promise<void> {
     const user = await this.findOne(id);
-    await user.destroy();
+    await user.deleteCascade();
   }
 
 }

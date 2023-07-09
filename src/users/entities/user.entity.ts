@@ -1,9 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { Column, DataType, HasOne, Model, Table } from 'sequelize-typescript'
+import { Column, DataType, HasOne, Model, Table, HasMany } from 'sequelize-typescript'
 import { BusinessAccount } from 'src/business-accounts/entities/business-account.entity'
 import { Location } from 'src/locations/entities/location.entity'
 import { GenderEnum } from '../enums/gender.enum'
 import { UserRoleEnum } from '../enums/user-role.enum'
+import { Subscription } from 'src/subscription/entities/subscription.entity'
+import { Op } from 'sequelize'
 
 @Table({ 
 	tableName: 'users',
@@ -82,5 +84,22 @@ export class User extends Model<User> {
   @HasOne(() => Location)
   location: Location;
 
+  @HasMany(() => Subscription, {
+    foreignKey: 'subscriberId',
+  })
+  subscriptions: Subscription[];
+
+  @HasMany(() => Subscription, {
+    foreignKey: 'subscribesToId',
+  })
+  subscribers: Subscription[];
+
+  async deleteCascade() {
+    await Subscription.destroy({
+      where: {
+        [Op.or]: [{ subscriberId: this.id }, { subscribesToId: this.id }],
+      },
+    });
+    return this.destroy();
+  }
 }
- 
