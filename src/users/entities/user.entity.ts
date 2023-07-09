@@ -78,6 +78,22 @@ export class User extends Model<User> {
   @Column({ type: DataType.INTEGER, allowNull: true })
   locationId: number | null;
 
+  @ApiProperty({ example: 2, description: 'The number of users subscribed to by this user' })
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: false,
+    defaultValue: 0,
+  })
+  countSubscribers: number;
+
+  @ApiProperty({ example: 2, description: 'The number of users who are subscribed to this user' })
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: false,
+    defaultValue: 0,
+  })
+  countSubscriptions: number;
+
   @HasOne(() => BusinessAccount)
   businessAccount: BusinessAccount;
 
