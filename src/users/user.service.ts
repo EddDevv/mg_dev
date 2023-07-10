@@ -48,11 +48,32 @@ export class UserService {
       throw new BadRequestException('You already have a business account')
     }
   }
-  
+
+  async updateCountSubscriptions (userId: number, countSubscriptions: number) {
+    const user = await this.findOne(userId);
+    if (user) {
+      user.countSubscriptions = countSubscriptions;
+      await user.save();
+      return user;
+    } else {
+      throw new BadRequestException('Your counter does not change value');
+    }
+  }
+
+  async updateCountSubscribers(userId: number, countSubscribers: number) {
+    const user = await this.findOne(userId);
+    if (user) {
+      user.countSubscribers = countSubscribers;
+      await user.save();
+      return user;
+    } else {
+      throw new BadRequestException('Your counter does not change value');
+    }
+  }
 
   async remove(id: number): Promise<void> {
     const user = await this.findOne(id);
-    await user.destroy();
+    await user.deleteCascade();
   }
 
 }

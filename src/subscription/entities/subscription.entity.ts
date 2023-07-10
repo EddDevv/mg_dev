@@ -4,8 +4,7 @@ import {
   DataType,
   ForeignKey,
   Model,
-  Table,
-  BelongsTo
+  Table
 } from 'sequelize-typescript';
 import { User } from 'src/users/entities/user.entity';
 
@@ -14,21 +13,24 @@ import { User } from 'src/users/entities/user.entity';
   timestamps: false,
 })
 export class Subscription extends Model<Subscription> {
+  @ApiProperty({ example: 1, description: 'The unique identifier of the subscription'})
+  @Column({ type: DataType.INTEGER, primaryKey: true, autoIncrement: true, unique: true })
+  id: number;
 
-  @ApiProperty({ example: 1, description: 'The ID of the user associated subscription' })
+  @ApiProperty({ example: 1, description: 'The ID of the user associated subscriber' })
   @ForeignKey(() => User)
-  @Column({ type: DataType.INTEGER })
+  @Column({
+    onDelete: 'CASCADE',
+    type: DataType.INTEGER,
+  })
   subscriberId: number;
 
-  @ApiProperty({ example: 1, description: 'The ID of the user associated publisher' })
+  @ApiProperty({ example: 2, description: 'The ID of the user associated subscribesTo' })
   @ForeignKey(() => User)
-  @Column({ type: DataType.INTEGER })
+  @Column({
+    onDelete: 'CASCADE',
+    type: DataType.INTEGER,
+  })
   subscribesToId: number;
-
-  @BelongsTo(() => User, 'subscriberId')
-  subscriber: User;
-
-  @BelongsTo(() => User, 'subscribesToId')
-  subscribesTo: User;
 
 }

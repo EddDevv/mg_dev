@@ -1,9 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { Column, DataType, HasOne, Model, Table } from 'sequelize-typescript'
+import { Column, DataType, HasOne, Model, Table, HasMany } from 'sequelize-typescript'
 import { BusinessAccount } from 'src/business-accounts/entities/business-account.entity'
 import { Location } from 'src/locations/entities/location.entity'
 import { GenderEnum } from '../enums/gender.enum'
 import { UserRoleEnum } from '../enums/user-role.enum'
+import { Subscription } from 'src/subscription/entities/subscription.entity'
+import { Op } from 'sequelize'
 
 @Table({ 
 	tableName: 'users',
@@ -76,11 +78,44 @@ export class User extends Model<User> {
   @Column({ type: DataType.INTEGER, allowNull: true })
   locationId: number | null;
 
+  @ApiProperty({ example: 2, description: 'The number of users subscribed to by this user' })
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: false,
+    defaultValue: 0,
+  })
+  countSubscribers: number;
+
+  @ApiProperty({ example: 2, description: 'The number of users who are subscribed to this user' })
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: false,
+    defaultValue: 0,
+  })
+  countSubscriptions: number;
+
   @HasOne(() => BusinessAccount)
   businessAccount: BusinessAccount;
 
   @HasOne(() => Location)
   location: Location;
 
+  @HasMany(() => Subscription, {
+    foreignKey: 'subscriberId',
+  })
+  subscriptions: Subscription[];
+
+  @HasMany(() => Subscription, {
+    foreignKey: 'subscribesToId',
+  })
+  subscribers: Subscription[];
+
+  async deleteCascade() {
+    await Subscription.destroy({
+      where: {
+        [Op.or]: [{ subscriberId: this.id }, { subscribesToId: this.id }],
+      },
+    });
+    return this.destroy();
+  }
 }
- 
