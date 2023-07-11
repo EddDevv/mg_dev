@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common'
 import { SequelizeModule } from '@nestjs/sequelize'
-import { UserModule } from 'src/users/user.module'
-import { BusinessAccountController } from './business-accounts.controller'
+import { UserModule } from 'src/domain/users/user.module'
+import { BusinessAccountController } from '../../application/controllers/business-accounts.controller'
 import { BusinessAccountService } from './business-accounts.service'
-import { BusinessAccount } from './entities/business-account.entity'
+import { BusinessAccount } from './business-account.entity'
 
 @Module({
   imports: [SequelizeModule.forFeature([BusinessAccount]), UserModule],
