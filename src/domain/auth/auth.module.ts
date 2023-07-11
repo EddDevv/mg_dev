@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common'
 import { JwtModule } from '@nestjs/jwt'
 import { SequelizeModule } from '@nestjs/sequelize'
-import { User } from 'src/users/entities/user.entity'
-import { UserService } from 'src/users/user.service'
-import { AuthController } from './auth.controller'
+import { User } from 'src/domain/users/user.entity'
+import { UserService } from 'src/domain/users/user.service'
+import { AuthController } from '../../application/controllers/auth.controller'
 import { AuthService } from './auth.service'
 
 @Module({
