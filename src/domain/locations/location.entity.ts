@@ -1,18 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript'
-import { User } from 'src/users/entities/user.entity'
+import { User } from 'src/domain/users/user.entity'
+import {BasicEntity} from "../../config/basic.entity";
 
 @Table({ 
 	tableName: 'location',
 	timestamps: true
 })
 
-export class Location extends Model<Location> {
-
-  @ApiProperty({ example: 1, description: 'The unique identifier of the location' })
-  @Column({ type: DataType.INTEGER, primaryKey: true, autoIncrement: true, unique: true })
-  id: number;
-
+export class Location extends BasicEntity {
   @ApiProperty({ example: 1, description: 'The ID of the user associated' })
   @ForeignKey(() => User)
   @Column({ type: DataType.INTEGER })
