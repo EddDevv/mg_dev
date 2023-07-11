@@ -1,29 +1,20 @@
 import {
-  AutoIncrement,
-  Column,
-  CreatedAt,
-  DataType,
-  DeletedAt,
-  Model,
-  PrimaryKey,
-  UpdatedAt,
-} from 'sequelize-typescript';
+  BaseEntity,
+  CreateDateColumn,
+  DeleteDateColumn,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
-export class BasicEntity extends Model<BasicEntity> {
-  @PrimaryKey
-  @AutoIncrement
-  @Column(DataType.INTEGER)
+export class BasicEntity extends BaseEntity {
+  @PrimaryGeneratedColumn()
   id: number;
 
-  @CreatedAt
-  @Column(DataType.DATE)
+  @CreateDateColumn()
   createdAt: Date;
 
-  @UpdatedAt
-  @Column(DataType.DATE)
+  @DeleteDateColumn()
   updatedAt: Date;
 
-  @DeletedAt
-  @Column(DataType.DATE)
+  @DeleteDateColumn()
   deletedAt: Date;
 }
