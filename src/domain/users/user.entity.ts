@@ -1,131 +1,88 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { Column, DataType, HasOne, Model, Table } from 'sequelize-typescript';
 import { GenderEnum } from '../../config/enums/gender.enum';
 import { UserRoleEnum } from '../../config/enums/user-role.enum';
-import { BusinessAccount } from '../business-accounts/business-account.entity';
-import { Location } from '../locations/location.entity';
+import { Column, Entity } from 'typeorm';
+import { BasicEntity } from '../../config/basic.entity';
 
-@Table({
-  tableName: 'users',
-  timestamps: true,
-})
-export class User extends Model<User> {
-  @ApiProperty({ example: 1, description: 'The unique identifier of the user' })
-  @Column({
-    type: DataType.INTEGER,
-    primaryKey: true,
-    autoIncrement: true,
-    unique: true,
-  })
+export interface User {
   id: number;
+  firstname: string;
+  lastName: string | null;
+  description: string | null;
+  gender: GenderEnum;
+  role: UserRoleEnum;
+  email: string;
+  phoneNumber: string | null;
+  password: string;
+  websiteLink: string | null;
+  isVerified: boolean;
+  receiveNotifications: boolean;
+  onlineStatus: boolean;
+  lastOnline: Date;
+}
 
-  @ApiProperty({ example: 'John', description: 'The first name of the user' })
-  @Column({ type: DataType.STRING })
-  firstName: string;
+@Entity('users')
+export class UserEntity extends BasicEntity implements User {
+  @Column()
+  firstname: string;
 
-  @ApiProperty({ example: 'Doe', description: 'The last name of the user' })
-  @Column({ type: DataType.STRING, allowNull: true })
+  @Column({ nullable: true })
   lastName: string | null;
 
-  @ApiProperty({
-    example: 'My account is the best',
-    description: 'The description of the user account',
-  })
-  @Column({ type: DataType.STRING, allowNull: true })
+  @Column({ nullable: true })
   description: string | null;
 
-  @ApiProperty({
-    example: '1990-01-01',
-    description: 'The date of birth of the user',
-  })
-  @Column({ type: DataType.DATEONLY, allowNull: true })
+  @Column({ nullable: true })
   dateOfBirth: Date | null;
 
-  @ApiProperty({
-    enum: GenderEnum,
-    default: GenderEnum.NotSpecified,
-    description: 'The gender of the user',
-  })
-  @Column({
-    type: DataType.ENUM(...Object.values(GenderEnum)),
-    defaultValue: GenderEnum.NotSpecified,
-  })
+  @Column({ enum: GenderEnum, default: GenderEnum.NotSpecified })
   gender: GenderEnum;
 
-  @ApiProperty({
-    enum: UserRoleEnum,
-    default: UserRoleEnum.Client,
-    description: 'The role of the user',
-  })
-  @Column({
-    type: DataType.ENUM(...Object.values(UserRoleEnum)),
-    defaultValue: UserRoleEnum.Client,
-  })
+  @Column({ enum: UserRoleEnum })
   role: UserRoleEnum;
 
-  @ApiProperty({
-    example: 'john@example.com',
-    description: 'The email address of the user',
-  })
-  @Column({ type: DataType.STRING, unique: true })
+  @Column()
   email: string;
 
-  @ApiProperty({
-    example: '123456',
-    description: 'The phone number of the user',
-  })
-  @Column({ type: DataType.STRING, allowNull: true })
+  @Column({ nullable: true })
   phoneNumber: string | null;
 
-  @ApiProperty({
-    example: 'password123',
-    description: 'The password of the user',
-  })
-  @Column({ type: DataType.STRING })
+  @Column()
   password: string;
 
-  @ApiProperty({
-    example: 'https://example.com',
-    description: 'The website link of the user',
-  })
-  @Column({ type: DataType.STRING, allowNull: true })
+  @Column({ nullable: true })
   websiteLink: string | null;
 
-  @ApiProperty({
-    example: true,
-    description: 'Indicates whether the user is verified',
-  })
-  @Column({ type: DataType.BOOLEAN, defaultValue: false })
+  @Column({ default: false })
   isVerified: boolean;
 
-  @ApiProperty({
-    example: true,
-    description: 'Whether the user wants to receive notifications',
-  })
-  @Column({ type: DataType.BOOLEAN, defaultValue: true })
+  @Column()
   receiveNotifications: boolean;
 
-  @ApiProperty({
-    example: true,
-    description: 'Whether the user is currently online',
-  })
-  @Column({ type: DataType.BOOLEAN, defaultValue: false })
+  @Column()
   onlineStatus: boolean;
 
-  @ApiProperty({
-    example: '2023-07-07 10:30:00',
-    description: 'The timestamp when the user was last online',
-  })
-  @Column({ type: DataType.DATE })
+  @Column()
   lastOnline: Date;
 
-  @ApiProperty({ example: 1, description: 'The ID of the user location' })
-  @Column({ type: DataType.INTEGER, allowNull: true })
-  locationId: number | null;
+  // @HasOne(() => BusinessAccount)
+  // businessAccount: BusinessAccount;
 
-  @HasOne(() => BusinessAccount)
-  businessAccount: BusinessAccount;
+  // @HasOne(() => Location)
+  // location: Location;
 
-  @HasOne(() => Location)
-  location: Location;
+  // @Column()
+  // locationId: number | null;
+
+  constructor(
+    firstname: string,
+    lastName: string,
+    email: string,
+    password: string,
+  ) {
+    super();
+    this.firstname = firstname;
+    this.lastName = lastName;
+    this.email = email;
+    this.password = password;
+  }
 }
