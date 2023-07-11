@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
 import { SequelizeModule } from '@nestjs/sequelize'
-import { AuthModule } from './auth/auth.module'
-import { BusinessAccountModule } from './business-accounts/business-accounts.module'
-import { BusinessAccount } from './business-accounts/entities/business-account.entity'
-import { Location } from './locations/entities/location.entity'
-import { LocationsModule } from './locations/locations.module'
-import { User } from './users/entities/user.entity'
-import { UserModule } from './users/user.module'
+import { AuthModule } from './domain/auth/auth.module'
+import { BusinessAccountModule } from './domain/business-accounts/business-accounts.module'
+import { BusinessAccount } from './domain/business-accounts/business-account.entity'
+import { Location } from './domain/locations/location.entity'
+import { LocationsModule } from './domain/locations/locations.module'
+import { User } from './domain/users/user.entity'
+import { UserModule } from './domain/users/user.module'
 
 
 @Module({
