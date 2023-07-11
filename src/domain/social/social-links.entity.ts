@@ -1,7 +1,5 @@
-import { Table } from 'sequelize-typescript'
+import { BasicEntity } from '../../config/basic.entity';
+import { Entity } from 'typeorm';
 
-@Table({
-	tableName: 'social_links',
-	timestamps: true
-})
-export class SocialLinks {}
+@Entity('social_links')
+export class SocialLinksEntity extends BasicEntity {}

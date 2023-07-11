@@ -1,47 +1,33 @@
-import { ApiProperty } from '@nestjs/swagger'
-import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript'
-import { User } from 'src/domain/users/user.entity'
-import {BasicEntity} from "../../config/basic.entity";
+import { BasicEntity } from '../../config/basic.entity';
+import { Column, Entity, ManyToOne } from 'typeorm';
+import { UserEntity } from '../users/user.entity';
 
-@Table({ 
-	tableName: 'location',
-	timestamps: true
-})
-
-export class Location extends BasicEntity {
-  @ApiProperty({ example: 1, description: 'The ID of the user associated' })
-  @ForeignKey(() => User)
-  @Column({ type: DataType.INTEGER })
-  userId: number;
-  
-	@ApiProperty({ example: 'USA', description: 'The country of the user' })
-  @Column({ type: DataType.STRING })
+@Entity('locations')
+export class LocationEntity extends BasicEntity {
+  @Column()
   country: string;
 
-  @ApiProperty({ example: 'New York', description: 'The city of the user' })
-  @Column({ type: DataType.STRING })
+  @Column()
   city: string;
 
-  @ApiProperty({ example: 'Central Station', description: 'The metro station of the user' })
-  @Column({ type: DataType.STRING })
+  @Column()
   metro: string;
 
-  @ApiProperty({ example: 'Main Street', description: 'The street address of the user' })
-  @Column({ type: DataType.STRING })
+  @Column()
   street: string;
 
-  @ApiProperty({ example: 'Apt 123', description: 'The apartment number of the user' })
-  @Column({ type: DataType.STRING })
+  @Column()
   apartment: string;
 
-  @ApiProperty({ example: 'Entrance A', description: 'The entrance of the user' })
-  @Column({ type: DataType.STRING })
+  @Column()
   entrance: string;
 
-  @ApiProperty({ example: '12345', description: 'The postal code of the user' })
-  @Column({ type: DataType.STRING })
+  @Column()
   postalCode: string;
 
-	@BelongsTo(() => User)
-  user: User;
+  // @ManyToOne(() => UserEntity, (user) => user.location)
+  // user: UserEntity;
+
+  @Column()
+  userId: number;
 }

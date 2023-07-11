@@ -18,8 +18,8 @@ export class LocationsController {
   constructor(private readonly locationsService: LocationsService) {}
 
   @Post()
-  create(@Body() createLocationDto: LocationsCreateRequest) {
-    return this.locationsService.create(createLocationDto);
+  create(@Body() body: LocationsCreateRequest) {
+    return this.locationsService.create(body);
   }
 
   @Get()
