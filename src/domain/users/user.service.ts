@@ -1,16 +1,21 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common'
-import { InjectModel } from '@nestjs/sequelize'
-import { CreateUserDto } from './dto/create-user.dto'
-import { UserRoleEnum } from './enums/user-role.enum'
-
-import { UpdateUserDto } from './dto/update-user.dto'
-import { User } from './entities/user.entity'
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { InjectModel } from '@nestjs/sequelize';
+import { UserRoleEnum } from '../../config/enums/user-role.enum';
+import { User } from './user.entity';
+import {
+  UpdateUserDto,
+  UserCreateRequest,
+} from '../../application/dto/users/users.request';
 
 @Injectable()
 export class UserService {
   constructor(@InjectModel(User) private userRepository: typeof User) {}
 
-  async create(createUserDto: CreateUserDto): Promise<User> {
+  async create(createUserDto: UserCreateRequest): Promise<User> {
     const user = await this.userRepository.create(createUserDto);
     return user;
   }
@@ -30,29 +35,27 @@ export class UserService {
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
     const user = await this.findOne(id);
-  
+
     Object.assign(user, updateUserDto);
-  
+
     await user.save();
-  
+
     return user;
   }
-  
+
   async updateRole(userId: number) {
     const user = await this.findOne(userId);
     if (user && user.role !== UserRoleEnum.Business) {
       user.role = UserRoleEnum.Business;
       await user.save();
-      return user
+      return user;
     } else {
-      throw new BadRequestException('You already have a business account')
+      throw new BadRequestException('You already have a business account');
     }
   }
-  
 
   async remove(id: number): Promise<void> {
     const user = await this.findOne(id);
     await user.destroy();
   }
-
 }
