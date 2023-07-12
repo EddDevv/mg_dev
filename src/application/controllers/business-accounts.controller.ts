@@ -12,8 +12,8 @@ export class BusinessAccountController {
   ) {}
 
   @Post('create')
-  create(@Body() createBusinessAccountDto: BusinessAccountsCreateRequest) {
-    return this.businessAccountService.create(createBusinessAccountDto);
+  create(@Body() body: BusinessAccountsCreateRequest) {
+    return this.businessAccountService.create(body);
   }
 
   @Get()

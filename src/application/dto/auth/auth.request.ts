@@ -1,11 +1,22 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator';
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsString,
+  IsStrongPassword,
+  MinLength,
+} from 'class-validator';
 
 export class AuthRegisterRequest {
   @ApiProperty({ example: 'John', description: 'The first name of the user' })
   @IsNotEmpty()
   @IsString()
   firstName: string;
+
+  @ApiProperty({ example: 'John', description: 'The first name of the user' })
+  @IsNotEmpty()
+  @IsString()
+  lastName: string;
 
   @ApiProperty({
     example: 'john@example.com',
@@ -29,8 +40,8 @@ export class AuthRegisterRequest {
     description: 'The password confirmation',
   })
   @IsNotEmpty()
-  @IsString()
-  confirmPassword: string;
+  @IsStrongPassword()
+  repeatPassword: string;
 }
 
 export class AuthLoginRequest {

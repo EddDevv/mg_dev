@@ -5,6 +5,10 @@ import {
   AuthLoginRequest,
   AuthRegisterRequest,
 } from '../dto/auth/auth.request';
+import {
+  AuthLoginResponse,
+  AuthRegisterResponse,
+} from '../dto/auth/auth.response';
 
 @Controller('auth')
 export class AuthController {
@@ -12,12 +16,12 @@ export class AuthController {
 
   @Post('register')
   @UsePipes(new PasswordMatchPipe())
-  create(@Body() body: AuthRegisterRequest) {
+  register(@Body() body: AuthRegisterRequest): Promise<AuthRegisterResponse> {
     return this.authService.register(body);
   }
 
   @Post('login')
-  login(@Body() body: AuthLoginRequest) {
+  login(@Body() body: AuthLoginRequest): Promise<AuthLoginResponse> {
     return this.authService.login(body);
   }
 

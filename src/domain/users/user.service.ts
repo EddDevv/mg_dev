@@ -3,59 +3,63 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { InjectModel } from '@nestjs/sequelize';
 import { UserRoleEnum } from '../../config/enums/user-role.enum';
-import { User } from './user.entity';
+import { UpdateUserDto } from '../../application/dto/users/users.request';
+import { UsersRepository } from '../../infrastructure/repositories/users.repository';
 import {
-  UpdateUserDto,
-  UserCreateRequest,
-} from '../../application/dto/users/users.request';
+  UserListResponse,
+  UsersResponse,
+} from '../../application/dto/users/users.response';
 
 @Injectable()
 export class UserService {
-  constructor(@InjectModel(User) private userRepository: typeof User) {}
+  constructor(private readonly userRepository: UsersRepository) {}
 
-  async create(createUserDto: UserCreateRequest): Promise<User> {
-    const user = await this.userRepository.create(createUserDto);
-    return user;
+  async findAll(): Promise<UserListResponse> {
+    const users = await this.userRepository.find({});
+
+    return new UserListResponse(users, 0);
   }
 
-  async findAll(): Promise<User[]> {
-    const users = await this.userRepository.findAll();
-    return users;
-  }
-
-  async findOne(id: number): Promise<User> {
-    const user = await this.userRepository.findByPk(id);
+  async findOne(id: number): Promise<UsersResponse> {
+    const user = await this.userRepository.findOne({ where: { id } });
     if (!user) {
       throw new NotFoundException('User not found');
     }
-    return user;
+
+    return new UsersResponse(user);
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
-    const user = await this.findOne(id);
+  async update(
+    id: number,
+    updateUserDto: UpdateUserDto,
+  ): Promise<UsersResponse> {
+    const user = await this.userRepository.findOne({ where: { id } });
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
 
     Object.assign(user, updateUserDto);
+    await this.userRepository.save(user);
 
-    await user.save();
-
-    return user;
+    return new UsersResponse(user);
   }
 
-  async updateRole(userId: number) {
-    const user = await this.findOne(userId);
+  async updateRole(id: number) {
+    const user = await this.userRepository.findOne({ where: { id } });
+
     if (user && user.role !== UserRoleEnum.Business) {
       user.role = UserRoleEnum.Business;
-      await user.save();
-      return user;
+      await this.userRepository.save(user);
+
+      return new UsersResponse(user);
     } else {
       throw new BadRequestException('You already have a business account');
     }
   }
 
   async remove(id: number): Promise<void> {
-    const user = await this.findOne(id);
-    await user.destroy();
+    const user = await this.userRepository.findOne({ where: { id } });
+    await this.userRepository.softRemove(user);
   }
 }

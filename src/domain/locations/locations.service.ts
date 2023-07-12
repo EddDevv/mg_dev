@@ -6,7 +6,7 @@ import {
 
 @Injectable()
 export class LocationsService {
-  create(createLocationDto: LocationsCreateRequest) {
+  create(data: LocationsCreateRequest) {
     return 'This action adds a new location';
   }
 

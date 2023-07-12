@@ -1,24 +1,43 @@
-import { ApiProperty } from '@nestjs/swagger'
-import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript'
-import { User } from 'src/domain/users/user.entity'
-import {BasicEntity} from "../../config/basic.entity";
+import { ApiProperty } from '@nestjs/swagger';
+import { BasicEntity } from '../../config/basic.entity';
+import { Column, Entity } from 'typeorm';
+import { UserEntity } from '../users/user.entity';
 
-@Table({ tableName: 'business_accounts' })
-export class BusinessAccount extends BasicEntity {
-  @ApiProperty({ example: 'My Business', description: 'The name of the business' })
-  @Column({ type: DataType.STRING })
+export interface BusinessAccount {
+  id: number;
+  businessName: string;
+  registrationNumber: string;
+  userId: number;
+}
+
+@Entity('business_account')
+export class BusinessAccountEntity
+  extends BasicEntity
+  implements BusinessAccount
+{
+  @ApiProperty({
+    example: 'My Business',
+    description: 'The name of the business',
+  })
+  @Column()
   businessName: string;
 
-  @ApiProperty({ example: '123456789', description: 'The registration number of the business' })
-  @Column({ type: DataType.STRING })
+  @ApiProperty({
+    example: '123456789',
+    description: 'The registration number of the business',
+  })
+  @Column()
   registrationNumber: string;
 
-  @ApiProperty({ example: 1, description: 'The ID of the user associated with the business account' })
-  @ForeignKey(() => User)
-  @Column({ type: DataType.INTEGER })
+  // @ManyToOne(() => UserEntity, (user) => user.businessAccount)
+  // user: UserEntity;
+
+  @Column()
   userId: number;
 
-  @BelongsTo(() => User)
-  user: User;
-  
+  constructor(businessName: string) {
+    super();
+    //this.user = user todo user
+    this.businessName = businessName;
+  }
 }

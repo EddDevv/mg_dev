@@ -1,70 +1,83 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/sequelize';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
-import { User } from 'src/domain/users/user.entity';
 import {
   AuthLoginRequest,
   AuthRegisterRequest,
 } from '../../application/dto/auth/auth.request';
+import { UsersRepository } from '../../infrastructure/repositories/users.repository';
+import { User, UserEntity } from '../users/user.entity';
+import {
+  AuthLoginResponse,
+  AuthRegisterResponse,
+  AuthTokensResponse,
+} from '../../application/dto/auth/auth.response';
 
 @Injectable()
 export class AuthService {
-  constructor(
-    @InjectModel(User)
-    private userModel: typeof User,
-  ) {}
+  constructor(private readonly userService: UsersRepository) {}
 
-  //Registration user
   async register({
+    firstName,
+    lastName,
     email,
     password,
-    firstName,
-    confirmPassword,
-  }: AuthRegisterRequest) {
-    const existingUser = await this.userModel.findOne({ where: { email } });
+    repeatPassword,
+  }: AuthRegisterRequest): Promise<AuthRegisterResponse> {
+    const existingUser = await this.userService.findOne({ where: { email } });
 
     if (existingUser) {
       throw new BadRequestException('User with this email already exists');
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const user = await this.userModel.create<User>({
-      firstName,
-      email,
-      password: hashedPassword,
-    });
-
-    const tokens = this.generateTokens(user);
-
-    return { user, tokens };
-  }
-
-  //Login user
-  async login({ email, password }: AuthLoginRequest): Promise<{
-    user: User;
-    tokens: {
-      accessToken: string;
-      refreshToken: string;
-    };
-  }> {
-    const user = await this.userModel.findOne({ where: { email } });
-    if (!user) {
-      throw new BadRequestException('User is not registered');
+    if (this.checkPasswordRepeat(password, repeatPassword)) {
+      throw new BadRequestException('Not the same passwords');
     }
 
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!isPasswordValid) {
+    const hashedPassword = await this.hashPassword(password);
+    const user = new UserEntity(firstName, lastName, email, hashedPassword);
+    const tokens = this.generateTokens(user);
+
+    return new AuthRegisterResponse(user, tokens);
+  }
+
+  private checkPasswordRepeat(
+    password: string,
+    repeatPassword: string,
+  ): boolean {
+    return password === repeatPassword;
+  }
+
+  private async hashPassword(password: string): Promise<string> {
+    return await bcrypt.hash(password, 10);
+  }
+
+  private async comparePassword(password: string, hash: string) {
+    return await bcrypt.compare(password, hash);
+  }
+
+  async login({
+    email,
+    password,
+  }: AuthLoginRequest): Promise<AuthLoginResponse> {
+    const user = await this.userService.findOne({ where: { email } });
+    if (!user) {
+      throw new NotFoundException('User is not found');
+    }
+
+    if (!(await this.comparePassword(password, user.password))) {
       throw new BadRequestException('Invalid credentials');
     }
 
     const tokens = this.generateTokens(user);
 
-    return { user, tokens };
+    return new AuthLoginResponse(user, tokens);
   }
 
-  //Generate New Access Token
   async refreshToken(refreshToken: string): Promise<string> {
     try {
       const decodedToken = jwt.verify(
@@ -72,31 +85,22 @@ export class AuthService {
         process.env.PRIVATE_REFRESH_KEY,
       ) as { id: number; email: string };
 
-      const user = await this.userModel.findByPk(decodedToken.id);
+      const user = await this.userService.findOne({
+        where: { id: decodedToken.id },
+      });
       if (!user) {
         throw new BadRequestException('Invalid refresh token');
       }
 
-      const accessToken = this.generateAccessToken(user);
-
-      return accessToken;
+      return this.generateAccessToken(user);
     } catch (error) {
       throw new BadRequestException('Invalid refresh token');
     }
   }
 
-  //Generate access and refresh tokens
-  private generateTokens(user: User): {
-    accessToken: string;
-    refreshToken: string;
-  } {
-    const payload = { id: user.id, email: user.email };
-    const accessToken = jwt.sign(payload, process.env.PRIVATE_ACCESS_KEY, {
-      expiresIn: '15m',
-    });
-    const refreshToken = jwt.sign(payload, process.env.PRIVATE_REFRESH_KEY, {
-      expiresIn: '7d',
-    });
+  private generateTokens(user: UserEntity): AuthTokensResponse {
+    const accessToken = this.generateAccessToken(user);
+    const refreshToken = this.generateRefreshToken(user);
 
     return { accessToken, refreshToken };
   }
@@ -104,9 +108,15 @@ export class AuthService {
   //Generate access token
   private generateAccessToken(user: User): string {
     const payload = { id: user.id, email: user.email };
-    const accessToken = jwt.sign(payload, process.env.PRIVATE_ACCESS_KEY, {
+    return jwt.sign(payload, process.env.PRIVATE_ACCESS_KEY, {
       expiresIn: '15m',
     });
-    return accessToken;
+  }
+
+  private generateRefreshToken(user: User): string {
+    const payload = { id: user.id, email: user.email };
+    return jwt.sign(payload, process.env.PRIVATE_REFRESH_KEY, {
+      expiresIn: '7d',
+    });
   }
 }

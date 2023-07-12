@@ -1,8 +1,8 @@
-import { FindOptions } from 'sequelize';
+import { FindManyOptions, FindOneOptions } from 'typeorm';
 
 export interface BasicRepository<T> {
-  findOne(options: FindOptions<T>): Promise<T | undefined>;
-  find(options: FindOptions<T>): Promise<T[] | undefined>;
+  findOne(options: FindOneOptions<T>): Promise<T | undefined>;
+  find(options: FindManyOptions<T>): Promise<T[] | undefined>;
   save(data: T): Promise<T>;
-  softRemove(data: T): void;
+  softRemove(data: T): Promise<void>;
 }
