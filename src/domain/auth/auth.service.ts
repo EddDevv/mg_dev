@@ -16,6 +16,7 @@ import {
   AuthRegisterResponse,
   AuthTokensResponse,
 } from '../../application/dto/auth/auth.response';
+import { CustomExceptions } from '../../config/messages/custom.exceptions';
 
 @Injectable()
 export class AuthService {
@@ -31,11 +32,11 @@ export class AuthService {
     const existingUser = await this.userService.findOne({ where: { email } });
 
     if (existingUser) {
-      throw new BadRequestException('User with this email already exists');
+      throw new BadRequestException(CustomExceptions.auth.AlreadyRegistered);
     }
 
     if (this.checkPasswordRepeat(password, repeatPassword)) {
-      throw new BadRequestException('Not the same passwords');
+      throw new BadRequestException(CustomExceptions.auth.NotTheSamePasswords);
     }
 
     const hashedPassword = await this.hashPassword(password);
@@ -66,11 +67,11 @@ export class AuthService {
   }: AuthLoginRequest): Promise<AuthLoginResponse> {
     const user = await this.userService.findOne({ where: { email } });
     if (!user) {
-      throw new NotFoundException('User is not found');
+      throw new NotFoundException(CustomExceptions.user.NotFound);
     }
 
     if (!(await this.comparePassword(password, user.password))) {
-      throw new BadRequestException('Invalid credentials');
+      throw new BadRequestException(CustomExceptions.auth.InvalidCred);
     }
 
     const tokens = this.generateTokens(user);
@@ -89,12 +90,12 @@ export class AuthService {
         where: { id: decodedToken.id },
       });
       if (!user) {
-        throw new BadRequestException('Invalid refresh token');
+        throw new BadRequestException(CustomExceptions.auth.InvalidRefresh);
       }
 
       return this.generateAccessToken(user);
     } catch (error) {
-      throw new BadRequestException('Invalid refresh token');
+      throw new BadRequestException(CustomExceptions.auth.InvalidRefresh);
     }
   }
 

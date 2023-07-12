@@ -18,6 +18,7 @@ import {
   BusinessAccountsListResponse,
   BusinessAccountsResponse,
 } from '../../application/dto/business-accounts/business-accounts.response';
+import { CustomExceptions } from '../../config/messages/custom.exceptions';
 
 @Injectable()
 export class BusinessAccountService {
@@ -40,7 +41,9 @@ export class BusinessAccountService {
         return await this.userService.updateRole(data.userId);
       }
     } else {
-      throw new BadRequestException('You already have a business account');
+      throw new BadRequestException(
+        CustomExceptions.businessAccount.AlreadyHave,
+      );
     }
   }
 
@@ -54,7 +57,7 @@ export class BusinessAccountService {
       where: { id },
     });
     if (!businessAccount) {
-      throw new NotFoundException('User not found');
+      throw new NotFoundException(CustomExceptions.user.NotFound);
     }
 
     return new BusinessAccountsResponse(businessAccount);
