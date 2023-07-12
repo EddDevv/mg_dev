@@ -10,10 +10,12 @@ import {
   ApiCreatedResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
+  ApiTags,
 } from '@nestjs/swagger';
 import { ResponseMessages } from '../../config/messages/response.messages';
 import { CustomExceptions } from '../../config/messages/custom.exceptions';
 
+@ApiTags('Business Account')
 @Controller('business-accounts')
 export class BusinessAccountController {
   constructor(

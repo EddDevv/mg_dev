@@ -14,10 +14,12 @@ import {
   ApiCreatedResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
+  ApiTags,
 } from '@nestjs/swagger';
 import { ResponseMessages } from '../../config/messages/response.messages';
 import { CustomExceptions } from '../../config/messages/custom.exceptions';
 
+@ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}

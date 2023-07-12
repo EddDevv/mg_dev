@@ -12,7 +12,9 @@ import {
   LocationsCreateRequest,
   LocationsUpdateRequest,
 } from '../dto/locations/locations.request';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Locations')
 @Controller('locations')
 export class LocationsController {
   constructor(private readonly locationsService: LocationsService) {}
