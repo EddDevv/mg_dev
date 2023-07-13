@@ -37,7 +37,7 @@ export class UserEntity extends BasicEntity implements User {
   @Column({ enum: GenderEnum, default: GenderEnum.NotSpecified })
   gender: GenderEnum;
 
-  @Column({ enum: UserRoleEnum })
+  @Column({ enum: UserRoleEnum, default: UserRoleEnum.Client })
   role: UserRoleEnum;
 
   @Column()
@@ -55,13 +55,13 @@ export class UserEntity extends BasicEntity implements User {
   @Column({ default: false })
   isVerified: boolean;
 
-  @Column()
+  @Column({ nullable: true })
   receiveNotifications: boolean;
 
-  @Column()
+  @Column({ default: false })
   onlineStatus: boolean;
 
-  @Column()
+  @Column({ default: new Date() })
   lastOnline: Date;
 
   // @HasOne(() => BusinessAccount)
