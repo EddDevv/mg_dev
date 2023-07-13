@@ -1,6 +1,5 @@
-import { Body, Controller, Headers, Post, UsePipes } from '@nestjs/common';
+import { Body, Controller, Headers, Post } from '@nestjs/common';
 import { AuthService } from '../../domain/auth/auth.service';
-import { PasswordMatchPipe } from '../guards/pass-match.pipe';
 import {
   AuthLoginRequest,
   AuthRegisterRequest,
@@ -32,7 +31,6 @@ export class AuthController {
     description: CustomExceptions.auth.AlreadyRegistered,
   })
   @Post('register')
-  @UsePipes(new PasswordMatchPipe())
   register(@Body() body: AuthRegisterRequest): Promise<AuthRegisterResponse> {
     return this.authService.register(body);
   }
