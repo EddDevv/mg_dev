@@ -35,12 +35,14 @@ export class AuthService {
       throw new BadRequestException(CustomExceptions.auth.AlreadyRegistered);
     }
 
-    if (this.checkPasswordRepeat(password, repeatPassword)) {
+    if (!this.checkPasswordRepeat(password, repeatPassword)) {
       throw new BadRequestException(CustomExceptions.auth.NotTheSamePasswords);
     }
 
     const hashedPassword = await this.hashPassword(password);
+
     const user = new UserEntity(firstName, lastName, email, hashedPassword);
+    await this.userService.save(user);
     const tokens = this.generateTokens(user);
 
     return new AuthRegisterResponse(user, tokens);
