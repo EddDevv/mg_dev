@@ -3,7 +3,9 @@ import { User, UserEntity } from '../../../domain/users/user.entity';
 import { GenderEnum } from '../../../config/enums/gender.enum';
 import { UserRoleEnum } from '../../../config/enums/user-role.enum';
 
-export class UsersResponse implements Omit<User, 'password'> {
+export class UsersResponse
+  implements Omit<User, 'password' | 'subscriptions' | 'subscribers'>
+{
   @ApiProperty()
   id: number;
 

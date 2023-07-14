@@ -1,7 +1,8 @@
 import { GenderEnum } from '../../config/enums/gender.enum';
 import { UserRoleEnum } from '../../config/enums/user-role.enum';
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, OneToMany } from 'typeorm';
 import { BasicEntity } from '../../config/basic.entity';
+import { SubscriptionsEntity } from '../subscriptions/subscriptions.entity';
 
 export interface User {
   id: number;
@@ -18,6 +19,8 @@ export interface User {
   receiveNotifications: boolean;
   onlineStatus: boolean;
   lastOnline: Date;
+  subscribers: UserEntity[];
+  subscriptions: UserEntity[];
 }
 
 @Entity('users')
@@ -63,6 +66,12 @@ export class UserEntity extends BasicEntity implements User {
 
   @Column({ default: new Date() })
   lastOnline: Date;
+
+  @OneToMany(() => SubscriptionsEntity, (subs) => subs.user)
+  subscribers: UserEntity[];
+
+  @OneToMany(() => SubscriptionsEntity, (subs) => subs.subscriber)
+  subscriptions: UserEntity[];
 
   // @HasOne(() => BusinessAccount)
   // businessAccount: BusinessAccount;
