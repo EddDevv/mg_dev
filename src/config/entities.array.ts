@@ -10,6 +10,6 @@ export const EntitiesArray = [
   LocationEntity,
   BusinessAccountEntity,
   SocialLinksEntity,
-  PostEntity
+  PostEntity,
   SubscriptionsEntity,
 ];

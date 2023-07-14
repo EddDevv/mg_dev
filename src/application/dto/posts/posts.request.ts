@@ -22,12 +22,10 @@ export class UpdatePostDto {
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
     description: 'The first name of the user',
   })
-  @IsOptional()
   @IsString()
   text?: string;
 
   @ApiProperty({ example: 1, description: 'The number of likes' })
-  @IsOptional()
   @IsNumber()
   likes?: number;
 
@@ -35,7 +33,6 @@ export class UpdatePostDto {
     example: 23,
     description: 'The number of comments',
   })
-  @IsOptional()
   @IsNumber()
   comments?: number;
 
@@ -43,7 +40,6 @@ export class UpdatePostDto {
     example: 2,
     description: 'The number of views',
   })
-  @IsOptional()
   @IsNumber()
   views?: number;
 
@@ -51,7 +47,6 @@ export class UpdatePostDto {
     example: 12,
     description: 'The number of shares',
   })
-  @IsOptional()
   @IsNumber()
   shares?: number;
 }

@@ -36,23 +36,23 @@ export class PostsService {
       relations: ['user', 'user.business'],
     });
     if (!post) {
-      throw new NotFoundException('Posts not found');
+      throw new NotFoundException(CustomExceptions.posts.NotFound);
     }
     return new PostsRoleResponse(post);
   }
 
-  async createPost(data: PostsCreateRequest): Promise<PostsRoleResponse> {
-    const id = data.userId;
-    const user = await this.usersRepository.findOne({ where: { id } });
+  async createPost({
+    userId,
+    text,
+  }: PostsCreateRequest): Promise<PostsResponse> {
+    const user = await this.usersRepository.findOne({ where: { id: userId } })
     if (!user) {
       throw new NotFoundException(CustomExceptions.user.NotFound);
     }
 
-    const newPost = new PostEntity();
-    newPost.text = data.text;
-    newPost.user = user;
-    const post = await this.postsRepository.save(newPost);
-    return new PostsRoleResponse(post);
+    const post = new PostEntity(userId, text);
+    await this.postsRepository.save(post);
+    return new PostsResponse(post);
   }
 
   async update(
@@ -61,10 +61,10 @@ export class PostsService {
   ): Promise<PostsResponse> {
     const post = await this.postsRepository.findOne({ where: { id } });
     if (!post) {
-      throw new NotFoundException('Post not found');
+      throw new NotFoundException(CustomExceptions.posts.NotFound);
     }
 
-    Object.assign(post, updatePostDto);
+    post.update(updatePostDto);
     await this.postsRepository.save(post);
 
     return new PostsResponse(post);
@@ -73,7 +73,7 @@ export class PostsService {
   async deletePost(id: number): Promise<void> {
     const post = await this.postsRepository.findOne({ where: { id } });
     if (!post) {
-      throw new Error('Post not found');
+      throw new NotFoundException(CustomExceptions.posts.NotFound);
     }
     await this.postsRepository.softDelete(id);
   }

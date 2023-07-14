@@ -6,6 +6,7 @@ import {
   Delete,
   Post,
   Patch,
+  UseGuards,
 } from '@nestjs/common';
 import { PostsService } from 'src/domain/posts/post.service';
 import {
@@ -17,8 +18,14 @@ import {
   PostsResponse,
   PostsRoleResponse,
 } from '../dto/posts/posts.response';
-import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { ResponseMessages } from 'src/config/messages/response.messages';
+import { AuthGuard } from '../guards/jwt.guard';
 
 @ApiTags('Posts')
 @Controller('posts')
@@ -30,7 +37,7 @@ export class PostController {
     description: ResponseMessages.posts.findAll,
   })
   @Get()
-  async getAllPosts(): Promise<PostRoleListResponse> {
+  getAllPosts(): Promise<PostRoleListResponse> {
     return this.postsService.getAllPosts();
   }
 
@@ -39,7 +46,7 @@ export class PostController {
     description: ResponseMessages.user.findOne,
   })
   @Get(':id')
-  async getPost(@Param('id') id: string): Promise<PostsRoleResponse> {
+  getPost(@Param('id') id: string): Promise<PostsRoleResponse> {
     return this.postsService.getPostById(+id);
   }
 
@@ -48,9 +55,9 @@ export class PostController {
     description: ResponseMessages.posts.create,
   })
   @Post()
-  async createPost(
-    @Body() body: PostsCreateRequest,
-  ): Promise<PostsRoleResponse> {
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard)
+  createPost(@Body() body: PostsCreateRequest): Promise<PostsResponse> {
     return this.postsService.createPost(body);
   }
 
@@ -58,6 +65,8 @@ export class PostController {
     type: PostsRoleResponse,
     description: ResponseMessages.user.update,
   })
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard)
   @Patch(':id')
   update(
     @Param('id') id: string,
@@ -67,8 +76,10 @@ export class PostController {
   }
 
   @ApiOkResponse({ description: ResponseMessages.posts.remove })
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard)
   @Delete(':id')
-  async deletePost(@Param('id') id: string): Promise<void> {
+  deletePost(@Param('id') id: string): Promise<void> {
     return this.postsService.deletePost(+id);
   }
 }

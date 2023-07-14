@@ -12,4 +12,7 @@ export const CustomExceptions = {
   user: {
     NotFound: 'User not found',
   },
+  posts: {
+    NotFound: 'Post not found',
+  },
 };
