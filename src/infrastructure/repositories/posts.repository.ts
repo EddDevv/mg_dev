@@ -3,9 +3,10 @@ import { FindManyOptions, FindOneOptions, Repository } from 'typeorm';
 import { BasicRepository } from '../../config/basic-repository.interface';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PostEntity } from 'src/domain/posts/post.entity';
+import { UpdatePostDto } from 'src/application/dto/posts/posts.request';
 
 @Injectable()
-export class PostsRepository implements BasicRepository<PostEntity> {
+export class PostsRepository {
   constructor(
     @InjectRepository(PostEntity)
     private readonly repo: Repository<PostEntity>,
@@ -27,7 +28,7 @@ export class PostsRepository implements BasicRepository<PostEntity> {
     return this.repo.save(data);
   }
 
-  async softRemove(data: PostEntity): Promise<void> {
-    await this.repo.softRemove(data);
+  async softDelete(id: number): Promise<void> {
+    await this.repo.softDelete(id);
   }
 }

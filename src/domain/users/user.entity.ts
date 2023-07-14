@@ -1,8 +1,9 @@
 import { GenderEnum } from '../../config/enums/gender.enum';
 import { UserRoleEnum } from '../../config/enums/user-role.enum';
-import { Column, Entity, OneToMany } from 'typeorm';
+import { Column, Entity, OneToMany, OneToOne } from 'typeorm';
 import { BasicEntity } from '../../config/basic.entity';
 import { PostEntity } from '../posts/post.entity';
+import { BusinessAccountEntity } from '../business-accounts/business-account.entity';
 
 export interface User {
   id: number;
@@ -68,8 +69,8 @@ export class UserEntity extends BasicEntity implements User {
   @OneToMany(() => PostEntity, (post) => post.user)
   posts: PostEntity[];
 
-  // @HasOne(() => BusinessAccount)
-  // businessAccount: BusinessAccount;
+  @OneToOne(() => BusinessAccountEntity, (business) => business.user)
+  business: BusinessAccountEntity;
 
   // @HasOne(() => Location)
   // location: Location;

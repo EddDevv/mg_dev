@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { BasicEntity } from '../../config/basic.entity';
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
 import { UserEntity } from '../users/user.entity';
 
 export interface BusinessAccount {
@@ -29,8 +29,9 @@ export class BusinessAccountEntity
   @Column()
   registrationNumber: string;
 
-  // @ManyToOne(() => UserEntity, (user) => user.businessAccount)
-  // user: UserEntity;
+  @OneToOne(() => UserEntity, (user) => user.business)
+  @JoinColumn()
+  user: UserEntity;
 
   @Column()
   userId: number;

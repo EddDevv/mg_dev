@@ -6,9 +6,10 @@ import { PostController } from 'src/application/controllers/post.controller';
 import { PostsService } from './post.service';
 import { PostsRepository } from 'src/infrastructure/repositories/posts.repository';
 import { UserModule } from '../users/user.module';
+import { BusinessAccountModule } from '../business-accounts/business-accounts.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([PostEntity, UserEntity]), UserModule],
+  imports: [TypeOrmModule.forFeature([PostEntity, UserEntity]), UserModule, BusinessAccountModule],
   providers: [PostsService, PostsRepository],
   controllers: [PostController],
   exports: [PostsService, PostsRepository]
