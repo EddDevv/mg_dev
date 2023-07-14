@@ -4,6 +4,8 @@ import { Column, Entity, OneToMany, OneToOne } from 'typeorm';
 import { BasicEntity } from '../../config/basic.entity';
 import { PostEntity } from '../posts/post.entity';
 import { BusinessAccountEntity } from '../business-accounts/business-account.entity';
+import { SubscriptionsEntity } from '../subscriptions/subscriptions.entity';
+
 
 export interface User {
   id: number;
@@ -20,6 +22,8 @@ export interface User {
   receiveNotifications: boolean;
   onlineStatus: boolean;
   lastOnline: Date;
+  subscribers: UserEntity[];
+  subscriptions: UserEntity[];
 }
 
 @Entity('users')
@@ -66,11 +70,22 @@ export class UserEntity extends BasicEntity implements User {
   @Column({ default: new Date() })
   lastOnline: Date;
 
+
   @OneToMany(() => PostEntity, (post) => post.user)
   posts: PostEntity[];
 
   @OneToOne(() => BusinessAccountEntity, (business) => business.user)
   business: BusinessAccountEntity;
+
+  @OneToMany(() => SubscriptionsEntity, (subs) => subs.user)
+  subscribers: UserEntity[];
+
+  @OneToMany(() => SubscriptionsEntity, (subs) => subs.subscriber)
+  subscriptions: UserEntity[];
+
+  // @HasOne(() => BusinessAccount)
+  // businessAccount: BusinessAccount;
+
 
   // @HasOne(() => Location)
   // location: Location;

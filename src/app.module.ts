@@ -7,6 +7,8 @@ import { UserModule } from './domain/users/user.module';
 import { databaseProviders } from './infrastructure/dataSourceOptions';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PostModule } from './domain/posts/post.module';
+import { SubscriptionsModule } from './domain/subscriptions/subscriptions.module';
+
 
 @Module({
   controllers: [],
@@ -22,6 +24,7 @@ import { PostModule } from './domain/posts/post.module';
     BusinessAccountModule,
     LocationsModule,
     PostModule,
+    SubscriptionsModule,
   ],
 })
 export class AppModule {}
