@@ -6,7 +6,7 @@ import { SubscriptionsEntity } from '../subscriptions/subscriptions.entity';
 
 export interface User {
   id: number;
-  firstname: string;
+  firstName: string;
   lastName: string | null;
   description: string | null;
   gender: GenderEnum;
@@ -26,7 +26,7 @@ export interface User {
 @Entity('users')
 export class UserEntity extends BasicEntity implements User {
   @Column()
-  firstname: string;
+  firstName: string;
 
   @Column({ nullable: true })
   lastName: string | null;
@@ -89,7 +89,7 @@ export class UserEntity extends BasicEntity implements User {
     password: string,
   ) {
     super();
-    this.firstname = firstname;
+    this.firstName = firstname;
     this.lastName = lastName;
     this.email = email;
     this.password = password;
