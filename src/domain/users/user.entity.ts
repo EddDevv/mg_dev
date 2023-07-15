@@ -1,11 +1,12 @@
 import { GenderEnum } from '../../config/enums/gender.enum';
 import { UserRoleEnum } from '../../config/enums/user-role.enum';
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, OneToMany } from 'typeorm';
 import { BasicEntity } from '../../config/basic.entity';
+import { SubscriptionsEntity } from '../subscriptions/subscriptions.entity';
 
-export interface User {
+export interface IUser {
   id: number;
-  firstname: string;
+  firstName: string;
   lastName: string | null;
   description: string | null;
   gender: GenderEnum;
@@ -18,12 +19,14 @@ export interface User {
   receiveNotifications: boolean;
   onlineStatus: boolean;
   lastOnline: Date;
+  subscribers: UserEntity[];
+  subscriptions: UserEntity[];
 }
 
 @Entity('users')
-export class UserEntity extends BasicEntity implements User {
+export class UserEntity extends BasicEntity implements IUser {
   @Column()
-  firstname: string;
+  firstName: string;
 
   @Column({ nullable: true })
   lastName: string | null;
@@ -64,6 +67,12 @@ export class UserEntity extends BasicEntity implements User {
   @Column({ default: new Date() })
   lastOnline: Date;
 
+  @OneToMany(() => SubscriptionsEntity, (subs) => subs.user)
+  subscribers: UserEntity[];
+
+  @OneToMany(() => SubscriptionsEntity, (subs) => subs.subscriber)
+  subscriptions: UserEntity[];
+
   // @HasOne(() => BusinessAccount)
   // businessAccount: BusinessAccount;
 
@@ -80,7 +89,7 @@ export class UserEntity extends BasicEntity implements User {
     password: string,
   ) {
     super();
-    this.firstname = firstname;
+    this.firstName = firstname;
     this.lastName = lastName;
     this.email = email;
     this.password = password;

@@ -1,14 +1,20 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { User, UserEntity } from '../../../domain/users/user.entity';
+import { IUser, UserEntity } from '../../../domain/users/user.entity';
 import { GenderEnum } from '../../../config/enums/gender.enum';
 import { UserRoleEnum } from '../../../config/enums/user-role.enum';
+import {
+  BasicResponse,
+  BasicResponseArray,
+} from '../../../config/basic.response';
 
-export class UsersResponse implements Omit<User, 'password'> {
+export class User
+  implements Omit<IUser, 'password' | 'subscriptions' | 'subscribers'>
+{
   @ApiProperty()
   id: number;
 
   @ApiProperty()
-  firstname: string;
+  firstName: string;
 
   @ApiProperty()
   lastName: string | null;
@@ -45,7 +51,7 @@ export class UsersResponse implements Omit<User, 'password'> {
 
   constructor(user: UserEntity) {
     this.id = user.id;
-    this.firstname = user.firstname;
+    this.firstName = user.firstName;
     this.lastName = user.lastName;
     this.description = user.description;
     this.gender = user.gender;
@@ -60,21 +66,20 @@ export class UsersResponse implements Omit<User, 'password'> {
   }
 }
 
-export class UserListResponse {
-  @ApiProperty()
-  users: UsersResponse[];
-
-  @ApiProperty()
-  count: number;
-
-  constructor(users: UserEntity[], count: number) {
-    this.users = this.makeUsersResponse(users);
-    this.count = count;
+export class UserResponse extends BasicResponse<User> {
+  constructor(user: User) {
+    super(user);
   }
 
-  makeUsersResponse(users: UserEntity[]): UsersResponse[] {
-    return users.map((user) => {
-      return new UsersResponse(user);
-    });
+  @ApiProperty({ type: User })
+  item: User;
+}
+
+export class UsersListResponse extends BasicResponseArray<User> {
+  constructor(users: User[], count: number) {
+    super(users, count);
   }
+
+  @ApiProperty({ type: User, isArray: true })
+  items: User[];
 }

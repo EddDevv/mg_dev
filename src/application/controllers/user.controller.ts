@@ -2,7 +2,11 @@ import { Body, Controller, Delete, Get, Param, Patch } from '@nestjs/common';
 import { UserService } from '../../domain/users/user.service';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { UserUpdateRequest } from '../dto/users/users.request';
-import { UserListResponse, UsersResponse } from '../dto/users/users.response';
+import {
+  User,
+  UserResponse,
+  UsersListResponse,
+} from '../dto/users/users.response';
 import { ResponseMessages } from '../../config/messages/response.messages';
 
 @ApiTags('Users')
@@ -11,32 +15,32 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @ApiOkResponse({
-    type: UserListResponse,
+    type: UsersListResponse,
     description: ResponseMessages.user.findAll,
   })
   @Get()
-  findAll(): Promise<UserListResponse> {
+  findAll(): Promise<UsersListResponse> {
     return this.userService.findAll();
   }
 
   @ApiOkResponse({
-    type: UsersResponse,
+    type: User,
     description: ResponseMessages.user.findOne,
   })
   @Get(':id')
-  findOne(@Param('id') id: string): Promise<UsersResponse> {
+  findOne(@Param('id') id: string): Promise<UserResponse> {
     return this.userService.findOne(+id);
   }
 
   @ApiOkResponse({
-    type: UsersResponse,
+    type: User,
     description: ResponseMessages.user.update,
   })
   @Patch(':id')
   update(
     @Param('id') id: string,
     @Body() updateUserDto: UserUpdateRequest,
-  ): Promise<UsersResponse> {
+  ): Promise<UserResponse> {
     return this.userService.update(+id, updateUserDto);
   }
 
