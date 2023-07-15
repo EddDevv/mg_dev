@@ -1,7 +1,6 @@
 import {
   Body,
   Controller,
-  Delete,
   Get,
   Param,
   Post,
@@ -9,7 +8,6 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import {
-  ApiBasicAuth,
   ApiBearerAuth,
   ApiForbiddenResponse,
   ApiNotFoundResponse,
@@ -28,7 +26,7 @@ import {
 } from '../dto/subscriptions/subscriptions.response';
 import { CustomExceptions } from '../../config/messages/custom.exceptions';
 import { IRequestUser } from '../../config/user-request.interface';
-import { AuthGuard } from '../guards/jwt.guard';
+import { AuthGuard } from '../guards/auth.guard';
 
 @ApiTags('Subscriptions')
 @Controller('subscriptions')

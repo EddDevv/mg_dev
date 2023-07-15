@@ -66,7 +66,7 @@ export class SubscriptionsService {
   }
 
   async unsubscribe(
-    user: UserEntity,
+    user: UsersResponse,
     { userId }: SubscriptionsUnsubscribeRequest,
   ): Promise<void> {
     if (user.id === userId) {
