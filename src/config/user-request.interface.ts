@@ -1,5 +1,5 @@
-import { UserEntity } from '../domain/users/user.entity';
+import { UsersResponse } from '../application/dto/users/users.response';
 
 export interface IRequestUser extends Request {
-  user: UserEntity;
+  user: UsersResponse;
 }
