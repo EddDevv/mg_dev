@@ -9,7 +9,7 @@ import {
   AuthRegisterRequest,
 } from '../../application/dto/auth/auth.request';
 import { UsersRepository } from '../../infrastructure/repositories/users.repository';
-import { User, UserEntity } from '../users/user.entity';
+import { IUser, UserEntity } from '../users/user.entity';
 import {
   AuthLoginResponse,
   AuthRegisterResponse,
@@ -112,14 +112,14 @@ export class AuthService {
   }
 
   //Generate access token
-  private async generateAccessToken(user: User): Promise<string> {
+  private async generateAccessToken(user: IUser): Promise<string> {
     const payload = { id: user.id, email: user.email };
     return await this.jwtService.signAsync(payload, {
       expiresIn: '15m',
     });
   }
 
-  private async generateRefreshToken(user: User): Promise<string> {
+  private async generateRefreshToken(user: IUser): Promise<string> {
     const payload = { id: user.id, email: user.email };
     return await this.jwtService.signAsync(payload, {
       expiresIn: '7d',

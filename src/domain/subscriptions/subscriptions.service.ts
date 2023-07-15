@@ -11,13 +11,13 @@ import {
 import {
   SubscriptionsGetResponse,
   SubscriptionsGetSubscribersResponse,
-  SubscriptionsResponse,
+  Subscription,
 } from '../../application/dto/subscriptions/subscriptions.response';
 import { SubscriptionsRepository } from '../../infrastructure/repositories/subscriptions.repository';
 import { SubscriptionsEntity } from './subscriptions.entity';
 import { CustomExceptions } from '../../config/messages/custom.exceptions';
 import { UsersRepository } from '../../infrastructure/repositories/users.repository';
-import { UsersResponse } from '../../application/dto/users/users.response';
+import { User } from '../../application/dto/users/users.response';
 import { UserEntity } from '../users/user.entity';
 
 @Injectable()
@@ -30,7 +30,7 @@ export class SubscriptionsService {
   async subscribe({
     userId,
     subscriberId,
-  }: SubscriptionsSubscribeRequest): Promise<SubscriptionsResponse> {
+  }: SubscriptionsSubscribeRequest): Promise<Subscription> {
     if (userId === subscriberId) {
       throw new BadRequestException('Cannot subscribe from yourself');
     }
@@ -62,11 +62,11 @@ export class SubscriptionsService {
     );
     await this.subscriptionsRepository.save(subscription);
 
-    return new SubscriptionsResponse(subscription);
+    return new Subscription(subscription);
   }
 
   async unsubscribe(
-    user: UsersResponse,
+    user: User,
     { userId }: SubscriptionsUnsubscribeRequest,
   ): Promise<void> {
     if (user.id === userId) {
@@ -98,14 +98,12 @@ export class SubscriptionsService {
         relations: ['user'],
       });
 
-    console.log(subs, count);
-
     if (count == 0) {
       return new SubscriptionsGetSubscribersResponse([], 0);
     }
 
     const subscribers = subs.map((sub) => {
-      return new UsersResponse(sub.user);
+      return new User(sub.user);
     });
 
     return new SubscriptionsGetSubscribersResponse(subscribers, count);
@@ -123,7 +121,7 @@ export class SubscriptionsService {
     }
 
     const subscriptions = subs.map((sub) => {
-      return new UsersResponse(sub.user);
+      return new User(sub.user);
     });
 
     return new SubscriptionsGetResponse(subscriptions, count);

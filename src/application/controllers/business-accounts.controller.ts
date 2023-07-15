@@ -4,7 +4,7 @@ import {
   BusinessAccountsCreateRequest,
   BusinessAccountsUpdateRequest,
 } from '../dto/business-accounts/business-accounts.request';
-import { UsersResponse } from '../dto/users/users.response';
+import { User, UserResponse } from '../dto/users/users.response';
 import {
   ApiBadRequestResponse,
   ApiCreatedResponse,
@@ -14,6 +14,10 @@ import {
 } from '@nestjs/swagger';
 import { ResponseMessages } from '../../config/messages/response.messages';
 import { CustomExceptions } from '../../config/messages/custom.exceptions';
+import {
+  BusinessAccountResponse,
+  BusinessAccountsListResponse,
+} from '../dto/business-accounts/business-accounts.response';
 
 @ApiTags('Business Account')
 @Controller('business-accounts')
@@ -23,27 +27,33 @@ export class BusinessAccountController {
   ) {}
 
   @ApiCreatedResponse({
-    type: UsersResponse,
+    type: UserResponse,
     description: ResponseMessages.businessAccount.create,
   })
   @ApiBadRequestResponse({
     description: CustomExceptions.businessAccount.AlreadyHave,
   })
   @Post('create')
-  create(@Body() body: BusinessAccountsCreateRequest): Promise<UsersResponse> {
+  create(@Body() body: BusinessAccountsCreateRequest): Promise<UserResponse> {
     return this.businessAccountService.create(body);
   }
 
-  @ApiOkResponse({ description: ResponseMessages.businessAccount.findAll })
+  @ApiOkResponse({
+    type: BusinessAccountsListResponse,
+    description: ResponseMessages.businessAccount.findAll,
+  })
   @Get()
-  findAll() {
+  findAll(): Promise<BusinessAccountsListResponse> {
     return this.businessAccountService.findAll();
   }
 
-  @ApiOkResponse({ description: ResponseMessages.businessAccount.findOne })
+  @ApiOkResponse({
+    type: BusinessAccountResponse,
+    description: ResponseMessages.businessAccount.findOne,
+  })
   @ApiNotFoundResponse({ description: CustomExceptions.user.NotFound })
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id') id: string): Promise<BusinessAccountResponse> {
     return this.businessAccountService.findOne(+id);
   }
 

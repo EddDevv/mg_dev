@@ -9,14 +9,15 @@ import {
   BusinessAccountsUpdateRequest,
 } from '../../application/dto/business-accounts/business-accounts.request';
 import { BusinessAccountsRepository } from '../../infrastructure/repositories/business-accounts.repository';
-import { UsersResponse } from '../../application/dto/users/users.response';
+import { User, UserResponse } from '../../application/dto/users/users.response';
 import {
-  BusinessAccount,
+  IBusinessAccount,
   BusinessAccountEntity,
 } from './business-account.entity';
 import {
   BusinessAccountsListResponse,
-  BusinessAccountsResponse,
+  BusinessAccounts,
+  BusinessAccountResponse,
 } from '../../application/dto/business-accounts/business-accounts.response';
 import { CustomExceptions } from '../../config/messages/custom.exceptions';
 
@@ -27,7 +28,7 @@ export class BusinessAccountService {
     private userService: UserService,
   ) {}
 
-  async create(data: BusinessAccountsCreateRequest): Promise<UsersResponse> {
+  async create(data: BusinessAccountsCreateRequest): Promise<UserResponse> {
     const isBusiness = await this.businessAccountRepository.findOne({
       where: { userId: data.userId },
     });
@@ -48,11 +49,21 @@ export class BusinessAccountService {
   }
 
   async findAll(): Promise<BusinessAccountsListResponse> {
-    const businessAccounts = await this.businessAccountRepository.find({});
-    return new BusinessAccountsListResponse(businessAccounts);
+    const [businessAccounts, count] =
+      await this.businessAccountRepository.findAndCount({});
+
+    if (count == 0) {
+      return new BusinessAccountsListResponse([], 0);
+    }
+
+    const accountsResponse = businessAccounts.map((acc) => {
+      return new BusinessAccounts(acc);
+    });
+
+    return new BusinessAccountsListResponse(accountsResponse, count);
   }
 
-  async findOne(id: number): Promise<BusinessAccountsResponse> {
+  async findOne(id: number): Promise<BusinessAccountResponse> {
     const businessAccount = await this.businessAccountRepository.findOne({
       where: { id },
     });
@@ -60,7 +71,7 @@ export class BusinessAccountService {
       throw new NotFoundException(CustomExceptions.user.NotFound);
     }
 
-    return new BusinessAccountsResponse(businessAccount);
+    return new BusinessAccountResponse(new BusinessAccounts(businessAccount));
   }
 
   update(id: number, updateBusinessAccountDto: BusinessAccountsUpdateRequest) {

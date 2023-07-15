@@ -2,7 +2,7 @@ import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
 import { BasicEntity } from '../../config/basic.entity';
 import { UserEntity } from '../users/user.entity';
 
-export interface Subscriptions {
+export interface ISubscriptions {
   user: UserEntity;
   userId: number;
   subscriber: UserEntity;
@@ -10,7 +10,7 @@ export interface Subscriptions {
 }
 
 @Entity('subscriptions')
-export class SubscriptionsEntity extends BasicEntity implements Subscriptions {
+export class SubscriptionsEntity extends BasicEntity implements ISubscriptions {
   @ManyToOne(() => UserEntity, (user) => user.subscribers)
   user: UserEntity;
 

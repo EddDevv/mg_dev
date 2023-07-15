@@ -22,7 +22,7 @@ import {
 import {
   SubscriptionsGetResponse,
   SubscriptionsGetSubscribersResponse,
-  SubscriptionsResponse,
+  Subscription,
 } from '../dto/subscriptions/subscriptions.response';
 import { CustomExceptions } from '../../config/messages/custom.exceptions';
 import { IRequestUser } from '../../config/user-request.interface';
@@ -33,7 +33,7 @@ import { AuthGuard } from '../guards/auth.guard';
 export class SubscriptionsController {
   constructor(private readonly subscriptionService: SubscriptionsService) {}
 
-  @ApiOkResponse({ type: SubscriptionsResponse })
+  @ApiOkResponse({ type: Subscription })
   @ApiNotFoundResponse({ description: CustomExceptions.user.NotFound })
   @ApiForbiddenResponse({ description: 'You already have a subscription' })
   @ApiBearerAuth()
@@ -41,7 +41,7 @@ export class SubscriptionsController {
   @Post('/subscribe')
   subscribe(
     @Body() body: SubscriptionsSubscribeRequest,
-  ): Promise<SubscriptionsResponse> {
+  ): Promise<Subscription> {
     return this.subscriptionService.subscribe(body);
   }
 
