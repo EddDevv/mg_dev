@@ -27,7 +27,6 @@ export class AuthService {
 
   async register({
     firstName,
-    lastName,
     email,
     password,
     repeatPassword,
@@ -44,7 +43,7 @@ export class AuthService {
 
     const hashedPassword = await this.hashPassword(password);
 
-    const user = new UserEntity(firstName, lastName, email, hashedPassword);
+    const user = new UserEntity(firstName, '', email, hashedPassword);
     await this.userService.save(user);
     const tokens = await this.generateTokens(user);
 

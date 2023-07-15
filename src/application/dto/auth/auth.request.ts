@@ -13,11 +13,6 @@ export class AuthRegisterRequest {
   @IsString()
   firstName: string;
 
-  @ApiProperty({ example: 'John', description: 'The first name of the user' })
-  @IsNotEmpty()
-  @IsString()
-  lastName: string;
-
   @ApiProperty({
     example: 'john@example.com',
     description: 'The email address of the user',
@@ -31,7 +26,7 @@ export class AuthRegisterRequest {
     description: 'The password of the user',
   })
   @IsNotEmpty()
-  @IsStrongPassword()
+  @IsString()
   @MinLength(6, { message: 'Password must be at least 6 characters long' })
   password: string;
 
@@ -40,7 +35,7 @@ export class AuthRegisterRequest {
     description: 'The password confirmation',
   })
   @IsNotEmpty()
-  @IsStrongPassword()
+  @IsString()
   repeatPassword: string;
 }
 

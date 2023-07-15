@@ -14,7 +14,7 @@ export class User
   id: number;
 
   @ApiProperty()
-  firstname: string;
+  firstName: string;
 
   @ApiProperty()
   lastName: string | null;
@@ -51,7 +51,7 @@ export class User
 
   constructor(user: UserEntity) {
     this.id = user.id;
-    this.firstname = user.firstname;
+    this.firstName = user.firstName;
     this.lastName = user.lastName;
     this.description = user.description;
     this.gender = user.gender;
