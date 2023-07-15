@@ -4,7 +4,7 @@ import { Column, Entity, OneToMany } from 'typeorm';
 import { BasicEntity } from '../../config/basic.entity';
 import { SubscriptionsEntity } from '../subscriptions/subscriptions.entity';
 
-export interface User {
+export interface IUser {
   id: number;
   firstname: string;
   lastName: string | null;
@@ -24,7 +24,7 @@ export interface User {
 }
 
 @Entity('users')
-export class UserEntity extends BasicEntity implements User {
+export class UserEntity extends BasicEntity implements IUser {
   @Column()
   firstname: string;
 
