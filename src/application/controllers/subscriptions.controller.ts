@@ -27,13 +27,17 @@ import {
 import { CustomExceptions } from '../../config/messages/custom.exceptions';
 import { IRequestUser } from '../../config/user-request.interface';
 import { AuthGuard } from '../guards/auth.guard';
+import { ResponseMessages } from '../../config/messages/response.messages';
 
 @ApiTags('Subscriptions')
 @Controller('subscriptions')
 export class SubscriptionsController {
   constructor(private readonly subscriptionService: SubscriptionsService) {}
 
-  @ApiOkResponse({ type: Subscription })
+  @ApiOkResponse({
+    type: Subscription,
+    description: ResponseMessages.subscriptions.subscribe,
+  })
   @ApiNotFoundResponse({ description: CustomExceptions.user.NotFound })
   @ApiForbiddenResponse({ description: 'You already have a subscription' })
   @ApiBearerAuth()
@@ -45,7 +49,7 @@ export class SubscriptionsController {
     return this.subscriptionService.subscribe(body);
   }
 
-  @ApiOkResponse()
+  @ApiOkResponse({ description: ResponseMessages.subscriptions.unsubscribe })
   @ApiBearerAuth()
   @UseGuards(AuthGuard)
   @Post('/unsubscribe')
@@ -56,7 +60,10 @@ export class SubscriptionsController {
     return this.subscriptionService.unsubscribe(user, body);
   }
 
-  @ApiOkResponse({ type: SubscriptionsGetSubscribersResponse })
+  @ApiOkResponse({
+    type: SubscriptionsGetSubscribersResponse,
+    description: ResponseMessages.subscriptions.getSubscribers,
+  })
   @Get('/subscribers/:userId')
   getSubscribers(
     @Param('userId') userId: number,
@@ -64,7 +71,10 @@ export class SubscriptionsController {
     return this.subscriptionService.getSubscribers(userId);
   }
 
-  @ApiOkResponse({ type: SubscriptionsGetResponse })
+  @ApiOkResponse({
+    type: SubscriptionsGetResponse,
+    description: ResponseMessages.subscriptions.getSubscriptions,
+  })
   @Get('/:userId')
   getSubscriptions(
     @Param('userId') userId: number,
