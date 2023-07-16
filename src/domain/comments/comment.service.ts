@@ -7,6 +7,7 @@ import { CommentsRepository } from 'src/infrastructure/repositories/comments.rep
 import { PostsRepository } from 'src/infrastructure/repositories/posts.repository';
 import { CommentEntity } from './comment.entity';
 import { UsersRepository } from 'src/infrastructure/repositories/users.repository';
+import { CommentsResponse } from 'src/application/dto/comments/comments.response';
 
 @Injectable()
 export class CommentsService {
@@ -16,7 +17,7 @@ export class CommentsService {
     private readonly usersRepository: UsersRepository,
   ) {}
 
-  async create(createCommentDto: CreateCommentDto): Promise<CommentEntity> {
+  async create(createCommentDto: CreateCommentDto) {
     const comment = new CommentEntity();
     comment.text = createCommentDto.text;
 
@@ -54,7 +55,8 @@ export class CommentsService {
       comment.parentComment = parentComment;
     }
 
-    return this.commentsRepository.save(comment);
+    this.commentsRepository.save(comment);
+    return new CommentsResponse(comment);
   }
 
   async findAll(): Promise<CommentEntity[]> {
@@ -63,7 +65,7 @@ export class CommentsService {
     });
   }
 
-  async findOne(id: number): Promise<CommentEntity> {
+  async findOne(id: number) {
     const comment = await this.commentsRepository.findOne({
       where: { id },
       relations: ['user', 'post', 'replies'],
@@ -71,14 +73,16 @@ export class CommentsService {
     if (!comment) {
       //throw new NotFoundException(`Comment with id ${id} not found`);
     }
-    return comment;
+    return new CommentsResponse(comment);
   }
 
   async update(
     id: number,
     updateCommentDto: UpdateCommentDto,
   ): Promise<CommentEntity> {
-    const comment = await this.findOne(id);
+    const comment = await this.commentsRepository.findOne({
+      where: { id: id },
+    });
     //Object.assign(comment, updateCommentDto);
     comment.update(updateCommentDto);
     return this.commentsRepository.save(comment);
