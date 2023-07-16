@@ -8,14 +8,9 @@ import { PostsRepository } from 'src/infrastructure/repositories/posts.repositor
 import { UserModule } from '../users/user.module';
 import { BusinessAccountModule } from '../business-accounts/business-accounts.module';
 import { JwtService } from '@nestjs/jwt';
-import { CommentEntity } from '../comments/comment.entity';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([PostEntity, UserEntity, CommentEntity]),
-    UserModule,
-    BusinessAccountModule,
-  ],
+  imports: [TypeOrmModule.forFeature([PostEntity, UserEntity]), UserModule, BusinessAccountModule],
   providers: [PostsService, PostsRepository, JwtService],
   controllers: [PostController],
   exports: [PostsService, PostsRepository]

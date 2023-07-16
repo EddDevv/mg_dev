@@ -1,14 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { BasicEntity } from '../../config/basic.entity';
-import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
+import { Column, Entity, ManyToOne } from 'typeorm';
 import { UserEntity } from '../users/user.entity';
 import { UpdatePostDto } from 'src/application/dto/posts/posts.request';
-import { CommentEntity } from '../comments/comment.entity';
 
 export interface Post {
   text: string;
   likes: number;
-  commentsCount: number;
+  comments: number;
   views: number;
   shares: number;
 }
@@ -23,7 +22,7 @@ export class PostEntity extends BasicEntity implements Post {
   likes: number;
 
   @Column({ default: 0 })
-  commentsCount: number;
+  comments: number;
 
   @Column({ default: 0 })
   views: number;
@@ -36,9 +35,6 @@ export class PostEntity extends BasicEntity implements Post {
 
   @ManyToOne(() => UserEntity, (user) => user.posts)
   user: UserEntity;
-
-  @OneToMany(() => CommentEntity, (comment) => comment.post)
-  comments: CommentEntity[];
 
   constructor(userId: number, text: string) {
     super();
@@ -54,7 +50,7 @@ export class PostEntity extends BasicEntity implements Post {
       this.likes = postData.likes;
     }
     if (postData.hasOwnProperty('comments')) {
-      this.commentsCount = postData.commentsCount;
+      this.comments = postData.comments;
     }
     if (postData.hasOwnProperty('views')) {
       this.views = postData.views;

@@ -15,7 +15,7 @@ export class PostsResponse implements Post {
   likes: number;
 
   @ApiProperty()
-  commentsCount: number;
+  comments: number;
 
   @ApiProperty()
   views: number;
@@ -30,7 +30,7 @@ export class PostsResponse implements Post {
     this.id = post.id;
     this.text = post.text;
     this.likes = post.likes;
-    this.commentsCount = post.commentsCount;
+    this.comments = post.comments;
     this.views = post.views;
     this.shares = post.shares;
     this.createdAt = post.createdAt;

@@ -34,7 +34,7 @@ export class UpdatePostDto {
     description: 'The number of comments',
   })
   @IsNumber()
-  commentsCount?: number;
+  comments?: number;
 
   @ApiProperty({
     example: 2,

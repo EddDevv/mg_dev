@@ -4,7 +4,6 @@ import { BusinessAccountEntity } from '../domain/business-accounts/business-acco
 import { SocialLinksEntity } from '../domain/social/social-links.entity';
 import { PostEntity } from 'src/domain/posts/post.entity';
 import { SubscriptionsEntity } from '../domain/subscriptions/subscriptions.entity';
-import { CommentEntity } from 'src/domain/comments/comment.entity';
 
 export const EntitiesArray = [
   UserEntity,
@@ -13,5 +12,4 @@ export const EntitiesArray = [
   SocialLinksEntity,
   PostEntity,
   SubscriptionsEntity,
-  CommentEntity,
 ];
