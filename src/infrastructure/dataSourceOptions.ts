@@ -3,6 +3,11 @@ import { TypeOrmModuleAsyncOptions } from '@nestjs/typeorm';
 import { DataSource, DataSourceOptions } from 'typeorm';
 import 'dotenv/config.js';
 import { EntitiesArray } from '../config/entities.array';
+import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
+
+interface CustomPostgresConnectionOptions extends PostgresConnectionOptions {
+  charset: string;
+}
 
 export const databaseProviders: TypeOrmModuleAsyncOptions = {
   inject: [ConfigService],
@@ -35,10 +40,11 @@ export const dataSourceOptions: DataSourceOptions = {
   database: String(process.env.DATABASE_NAME),
   logging: false,
   synchronize: false,
+  charset: 'utf8',
   name: 'default',
   entities: EntitiesArray,
   migrations: [__dirname + '/migrations/*{.ts,.js}'],
   // subscribers: ['src/subscriber/**/*{.ts,.js}'],
-};
+} as CustomPostgresConnectionOptions;
 
 export const dataSource = new DataSource(dataSourceOptions);
