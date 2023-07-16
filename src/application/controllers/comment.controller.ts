@@ -20,7 +20,7 @@ export class CommentsController {
   constructor(private readonly commentsService: CommentsService) {}
 
   @Post()
-  create(@Body() createCommentDto: CreateCommentDto): Promise<CommentEntity> {
+  create(@Body() createCommentDto: CreateCommentDto) {
     return this.commentsService.create(createCommentDto);
   }
 
@@ -30,7 +30,7 @@ export class CommentsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): Promise<CommentEntity> {
+  findOne(@Param('id') id: string) {
     return this.commentsService.findOne(+id);
   }
 
