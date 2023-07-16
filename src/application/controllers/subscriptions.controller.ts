@@ -1,7 +1,6 @@
 import {
   Body,
   Controller,
-  Delete,
   Get,
   Param,
   Post,
@@ -9,7 +8,6 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import {
-  ApiBasicAuth,
   ApiBearerAuth,
   ApiForbiddenResponse,
   ApiNotFoundResponse,
@@ -24,18 +22,22 @@ import {
 import {
   SubscriptionsGetResponse,
   SubscriptionsGetSubscribersResponse,
-  SubscriptionsResponse,
+  Subscription,
 } from '../dto/subscriptions/subscriptions.response';
 import { CustomExceptions } from '../../config/messages/custom.exceptions';
 import { IRequestUser } from '../../config/user-request.interface';
-import { AuthGuard } from '../guards/jwt.guard';
+import { AuthGuard } from '../guards/auth.guard';
+import { ResponseMessages } from '../../config/messages/response.messages';
 
 @ApiTags('Subscriptions')
 @Controller('subscriptions')
 export class SubscriptionsController {
   constructor(private readonly subscriptionService: SubscriptionsService) {}
 
-  @ApiOkResponse({ type: SubscriptionsResponse })
+  @ApiOkResponse({
+    type: Subscription,
+    description: ResponseMessages.subscriptions.subscribe,
+  })
   @ApiNotFoundResponse({ description: CustomExceptions.user.NotFound })
   @ApiForbiddenResponse({ description: 'You already have a subscription' })
   @ApiBearerAuth()
@@ -43,11 +45,11 @@ export class SubscriptionsController {
   @Post('/subscribe')
   subscribe(
     @Body() body: SubscriptionsSubscribeRequest,
-  ): Promise<SubscriptionsResponse> {
+  ): Promise<Subscription> {
     return this.subscriptionService.subscribe(body);
   }
 
-  @ApiOkResponse()
+  @ApiOkResponse({ description: ResponseMessages.subscriptions.unsubscribe })
   @ApiBearerAuth()
   @UseGuards(AuthGuard)
   @Post('/unsubscribe')
@@ -58,7 +60,10 @@ export class SubscriptionsController {
     return this.subscriptionService.unsubscribe(user, body);
   }
 
-  @ApiOkResponse({ type: SubscriptionsGetSubscribersResponse })
+  @ApiOkResponse({
+    type: SubscriptionsGetSubscribersResponse,
+    description: ResponseMessages.subscriptions.getSubscribers,
+  })
   @Get('/subscribers/:userId')
   getSubscribers(
     @Param('userId') userId: number,
@@ -66,7 +71,10 @@ export class SubscriptionsController {
     return this.subscriptionService.getSubscribers(userId);
   }
 
-  @ApiOkResponse({ type: SubscriptionsGetResponse })
+  @ApiOkResponse({
+    type: SubscriptionsGetResponse,
+    description: ResponseMessages.subscriptions.getSubscriptions,
+  })
   @Get('/:userId')
   getSubscriptions(
     @Param('userId') userId: number,

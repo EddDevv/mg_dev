@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { UsersResponse } from '../users/users.response';
+import { User } from '../users/users.response';
 import { UserEntity } from '../../../domain/users/user.entity';
 
 export class AuthTokensResponse {
@@ -12,15 +12,24 @@ export class AuthTokensResponse {
 
 export class AuthRegisterResponse {
   @ApiProperty()
-  user: UsersResponse;
+  user: User;
 
   @ApiProperty()
   tokens: AuthTokensResponse;
 
   constructor(user: UserEntity, tokens: AuthTokensResponse) {
-    this.user = new UsersResponse(user);
+    this.user = new User(user);
     this.tokens = tokens;
   }
 }
 
 export class AuthLoginResponse extends AuthRegisterResponse {}
+
+export class AuthRefreshResponse {
+  @ApiProperty()
+  accessToken: string;
+
+  constructor(token: string) {
+    this.accessToken = token;
+  }
+}

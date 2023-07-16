@@ -6,12 +6,12 @@ import { PostEntity } from '../posts/post.entity';
 import { BusinessAccountEntity } from '../business-accounts/business-account.entity';
 import { SubscriptionsEntity } from '../subscriptions/subscriptions.entity';
 
-
-export interface User {
+export interface IUser {
   id: number;
-  firstname: string;
+  firstName: string;
   lastName: string | null;
   description: string | null;
+  dateOfBirth: Date | null;
   gender: GenderEnum;
   role: UserRoleEnum;
   email: string;
@@ -27,9 +27,9 @@ export interface User {
 }
 
 @Entity('users')
-export class UserEntity extends BasicEntity implements User {
+export class UserEntity extends BasicEntity implements IUser {
   @Column()
-  firstname: string;
+  firstName: string;
 
   @Column({ nullable: true })
   lastName: string | null;
@@ -70,7 +70,6 @@ export class UserEntity extends BasicEntity implements User {
   @Column({ default: new Date() })
   lastOnline: Date;
 
-
   @OneToMany(() => PostEntity, (post) => post.user)
   posts: PostEntity[];
 
@@ -86,7 +85,6 @@ export class UserEntity extends BasicEntity implements User {
   // @HasOne(() => BusinessAccount)
   // businessAccount: BusinessAccount;
 
-
   // @HasOne(() => Location)
   // location: Location;
 
@@ -100,7 +98,7 @@ export class UserEntity extends BasicEntity implements User {
     password: string,
   ) {
     super();
-    this.firstname = firstname;
+    this.firstName = firstname;
     this.lastName = lastName;
     this.email = email;
     this.password = password;

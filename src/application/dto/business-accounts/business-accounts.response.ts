@@ -1,10 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
-  BusinessAccount,
+  IBusinessAccount,
   BusinessAccountEntity,
 } from '../../../domain/business-accounts/business-account.entity';
+import {
+  BasicResponse,
+  BasicResponseArray,
+} from '../../../config/basic.response';
 
-export class BusinessAccountsResponse implements BusinessAccount {
+export class BusinessAccounts implements IBusinessAccount {
   @ApiProperty()
   id: number;
 
@@ -25,17 +29,20 @@ export class BusinessAccountsResponse implements BusinessAccount {
   }
 }
 
-export class BusinessAccountsListResponse {
-  @ApiProperty()
-  accounts: BusinessAccountsResponse[];
-
-  constructor(data: BusinessAccountEntity[]) {
-    this.accounts = this.makeAccountResponse(data);
+export class BusinessAccountResponse extends BasicResponse<BusinessAccounts> {
+  constructor(account: BusinessAccounts) {
+    super(account);
   }
 
-  makeAccountResponse(accounts: BusinessAccountEntity[]) {
-    return accounts.map((account) => {
-      return new BusinessAccountsResponse(account);
-    });
+  @ApiProperty({ type: BusinessAccounts })
+  item: BusinessAccounts;
+}
+
+export class BusinessAccountsListResponse extends BasicResponseArray<BusinessAccounts> {
+  constructor(accounts: BusinessAccounts[], count: number) {
+    super(accounts, count);
   }
+
+  @ApiProperty({ type: BusinessAccounts, isArray: true })
+  items: BusinessAccounts[];
 }

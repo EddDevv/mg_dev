@@ -1,46 +1,57 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { UsersResponse } from '../users/users.response';
-import { SubscriptionsEntity } from '../../../domain/subscriptions/subscriptions.entity';
+import { User, UserResponse } from '../users/users.response';
+import {
+  ISubscriptions,
+  SubscriptionsEntity,
+} from '../../../domain/subscriptions/subscriptions.entity';
+import {
+  BasicResponse,
+  BasicResponseArray,
+} from '../../../config/basic.response';
 
-export class SubscriptionsResponse {
+export class Subscription
+  implements
+    Omit<ISubscriptions, 'user' | 'userId' | 'subscriber' | 'subscriberId'>
+{
   @ApiProperty()
   id: number;
 
-  @ApiProperty({ type: UsersResponse })
-  user: UsersResponse;
+  @ApiProperty({ type: User })
+  user: User;
 
-  @ApiProperty({ type: UsersResponse })
-  subscriber: UsersResponse;
+  @ApiProperty({ type: User })
+  subscriber: User;
 
   constructor(subscription: SubscriptionsEntity) {
     this.id = subscription.id;
-    this.user = new UsersResponse(subscription.user);
-    this.subscriber = new UsersResponse(subscription.subscriber);
+    this.user = new User(subscription.user);
+    this.subscriber = new User(subscription.subscriber);
   }
 }
 
-export class SubscriptionsGetSubscribersResponse {
-  @ApiProperty({ type: UsersResponse, isArray: true })
-  subscribers: UsersResponse[];
-
-  @ApiProperty()
-  count: number;
-
-  constructor(subscribers: UsersResponse[], count: number) {
-    this.subscribers = subscribers;
-    this.count = count;
+export class SubscriptionResponse extends BasicResponse<Subscription> {
+  constructor(subscription: Subscription) {
+    super(subscription);
   }
+
+  @ApiProperty({ type: Subscription })
+  item: Subscription;
 }
 
-export class SubscriptionsGetResponse {
-  @ApiProperty({ type: UsersResponse, isArray: true })
-  subscriptions: UsersResponse[];
-
-  @ApiProperty()
-  count: number;
-
-  constructor(subscriptions: UsersResponse[], count: number) {
-    this.subscriptions = subscriptions;
-    this.count = count;
+export class SubscriptionsGetSubscribersResponse extends BasicResponseArray<User> {
+  constructor(subscribers: User[], count: number) {
+    super(subscribers, count);
   }
+
+  @ApiProperty({ type: User, isArray: true })
+  items: User[];
+}
+
+export class SubscriptionsGetResponse extends BasicResponseArray<User> {
+  constructor(subscriptions: User[], count: number) {
+    super(subscriptions, count);
+  }
+
+  @ApiProperty({ type: User, isArray: true })
+  items: User[];
 }

@@ -1,9 +1,31 @@
-import { Body, Controller, Delete, Get, Param, Patch } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { UserService } from '../../domain/users/user.service';
-import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiForbiddenResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
 import { UserUpdateRequest } from '../dto/users/users.request';
-import { UserListResponse, UsersResponse } from '../dto/users/users.response';
+import {
+  User,
+  UserResponse,
+  UsersListResponse,
+} from '../dto/users/users.response';
 import { ResponseMessages } from '../../config/messages/response.messages';
+import { IRequestUser } from '../../config/user-request.interface';
+import { JwtGuard } from '../guards/jwt.guard';
+import { CustomExceptions } from '../../config/messages/custom.exceptions';
 
 @ApiTags('Users')
 @Controller('users')
@@ -11,33 +33,38 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @ApiOkResponse({
-    type: UserListResponse,
+    type: UsersListResponse,
     description: ResponseMessages.user.findAll,
   })
   @Get()
-  findAll(): Promise<UserListResponse> {
+  findAll(): Promise<UsersListResponse> {
     return this.userService.findAll();
   }
 
   @ApiOkResponse({
-    type: UsersResponse,
+    type: User,
     description: ResponseMessages.user.findOne,
   })
   @Get(':id')
-  findOne(@Param('id') id: string): Promise<UsersResponse> {
+  findOne(@Param('id') id: string): Promise<UserResponse> {
     return this.userService.findOne(+id);
   }
 
   @ApiOkResponse({
-    type: UsersResponse,
+    type: UserResponse,
     description: ResponseMessages.user.update,
   })
+  @ApiNotFoundResponse({ description: CustomExceptions.user.NotFound })
+  @ApiForbiddenResponse({ description: CustomExceptions.user.NotSelfUpdate })
+  @ApiUnauthorizedResponse({ description: CustomExceptions.auth.Unauthorized })
+  @UseGuards(JwtGuard)
   @Patch(':id')
   update(
-    @Param('id') id: string,
-    @Body() updateUserDto: UserUpdateRequest,
-  ): Promise<UsersResponse> {
-    return this.userService.update(+id, updateUserDto);
+    @Req() { user }: IRequestUser,
+    @Param('id') id: number,
+    @Body() body: UserUpdateRequest,
+  ): Promise<UserResponse> {
+    return this.userService.update(id, user, body);
   }
 
   @ApiOkResponse({ description: ResponseMessages.user.remove })
