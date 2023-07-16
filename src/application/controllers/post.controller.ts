@@ -21,13 +21,11 @@ import {
 import {
   ApiBearerAuth,
   ApiCreatedResponse,
-  ApiNotFoundResponse,
   ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger';
 import { ResponseMessages } from 'src/config/messages/response.messages';
 import { AuthGuard } from '../guards/jwt.guard';
-import { CustomExceptions } from 'src/config/messages/custom.exceptions';
 
 @ApiTags('Posts')
 @Controller('posts')
@@ -47,7 +45,6 @@ export class PostController {
     type: PostsRoleResponse,
     description: ResponseMessages.user.findOne,
   })
-  @ApiNotFoundResponse({ description: CustomExceptions.posts.NotFound })
   @Get(':id')
   getPost(@Param('id') id: string): Promise<PostsRoleResponse> {
     return this.postsService.getPostById(+id);
@@ -57,7 +54,6 @@ export class PostController {
     type: PostsRoleResponse,
     description: ResponseMessages.posts.create,
   })
-  @ApiNotFoundResponse({ description: CustomExceptions.posts.NotFound })
   @Post()
   @ApiBearerAuth()
   @UseGuards(AuthGuard)
@@ -69,7 +65,6 @@ export class PostController {
     type: PostsRoleResponse,
     description: ResponseMessages.user.update,
   })
-  @ApiNotFoundResponse({ description: CustomExceptions.posts.NotFound })
   @ApiBearerAuth()
   @UseGuards(AuthGuard)
   @Patch(':id')
@@ -81,7 +76,6 @@ export class PostController {
   }
 
   @ApiOkResponse({ description: ResponseMessages.posts.remove })
-  @ApiNotFoundResponse({ description: CustomExceptions.posts.NotFound })
   @ApiBearerAuth()
   @UseGuards(AuthGuard)
   @Delete(':id')
