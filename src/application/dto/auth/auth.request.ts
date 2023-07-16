@@ -57,3 +57,9 @@ export class AuthLoginRequest {
   @MinLength(6, { message: 'Password must be at least 6 characters long' })
   password: string;
 }
+
+export class AuthRefreshRequest {
+  @ApiProperty()
+  @IsString()
+  token: string;
+}

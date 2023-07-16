@@ -12,17 +12,20 @@ import { UsersRepository } from '../../infrastructure/repositories/users.reposit
 import { IUser, UserEntity } from '../users/user.entity';
 import {
   AuthLoginResponse,
+  AuthRefreshResponse,
   AuthRegisterResponse,
   AuthTokensResponse,
 } from '../../application/dto/auth/auth.response';
 import { CustomExceptions } from '../../config/messages/custom.exceptions';
 import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly userService: UsersRepository,
     private jwtService: JwtService,
+    private readonly configService: ConfigService,
   ) {}
 
   async register({
@@ -84,11 +87,11 @@ export class AuthService {
     return new AuthLoginResponse(user, tokens);
   }
 
-  async refreshToken(refreshToken: string): Promise<string> {
+  async refreshToken(refreshToken: string): Promise<AuthRefreshResponse> {
     try {
-      const decodedToken = this.jwtService.verify(refreshToken, {
-        secret: process.env.PRIVATE_REFRESH_KEY,
-      }) as { id: number; email: string };
+      const decodedToken = (await this.jwtService.verifyAsync(refreshToken, {
+        secret: this.configService.get<string>('JWT_SECRET'),
+      })) as { id: number; email: string };
 
       const user = await this.userService.findOne({
         where: { id: decodedToken.id },
@@ -97,7 +100,9 @@ export class AuthService {
         throw new BadRequestException(CustomExceptions.auth.InvalidRefresh);
       }
 
-      return this.generateAccessToken(user);
+      const accessToken = await this.generateAccessToken(user);
+
+      return new AuthRefreshResponse(accessToken);
     } catch (error) {
       throw new BadRequestException(CustomExceptions.auth.InvalidRefresh);
     }

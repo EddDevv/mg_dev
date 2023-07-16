@@ -24,3 +24,12 @@ export class AuthRegisterResponse {
 }
 
 export class AuthLoginResponse extends AuthRegisterResponse {}
+
+export class AuthRefreshResponse {
+  @ApiProperty()
+  accessToken: string;
+
+  constructor(token: string) {
+    this.accessToken = token;
+  }
+}
