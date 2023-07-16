@@ -7,13 +7,21 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   DeleteDateColumn,
+  JoinColumn,
 } from 'typeorm';
 import { PostEntity } from '../posts/post.entity';
 import { UserEntity } from '../users/user.entity';
 import { UpdateCommentDto } from 'src/application/dto/comments/comments.request';
 
+export interface Comment {
+  text: string;
+  userId: number;
+  postId?: number;
+  parentCommentId?: number;
+}
+
 @Entity('comments')
-export class CommentEntity {
+export class CommentEntity implements Comment {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -28,6 +36,15 @@ export class CommentEntity {
 
   @DeleteDateColumn()
   deletedAt: Date;
+
+  @Column()
+  userId: number;
+
+  @Column()
+  postId: number;
+
+  @Column()
+  parentCommentId: number;
 
   @ManyToOne(() => UserEntity, (user) => user.posts)
   user: UserEntity;
@@ -44,6 +61,7 @@ export class CommentEntity {
     () => CommentEntity,
     (commentEntity) => commentEntity.parentComment,
   )
+  @JoinColumn()
   replies: CommentEntity[];
 
   update(commentData: UpdateCommentDto) {
