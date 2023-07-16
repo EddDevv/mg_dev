@@ -34,17 +34,6 @@ export class UpdateCommentDto {
   @IsOptional()
   text?: string;
 
-  @ApiProperty({ example: 1, description: 'The user id' })
-  @IsOptional()
-  userId: number;
-
-  @ApiProperty({ example: 1, description: 'The post id' })
-  @IsOptional()
-  postId?: number;
-
-  @ApiProperty({ example: 1, description: 'The parent comment id' })
-  @IsOptional()
-  parentCommentId?: number;
 }
 
 export class CommentUpdateRequest extends PartialType(UpdateCommentDto) {}
