@@ -68,32 +68,40 @@ export class UserUpdateRequest
       | 'receiveNotifications'
     >
 {
-  @ApiProperty()
+  @ApiProperty( { nullable: true })
+  @IsOptional()
   @IsString()
-  firstName: string;
+  firstName?: string;
 
-  @ApiProperty()
+  @ApiProperty( { nullable: true })
+  @IsOptional()
   @IsString()
-  lastName: string | null;
+  lastName?: string | null;
 
-  @ApiProperty()
+  @ApiProperty( { nullable: true })
+  @IsOptional()
+  @IsOptional()
   @IsPhoneNumber()
-  phoneNumber: string | null;
+  phoneNumber?: string | null;
 
-  @ApiProperty({ enum: GenderEnum })
+  @ApiProperty({ enum: GenderEnum, nullable: true })
+  @IsOptional()
   @IsEnum(GenderEnum)
-  gender: GenderEnum;
+  gender?: GenderEnum;
 
-  @ApiProperty()
+  @ApiProperty( { nullable: true })
+  @IsOptional()
   @IsDate()
-  dateOfBirth: Date | null;
+  dateOfBirth?: Date | null;
 
-  @ApiProperty()
+  @ApiProperty( { nullable: true })
+  @IsOptional()
   @IsEmail()
-  email: string;
+  email?: string;
 
-  @ApiProperty()
+  @ApiProperty( { nullable: true })
+  @IsOptional()
   @IsString()
   @MaxLength(880)
-  description: string | null;
+  description?: string | null;
 }
