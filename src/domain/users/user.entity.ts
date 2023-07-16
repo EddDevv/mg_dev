@@ -9,6 +9,7 @@ export interface IUser {
   firstName: string;
   lastName: string | null;
   description: string | null;
+  dateOfBirth: Date | null;
   gender: GenderEnum;
   role: UserRoleEnum;
   email: string;

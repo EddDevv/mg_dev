@@ -8,7 +8,8 @@ import {
 } from '../../../config/basic.response';
 
 export class User
-  implements Omit<IUser, 'password' | 'subscriptions' | 'subscribers'>
+  implements
+    Omit<IUser, 'password' | 'subscriptions' | 'subscribers' | 'dateOfBirth'>
 {
   @ApiProperty()
   id: number;
