@@ -4,6 +4,7 @@ export const CustomExceptions = {
     NotTheSamePasswords: 'Not the same passwords',
     InvalidCred: 'Invalid credentials',
     InvalidRefresh: 'Invalid refresh token',
+    Unauthorized: 'Unauthorized',
   },
   businessAccount: {
     AlreadyHave: 'You already have a business account',
@@ -11,5 +12,6 @@ export const CustomExceptions = {
   locations: {},
   user: {
     NotFound: 'User not found',
+    NotSelfUpdate: 'Only update yourself',
   },
 };

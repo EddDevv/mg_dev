@@ -1,16 +1,18 @@
 import {
   BadRequestException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
 import { UserRoleEnum } from '../../config/enums/user-role.enum';
-import { UpdateUserDto } from '../../application/dto/users/users.request';
 import { UsersRepository } from '../../infrastructure/repositories/users.repository';
 import {
   User,
   UserResponse,
   UsersListResponse,
 } from '../../application/dto/users/users.response';
+import { CustomExceptions } from '../../config/messages/custom.exceptions';
+import { UserUpdateRequest } from '../../application/dto/users/users.request';
 
 @Injectable()
 export class UserService {
@@ -37,17 +39,22 @@ export class UserService {
 
   async update(
     id: number,
-    updateUserDto: UpdateUserDto,
+    user: User,
+    updateUserDto: UserUpdateRequest,
   ): Promise<UserResponse> {
-    const user = await this.userRepository.findOne({ where: { id } });
-    if (!user) {
-      throw new NotFoundException('User not found');
+    const bdUser = await this.userRepository.findOne({ where: { id } });
+    if (!bdUser) {
+      throw new NotFoundException(CustomExceptions.user.NotFound);
     }
 
-    Object.assign(user, updateUserDto);
-    await this.userRepository.save(user);
+    if (user.id !== bdUser.id) {
+      throw new ForbiddenException(CustomExceptions.user.NotSelfUpdate);
+    }
 
-    return new UserResponse(new User(user));
+    Object.assign(bdUser, updateUserDto);
+    await this.userRepository.save(bdUser);
+
+    return new UserResponse(new User(bdUser));
   }
 
   async updateRole(id: number): Promise<UserResponse> {

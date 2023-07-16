@@ -6,11 +6,14 @@ import {
   IsEnum,
   IsNotEmpty,
   IsOptional,
+  IsPhoneNumber,
   IsString,
+  MaxLength,
   MinLength,
 } from 'class-validator';
 import { GenderEnum } from '../../../config/enums/gender.enum';
 import { PartialType } from '@nestjs/mapped-types';
+import { IUser } from '../../../domain/users/user.entity';
 
 export class UserCreateRequest {
   @ApiProperty({ example: 'John', description: 'The first name of the user' })
@@ -49,81 +52,48 @@ export class UserCreateRequest {
   confirmPassword: string;
 }
 
-export class UpdateUserDto {
-  @ApiProperty({ example: 'John', description: 'The first name of the user' })
-  @IsOptional()
+export class UserUpdateRequest
+  implements
+    Omit<
+      IUser,
+      | 'id'
+      | 'isVerified'
+      | 'role'
+      | 'subscribers'
+      | 'subscriptions'
+      | 'websiteLink'
+      | 'lastOnline'
+      | 'password'
+      | 'onlineStatus'
+      | 'receiveNotifications'
+    >
+{
+  @ApiProperty()
   @IsString()
-  firstName?: string;
+  firstName: string;
 
-  @ApiProperty({ example: 'Doe', description: 'The last name of the user' })
-  @IsOptional()
+  @ApiProperty()
   @IsString()
-  lastName?: string;
+  lastName: string | null;
 
-  @ApiProperty({
-    example: 'My account is the best',
-    description: 'The description of the user account',
-  })
-  @IsOptional()
-  @IsString()
-  description?: string;
+  @ApiProperty()
+  @IsPhoneNumber()
+  phoneNumber: string | null;
 
-  @ApiProperty({
-    example: '1990-01-01',
-    description: 'The date of birth of the user',
-  })
-  @IsOptional()
-  @IsDate()
-  dateOfBirth?: Date;
-
-  @ApiProperty({
-    enum: GenderEnum,
-    default: GenderEnum.NotSpecified,
-    description: 'The gender of the user',
-  })
-  @IsOptional()
+  @ApiProperty({ enum: GenderEnum })
   @IsEnum(GenderEnum)
-  gender?: GenderEnum;
+  gender: GenderEnum;
 
-  @ApiProperty({
-    example: 'john@example.com',
-    description: 'The email address of the user',
-  })
-  @IsOptional()
+  @ApiProperty()
+  @IsDate()
+  dateOfBirth: Date | null;
+
+  @ApiProperty()
   @IsEmail()
-  email?: string;
+  email: string;
 
-  @ApiProperty({
-    example: '123456',
-    description: 'The phone number of the user',
-  })
-  @IsOptional()
+  @ApiProperty()
   @IsString()
-  phoneNumber?: string;
-
-  @ApiProperty({
-    example: 'https://example.com',
-    description: 'The website link of the user',
-  })
-  @IsOptional()
-  @IsString()
-  websiteLink?: string;
-
-  @ApiProperty({
-    example: true,
-    description: 'Indicates whether the user is verified',
-  })
-  @IsOptional()
-  @IsBoolean()
-  isVerified?: boolean;
-
-  @ApiProperty({
-    example: true,
-    description: 'Whether the user wants to receive notifications',
-  })
-  @IsOptional()
-  @IsBoolean()
-  receiveNotifications?: boolean;
+  @MaxLength(880)
+  description: string | null;
 }
-
-export class UserUpdateRequest extends PartialType(UpdateUserDto) {}
