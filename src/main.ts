@@ -9,7 +9,7 @@ async function start() {
   app.useGlobalPipes(new ValidationPipe());
   const config = new DocumentBuilder()
     .setTitle('Masterhub Documentation API')
-    .setVersion('0.0.3')
+    .setVersion('0.0.4')
     .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
