@@ -2,10 +2,12 @@ import { Body, Controller, Headers, Post } from '@nestjs/common';
 import { AuthService } from '../../domain/auth/auth.service';
 import {
   AuthLoginRequest,
+  AuthRefreshRequest,
   AuthRegisterRequest,
 } from '../dto/auth/auth.request';
 import {
   AuthLoginResponse,
+  AuthRefreshResponse,
   AuthRegisterResponse,
 } from '../dto/auth/auth.response';
 import {
@@ -17,6 +19,7 @@ import {
 } from '@nestjs/swagger';
 import { ResponseMessages } from '../../config/messages/response.messages';
 import { CustomExceptions } from '../../config/messages/custom.exceptions';
+import { request } from 'express';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -46,14 +49,13 @@ export class AuthController {
     return this.authService.login(body);
   }
 
-  @ApiOkResponse({ description: ResponseMessages.auth.refreshToken })
+  @ApiOkResponse({
+    type: AuthRefreshResponse,
+    description: ResponseMessages.auth.refreshToken,
+  })
   @ApiBadRequestResponse({ description: CustomExceptions.auth.InvalidRefresh })
   @Post('refresh')
-  refreshToken(
-    @Headers('Authorization') authorizationHeader: string,
-  ): Promise<string> {
-    const token = authorizationHeader.replace('Bearer ', '');
-
-    return this.authService.refreshToken(token);
+  refreshToken(@Body() body: AuthRefreshRequest): Promise<AuthRefreshResponse> {
+    return this.authService.refreshToken(body.token);
   }
 }
