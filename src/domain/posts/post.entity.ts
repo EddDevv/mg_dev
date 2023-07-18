@@ -1,7 +1,8 @@
 import { v4 as uuidv4 } from 'uuid';
 import { BasicEntity } from '../../config/basic.entity';
-import { Column, Entity, ManyToOne } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 import { UserEntity } from '../users/user.entity';
+import { CommentEntity } from '../comments/comment.entity';
 
 export interface IPost {
   shareId: string;
@@ -9,7 +10,7 @@ export interface IPost {
   user: UserEntity;
   userId: number;
   // likes: number;
-  // comments: number;
+  comments: CommentEntity[];
   // views: number;
   // shares: number;
 }
@@ -29,6 +30,9 @@ export class PostEntity extends BasicEntity implements IPost {
 
   @Column()
   userId: number;
+
+  @OneToMany(() => CommentEntity, (comment) => comment.post)
+  comments: CommentEntity[];
 
   constructor(user: UserEntity, userId: number, text: string) {
     super();

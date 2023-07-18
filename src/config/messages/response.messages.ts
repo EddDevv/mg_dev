@@ -1,5 +1,3 @@
-import { Subscription } from '../../application/dto/subscriptions/subscriptions.response';
-
 export const ResponseMessages = {
   auth: {
     register: 'User success registration',
@@ -31,5 +29,12 @@ export const ResponseMessages = {
     findOne: 'Get post data',
     update: 'Success update',
     remove: 'Success remove',
+  },
+  comments: {
+    create: 'Success creation of comment',
+    findAll: 'Get list of comments',
+    findOne: 'Get comment data',
+    update: 'Success updating of comment',
+    remove: 'Success comment remove',
   },
 };

@@ -8,6 +8,7 @@ import { PostsRepository } from 'src/infrastructure/repositories/posts.repositor
 import { UserModule } from '../users/user.module';
 import { BusinessAccountModule } from '../business-accounts/business-accounts.module';
 import { JwtService } from '@nestjs/jwt';
+import { CommentEntity } from '../comments/comment.entity';
 
 @Module({
   imports: [

@@ -3,7 +3,9 @@ import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 import { IPost } from '../../../domain/posts/post.entity';
 import { UserEntity } from '../../../domain/users/user.entity';
 
-export class PostsCreateRequest implements Omit<IPost, 'user' | 'shareId'> {
+export class PostsCreateRequest
+  implements Omit<IPost, 'user' | 'shareId' | 'comments'>
+{
   @ApiProperty({ example: '2', description: 'The user id' })
   @IsNotEmpty()
   userId: number;
@@ -19,7 +21,7 @@ export class PostsCreateRequest implements Omit<IPost, 'user' | 'shareId'> {
 }
 
 export class PostsUpdateRequest
-  implements Omit<IPost, 'userId' | 'user' | 'shareId'>
+  implements Omit<IPost, 'userId' | 'user' | 'shareId' | 'comments'>
 {
   @ApiProperty({
     example:
