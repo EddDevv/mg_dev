@@ -1,9 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { FindManyOptions, FindOneOptions, Repository } from 'typeorm';
-import { BasicRepository } from '../../config/basic-repository.interface';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PostEntity } from 'src/domain/posts/post.entity';
-import { UpdatePostDto } from 'src/application/dto/posts/posts.request';
 
 @Injectable()
 export class PostsRepository {
@@ -16,6 +14,12 @@ export class PostsRepository {
     options: FindManyOptions<PostEntity>,
   ): Promise<PostEntity[] | undefined> {
     return this.repo.find(options);
+  }
+
+  findAndCount(
+    options: FindManyOptions<PostEntity>,
+  ): Promise<[PostEntity[], number]> {
+    return this.repo.findAndCount(options);
   }
 
   findOne(
