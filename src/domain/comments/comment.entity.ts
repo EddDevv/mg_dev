@@ -47,7 +47,7 @@ export class CommentEntity extends BasicEntity implements IComment {
   )
   parentComment: CommentEntity;
 
-  @Column()
+  @Column({ nullable: true })
   parentCommentId: number;
 
   @OneToMany(
