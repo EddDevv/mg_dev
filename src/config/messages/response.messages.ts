@@ -19,17 +19,17 @@ export const ResponseMessages = {
     update: 'Success update',
     remove: 'Success remove',
   },
+  subscriptions: {
+    subscribe: 'Success subscribe',
+    unsubscribe: 'Success unsubscribe',
+    getSubscribers: 'Get list of subscribers',
+    getSubscriptions: 'Get list of subscriptions',
+  },
   posts: {
     create: 'Success creation of post',
     findAll: 'Get list of posts',
     findOne: 'Get post data',
     update: 'Success update',
     remove: 'Success remove',
-    subscriptions: {
-      subscribe: 'Success subscribe',
-      unsubscribe: 'Success unsubscribe',
-      getSubscribers: 'Get list of subscribers',
-      getSubscriptions: 'Get list of subscriptions',
-    },
   },
 };
