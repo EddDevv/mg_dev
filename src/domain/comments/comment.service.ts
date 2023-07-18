@@ -1,13 +1,22 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
 import {
-  CreateCommentDto,
-  UpdateCommentDto,
-} from 'src/application/dto/comments/comments.request';
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CommentsRepository } from 'src/infrastructure/repositories/comments.repository';
 import { PostsRepository } from 'src/infrastructure/repositories/posts.repository';
 import { CommentEntity } from './comment.entity';
 import { UsersRepository } from 'src/infrastructure/repositories/users.repository';
-import { CommentsResponse } from 'src/application/dto/comments/comments.response';
+import {
+  Comment,
+  CommentResponse,
+} from 'src/application/dto/comments/comments.response';
+import {
+  CommentsCreateRequest,
+  CommentsUpdateRequest,
+} from '../../application/dto/comments/comments.request';
+import { User } from '../../application/dto/users/users.response';
+import { CustomExceptions } from '../../config/messages/custom.exceptions';
 
 @Injectable()
 export class CommentsService {
@@ -17,75 +26,77 @@ export class CommentsService {
     private readonly usersRepository: UsersRepository,
   ) {}
 
-  async create(createCommentDto: CreateCommentDto) {
-    const comment = new CommentEntity();
-    comment.text = createCommentDto.text;
-
-    if (createCommentDto.userId) {
-      const user = await this.usersRepository.findOne({
-        where: { id: createCommentDto.userId },
-      });
-      if (!user) {
-        throw new NotFoundException(
-          `User with id ${createCommentDto.userId} not found`,
-        );
-      }
-      comment.user = user;
+  async create(
+    user: User,
+    { postId, text, parentCommentId }: CommentsCreateRequest,
+  ): Promise<CommentResponse> {
+    if (!postId && !parentCommentId) {
+      throw new BadRequestException(CustomExceptions.comments.NotPasteData);
     }
 
-    if (createCommentDto.postId) {
+    const existUser = await this.usersRepository.findOne({
+      where: { id: user.id },
+    });
+
+    const comment: CommentEntity = new CommentEntity(
+      existUser,
+      existUser.id,
+      text,
+    );
+
+    if (postId) {
       const post = await this.postsRepository.findOne({
-        where: { id: createCommentDto.postId },
+        where: { id: postId },
       });
       if (!post) {
-        throw new NotFoundException(
-          `Post with id ${createCommentDto.postId} not found`,
-        );
+        throw new NotFoundException(CustomExceptions.posts.NotFound);
       }
-      comment.post = post;
+      comment.addPostInfo(post);
     }
 
-    if (createCommentDto.parentCommentId) {
+    if (parentCommentId) {
       const parentComment = await this.commentsRepository.findOne({
-        where: { id: createCommentDto.parentCommentId },
+        where: { id: parentCommentId },
       });
       if (!parentComment) {
-        //throw new NotFoundException(`Comment with id ${createCommentDto.parentCommentId} not found`);
+        throw new NotFoundException(CustomExceptions.comments.NotFound);
       }
-      comment.parentComment = parentComment;
+
+      comment.addParentCommentInfo(parentComment);
     }
 
-    this.commentsRepository.save(comment);
-    return new CommentsResponse(comment);
+    await this.commentsRepository.save(comment);
+
+    return new CommentResponse(new Comment(comment));
   }
 
-  async findAll(): Promise<CommentEntity[]> {
-    return this.commentsRepository.find({
-      relations: ['user', 'post', 'replies'],
-    });
-  }
-
-  async findOne(id: number) {
+  async findOne(id: number): Promise<CommentResponse> {
     const comment = await this.commentsRepository.findOne({
       where: { id },
       relations: ['user', 'post', 'replies'],
     });
     if (!comment) {
-      //throw new NotFoundException(`Comment with id ${id} not found`);
+      throw new NotFoundException(CustomExceptions.comments.NotFound);
     }
-    return new CommentsResponse(comment);
+    return new CommentResponse(new Comment(comment));
   }
 
   async update(
     id: number,
-    updateCommentDto: UpdateCommentDto,
-  ): Promise<CommentEntity> {
+    { text }: CommentsUpdateRequest,
+  ): Promise<CommentResponse> {
     const comment = await this.commentsRepository.findOne({
       where: { id: id },
     });
-    //Object.assign(comment, updateCommentDto);
-    comment.update(updateCommentDto);
-    return this.commentsRepository.save(comment);
+
+    if (!comment) {
+      throw new NotFoundException(CustomExceptions.comments.NotFound);
+    }
+    comment.text = text;
+
+    await this.commentsRepository.save(comment);
+
+    return new CommentResponse(new Comment(comment));
   }
 
   async remove(id: number): Promise<void> {

@@ -8,14 +8,10 @@ import { UserEntity } from '../users/user.entity';
 import { CommentsRepository } from 'src/infrastructure/repositories/comments.repository';
 import { PostModule } from '../posts/post.module';
 import { CommentsService } from './comment.service';
-import { CommentsController } from 'src/application/controllers/comment.controller';
+import { CommentsController } from 'src/application/controllers/comments.controller';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([CommentEntity, PostEntity, UserEntity]),
-    UserModule,
-    PostModule,
-  ],
+  imports: [TypeOrmModule.forFeature([CommentEntity]), UserModule, PostModule],
   providers: [CommentsService, CommentsRepository, JwtService],
   controllers: [CommentsController],
   exports: [CommentsService, CommentsRepository],
