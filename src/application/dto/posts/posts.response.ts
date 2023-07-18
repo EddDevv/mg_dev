@@ -1,13 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IPost, PostEntity } from 'src/domain/posts/post.entity';
-import { UserRoleEnum } from 'src/config/enums/user-role.enum';
-import { UserEntity } from 'src/domain/users/user.entity';
 import {
   BasicResponse,
   BasicResponseArray,
 } from '../../../config/basic.response';
+import { Comment } from '../comments/comments.response';
 
-export class Post implements Omit<IPost, 'user' | 'userId'> {
+export class Post implements Omit<IPost, 'user' | 'userId' | 'comments'> {
   @ApiProperty()
   id: number;
 
@@ -18,16 +17,15 @@ export class Post implements Omit<IPost, 'user' | 'userId'> {
   text: string;
 
   @ApiProperty()
+  comments: Comment[];
+
+  @ApiProperty()
   createdAt: Date;
 
   constructor(post: PostEntity) {
     this.id = post.id;
     this.shareId = post.shareId;
     this.text = post.text;
-    this.likes = post.likes;
-    this.commentsCount = post.commentsCount;
-    this.views = post.views;
-    this.shares = post.shares;
   }
 }
 
