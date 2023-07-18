@@ -1,72 +1,76 @@
-import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  ManyToOne,
-  OneToMany,
-  CreateDateColumn,
-  UpdateDateColumn,
-  DeleteDateColumn,
-  JoinColumn,
-} from 'typeorm';
+import { Entity, Column, ManyToOne, OneToMany, JoinColumn } from 'typeorm';
 import { PostEntity } from '../posts/post.entity';
 import { UserEntity } from '../users/user.entity';
-import { UpdateCommentDto } from 'src/application/dto/comments/comments.request';
+import { BasicEntity } from '../../config/basic.entity';
 
-export interface Comment {
+export interface IComment {
+  id: number;
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt: Date;
   text: string;
+  user: UserEntity;
   userId: number;
-  postId?: number;
-  parentCommentId?: number;
+  post: PostEntity;
+  postId: number;
+  parentComment: CommentEntity;
+  parentCommentId: number;
+  childrenComments: CommentEntity[];
 }
 
 @Entity('comments')
-export class CommentEntity implements Comment {
-  @PrimaryGeneratedColumn()
-  id: number;
-
+export class CommentEntity extends BasicEntity implements IComment {
   @Column()
   text: string;
-
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @UpdateDateColumn()
-  updatedAt: Date;
-
-  @DeleteDateColumn()
-  deletedAt: Date;
-
-  @Column()
-  userId: number;
-
-  @Column()
-  postId: number;
-
-  @Column()
-  parentCommentId: number;
 
   @ManyToOne(() => UserEntity, (user) => user.posts)
   user: UserEntity;
 
-  @ManyToOne(() => PostEntity, (post) => post.comments)
+  @Column()
+  userId: number;
+
+  @ManyToOne(() => PostEntity, (post) => post.comments, {
+    nullable: true,
+  })
   post: PostEntity;
 
-  @ManyToOne(() => CommentEntity, (commentEntity) => commentEntity.replies, {
-    onDelete: 'CASCADE',
-  })
+  @Column({ nullable: true })
+  postId: number;
+
+  @ManyToOne(
+    () => CommentEntity,
+    (commentEntity) => commentEntity.childrenComments,
+    {
+      nullable: true,
+      onDelete: 'CASCADE',
+    },
+  )
   parentComment: CommentEntity;
+
+  @Column()
+  parentCommentId: number;
 
   @OneToMany(
     () => CommentEntity,
     (commentEntity) => commentEntity.parentComment,
   )
   @JoinColumn()
-  replies: CommentEntity[];
+  childrenComments: CommentEntity[];
 
-  update(commentData: UpdateCommentDto) {
-    if (commentData.hasOwnProperty('text')) {
-      this.text = commentData.text;
-    }
+  constructor(user: UserEntity, userId: number, text) {
+    super();
+    this.user = user;
+    this.userId = userId;
+    this.text = text;
+  }
+
+  addPostInfo(post: PostEntity) {
+    this.post = post;
+    this.postId = post.id;
+  }
+
+  addParentCommentInfo(parentComment: CommentEntity) {
+    this.parentComment = parentComment;
+    this.parentCommentId = parentComment.id;
   }
 }
