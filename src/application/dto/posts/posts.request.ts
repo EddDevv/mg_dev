@@ -1,7 +1,9 @@
 import { ApiProperty, PartialType } from '@nestjs/swagger';
 import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IPost } from '../../../domain/posts/post.entity';
+import { UserEntity } from '../../../domain/users/user.entity';
 
-export class PostsCreateRequest {
+export class PostsCreateRequest implements Omit<IPost, 'user' | 'shareId'> {
   @ApiProperty({ example: '2', description: 'The user id' })
   @IsNotEmpty()
   userId: number;
@@ -16,39 +18,14 @@ export class PostsCreateRequest {
   text: string;
 }
 
-export class UpdatePostDto {
+export class PostsUpdateRequest
+  implements Omit<IPost, 'userId' | 'user' | 'shareId'>
+{
   @ApiProperty({
     example:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
     description: 'The first name of the user',
   })
   @IsString()
-  text?: string;
-
-  @ApiProperty({ example: 1, description: 'The number of likes' })
-  @IsNumber()
-  likes?: number;
-
-  @ApiProperty({
-    example: 23,
-    description: 'The number of comments',
-  })
-  @IsNumber()
-  commentsCount?: number;
-
-  @ApiProperty({
-    example: 2,
-    description: 'The number of views',
-  })
-  @IsNumber()
-  views?: number;
-
-  @ApiProperty({
-    example: 12,
-    description: 'The number of shares',
-  })
-  @IsNumber()
-  shares?: number;
+  text: string;
 }
-
-export class PostsUpdateRequest extends PartialType(UpdatePostDto) {}

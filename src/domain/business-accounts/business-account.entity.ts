@@ -3,7 +3,7 @@ import { BasicEntity } from '../../config/basic.entity';
 import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
 import { UserEntity } from '../users/user.entity';
 
-export interface BusinessAccount {
+export interface IBusinessAccount {
   id: number;
   businessName: string;
   registrationNumber: string;
@@ -13,7 +13,7 @@ export interface BusinessAccount {
 @Entity('business_account')
 export class BusinessAccountEntity
   extends BasicEntity
-  implements BusinessAccount
+  implements IBusinessAccount
 {
   @ApiProperty({
     example: 'My Business',

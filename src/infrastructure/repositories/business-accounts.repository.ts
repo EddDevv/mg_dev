@@ -19,6 +19,12 @@ export class BusinessAccountsRepository
     return this.repo.find(options);
   }
 
+  findAndCount(
+    options: FindManyOptions<BusinessAccountEntity>,
+  ): Promise<[BusinessAccountEntity[], number]> {
+    return this.repo.findAndCount(options);
+  }
+
   findOne(
     options: FindOneOptions<BusinessAccountEntity>,
   ): Promise<BusinessAccountEntity | undefined> {

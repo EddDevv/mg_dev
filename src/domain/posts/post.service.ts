@@ -4,70 +4,77 @@ import { UsersRepository } from 'src/infrastructure/repositories/users.repositor
 import { PostsRepository } from 'src/infrastructure/repositories/posts.repository';
 import {
   PostsCreateRequest,
-  UpdatePostDto,
+  PostsUpdateRequest,
 } from 'src/application/dto/posts/posts.request';
 import {
-  PostRoleListResponse,
-  PostsResponse,
-  PostsRoleResponse,
+  Post,
+  PostListResponse,
+  PostResponse,
 } from 'src/application/dto/posts/posts.response';
-import { BusinessAccountService } from '../business-accounts/business-accounts.service';
 import { CustomExceptions } from 'src/config/messages/custom.exceptions';
 
 @Injectable()
 export class PostsService {
-
   constructor(
     private readonly postsRepository: PostsRepository,
     private readonly usersRepository: UsersRepository,
-    private readonly businessAccountService: BusinessAccountService,
   ) {}
 
-  async getAllPosts(): Promise<PostRoleListResponse> {
-    const posts = await this.postsRepository.find({
-      relations: ['user', 'user.business'],
-    });
-    return new PostRoleListResponse(posts);
-  }
-
-  async getPostById(id: number): Promise<PostsRoleResponse> {
+  async getPost(id: number): Promise<PostResponse> {
     const post = await this.postsRepository.findOne({
       where: { id },
-      relations: ['user', 'user.business'],
+      relations: ['user'],
     });
     if (!post) {
       throw new NotFoundException(CustomExceptions.posts.NotFound);
     }
-    return new PostsRoleResponse(post);
+
+    return new PostResponse(new Post(post));
   }
 
-  async createPost({
-    userId,
-    text,
-  }: PostsCreateRequest): Promise<PostsResponse> {
-    const user = await this.usersRepository.findOne({ where: { id: userId } })
+  async getAllPosts(userId: number): Promise<PostListResponse> {
+    const [posts, count] = await this.postsRepository.findAndCount({
+      relations: ['user', 'user.business'],
+      where: {
+        userId,
+      },
+    });
+
+    if (count == 0) {
+      return new PostListResponse([], 0);
+    }
+
+    const resPosts = posts.map((post) => {
+      return new Post(post);
+    });
+
+    return new PostListResponse(resPosts, count);
+  }
+
+  async create({ userId, text }: PostsCreateRequest): Promise<PostResponse> {
+    const user = await this.usersRepository.findOne({ where: { id: userId } });
     if (!user) {
       throw new NotFoundException(CustomExceptions.user.NotFound);
     }
 
-    const post = new PostEntity(userId, text);
+    const post = new PostEntity(user, userId, text);
     await this.postsRepository.save(post);
-    return new PostsResponse(post);
+    return new PostResponse(new Post(post));
   }
 
   async update(
     id: number,
-    updatePostDto: UpdatePostDto,
-  ): Promise<PostsResponse> {
+    { text }: PostsUpdateRequest,
+  ): Promise<PostResponse> {
     const post = await this.postsRepository.findOne({ where: { id } });
     if (!post) {
       throw new NotFoundException(CustomExceptions.posts.NotFound);
     }
 
-    post.update(updatePostDto);
+    post.text = text;
     await this.postsRepository.save(post);
 
-    return new PostsResponse(post);
+    return new PostResponse(new Post(post));
   }
 
   async deletePost(id: number): Promise<void> {
@@ -75,6 +82,7 @@ export class PostsService {
     if (!post) {
       throw new NotFoundException(CustomExceptions.posts.NotFound);
     }
+
     await this.postsRepository.softDelete(id);
   }
 }

@@ -1,111 +1,50 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { Post, PostEntity } from 'src/domain/posts/post.entity';
-import { IsOptional } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
+import { IPost, PostEntity } from 'src/domain/posts/post.entity';
 import { UserRoleEnum } from 'src/config/enums/user-role.enum';
 import { UserEntity } from 'src/domain/users/user.entity';
+import {
+  BasicResponse,
+  BasicResponseArray,
+} from '../../../config/basic.response';
 
-export class PostsResponse implements Post {
+export class Post implements Omit<IPost, 'user' | 'userId'> {
   @ApiProperty()
   id: number;
 
   @ApiProperty()
+  shareId: string;
+
+  @ApiProperty()
   text: string;
-
-  @ApiProperty()
-  likes: number;
-
-  @ApiProperty()
-  commentsCount: number;
-
-  @ApiProperty()
-  views: number;
-
-  @ApiProperty()
-  shares: number;
 
   @ApiProperty()
   createdAt: Date;
 
   constructor(post: PostEntity) {
     this.id = post.id;
+    this.shareId = post.shareId;
     this.text = post.text;
     this.likes = post.likes;
     this.commentsCount = post.commentsCount;
     this.views = post.views;
     this.shares = post.shares;
-    this.createdAt = post.createdAt;
   }
 }
 
-export class PostsRoleResponse {
-  @ApiProperty({ type: PostsRoleResponse })
-  post: PostsResponse;
-
-  @ApiProperty({ nullable: true })
-  firstName?: string;
-
-  @ApiProperty({ nullable: true })
-  lastName?: string | null;
-
-  @ApiProperty({ nullable: true })
-  businessName?: string;
-
-  constructor(post: PostEntity) {
-    this.post = new PostsResponse(post);
-
-    const { firstName, lastName, businessName } = this.getUserInfo(post.user);
-    this.firstName = firstName;
-    this.lastName = lastName;
-    this.businessName = businessName;
+export class PostResponse extends BasicResponse<Post> {
+  constructor(post: Post) {
+    super(post);
   }
 
-  private getUserInfo(user: UserEntity | null): {
-    firstName?: string;
-    lastName?: string | null;
-    businessName?: string;
-  } {
-    if (!user) {
-      return {
-        firstName: 'Unknown',
-        lastName: undefined,
-        businessName: undefined,
-      };
-    } else {
-      switch (user.role) {
-        case UserRoleEnum.Business:
-          return {
-            firstName: undefined,
-            lastName: undefined,
-            businessName: user.business.businessName,
-          };
-        case UserRoleEnum.Client:
-          return {
-            firstName: user.firstname,
-            lastName: user.lastName,
-            businessName: undefined,
-          };
-        default:
-          return {
-            firstName: undefined,
-            lastName: undefined,
-            businessName: undefined,
-          };
-      }
-    }
-  }
+  @ApiProperty({ type: Post })
+  item: Post;
 }
 
-export class PostRoleListResponse {
-  @ApiProperty({ type: PostsRoleResponse, isArray: true })
-  posts: PostsRoleResponse[];
-
-  constructor(posts: PostEntity[]) {
-    this.posts = this.makePostsRoleResponse(posts);
+export class PostListResponse extends BasicResponseArray<Post> {
+  constructor(posts: Post[], count: number) {
+    super(posts, count);
   }
 
-  makePostsRoleResponse(posts: PostEntity[]): PostsRoleResponse[] {
-    return posts.map((post) => {
-      return new PostsRoleResponse(post);
-    });
-  }
+  @ApiProperty({ type: Post, isArray: true })
+  items: Post[];
 }
