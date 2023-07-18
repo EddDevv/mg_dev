@@ -6,7 +6,10 @@ import { LocationsModule } from './domain/locations/locations.module';
 import { UserModule } from './domain/users/user.module';
 import { databaseProviders } from './infrastructure/dataSourceOptions';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { PostModule } from './domain/posts/post.module';
 import { SubscriptionsModule } from './domain/subscriptions/subscriptions.module';
+import { CommentModule } from './domain/comments/comment.module';
+
 
 @Module({
   controllers: [],
@@ -21,7 +24,9 @@ import { SubscriptionsModule } from './domain/subscriptions/subscriptions.module
     UserModule,
     BusinessAccountModule,
     LocationsModule,
+    PostModule,
     SubscriptionsModule,
+    CommentModule,
   ],
 })
 export class AppModule {}
