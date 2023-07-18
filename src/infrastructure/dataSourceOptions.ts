@@ -16,6 +16,7 @@ export const databaseProviders: TypeOrmModuleAsyncOptions = {
       database: configService.get<string>('DATABASE_NAME'),
       logging: false,
       synchronize: false,
+      charset: 'utf8',
       name: 'default',
       entities: EntitiesArray,
       migrationsTableName: 'migrations',
