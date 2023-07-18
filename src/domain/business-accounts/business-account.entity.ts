@@ -26,8 +26,8 @@ export class BusinessAccountEntity
     example: '123456789',
     description: 'The registration number of the business',
   })
-  @Column()
-  registrationNumber: string;
+  @Column({ nullable: true })
+  registrationNumber: string | null;
 
   // @ManyToOne(() => UserEntity, (user) => user.businessAccount)
   // user: UserEntity;
@@ -35,9 +35,10 @@ export class BusinessAccountEntity
   @Column()
   userId: number;
 
-  constructor(businessName: string) {
+  constructor(userId: number, businessName: string) {
     super();
     //this.user = user todo user
     this.businessName = businessName;
+    this.userId = userId;
   }
 }
