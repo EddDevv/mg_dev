@@ -1,7 +1,10 @@
-import { ApiProperty, PartialType } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
+import { IsNotEmpty, IsOptional, IsString, MinLength } from 'class-validator';
+import { UserEntity } from '../../../domain/users/user.entity';
+import { PostEntity } from '../../../domain/posts/post.entity';
+import { CommentEntity } from '../../../domain/comments/comment.entity';
 
-export class CreateCommentDto {
+export class CommentsCreateRequest {
   @ApiProperty({
     example:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam',
@@ -10,10 +13,6 @@ export class CreateCommentDto {
   @IsString()
   @IsNotEmpty()
   text: string;
-
-  @ApiProperty({ example: 1, description: 'The user id' })
-  @IsOptional()
-  userId: number;
 
   @ApiProperty({ example: 1, description: 'The post id' })
   @IsOptional()
@@ -24,16 +23,13 @@ export class CreateCommentDto {
   parentCommentId: number;
 }
 
-export class UpdateCommentDto {
+export class CommentsUpdateRequest {
   @ApiProperty({
     example:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam',
     description: 'The first name of the user',
   })
   @IsString()
-  @IsOptional()
-  text?: string;
-
+  @MinLength(1)
+  text: string;
 }
-
-export class CommentUpdateRequest extends PartialType(UpdateCommentDto) {}
