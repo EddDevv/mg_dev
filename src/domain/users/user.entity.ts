@@ -9,14 +9,14 @@ import { CommentEntity } from '../comments/comment.entity';
 
 export interface IUser {
   id: number;
-  firstName: string;
-  lastName: string | null;
-  description: string | null;
-  dateOfBirth: Date | null;
-  gender: GenderEnum;
+  firstName?: string;
+  lastName?: string | null;
+  description?: string | null;
+  dateOfBirth?: Date | null;
+  gender?: GenderEnum;
   role: UserRoleEnum;
-  email: string;
-  phoneNumber: string | null;
+  email?: string;
+  phoneNumber?: string | null;
   password: string;
   websiteLink: string | null;
   isVerified: boolean;
