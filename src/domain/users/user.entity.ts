@@ -1,8 +1,11 @@
 import { GenderEnum } from '../../config/enums/gender.enum';
 import { UserRoleEnum } from '../../config/enums/user-role.enum';
-import { Column, Entity, OneToMany } from 'typeorm';
+import { Column, Entity, OneToMany, OneToOne } from 'typeorm';
 import { BasicEntity } from '../../config/basic.entity';
+import { PostEntity } from '../posts/post.entity';
+import { BusinessAccountEntity } from '../business-accounts/business-account.entity';
 import { SubscriptionsEntity } from '../subscriptions/subscriptions.entity';
+import { CommentEntity } from '../comments/comment.entity';
 
 export interface IUser {
   id: number;
@@ -68,8 +71,17 @@ export class UserEntity extends BasicEntity implements IUser {
   @Column({ default: new Date() })
   lastOnline: Date;
 
+  @OneToMany(() => PostEntity, (post) => post.user)
+  posts: PostEntity[];
+
+  @OneToOne(() => BusinessAccountEntity, (business) => business.user)
+  business: BusinessAccountEntity;
+
   @OneToMany(() => SubscriptionsEntity, (subs) => subs.user)
   subscribers: UserEntity[];
+
+  @OneToMany(() => CommentEntity, (comments) => comments.user)
+  comments: CommentEntity[];
 
   @OneToMany(() => SubscriptionsEntity, (subs) => subs.subscriber)
   subscriptions: UserEntity[];

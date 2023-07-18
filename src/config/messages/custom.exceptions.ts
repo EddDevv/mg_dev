@@ -14,4 +14,11 @@ export const CustomExceptions = {
     NotFound: 'User not found',
     NotSelfUpdate: 'Only update yourself',
   },
+  posts: {
+    NotFound: `Post not found`,
+  },
+  comments: {
+    NotPasteData: 'Not data where paste comment',
+    NotFound: `Comment not found`,
+  },
 };
