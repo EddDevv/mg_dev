@@ -83,6 +83,6 @@ export class PostsService {
       throw new NotFoundException(CustomExceptions.posts.NotFound);
     }
 
-    await this.postsRepository.softDelete(id);
+    await this.postsRepository.softDelete({ id: post.id });
   }
 }
