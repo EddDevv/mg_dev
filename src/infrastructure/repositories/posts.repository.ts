@@ -1,10 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import { FindManyOptions, FindOneOptions, Repository } from 'typeorm';
+import {
+  FindManyOptions,
+  FindOneOptions,
+  FindOptionsWhere,
+  Repository,
+} from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PostEntity } from 'src/domain/posts/post.entity';
+import { BasicRepository } from '../../config/basic-repository.interface';
 
 @Injectable()
-export class PostsRepository {
+export class PostsRepository implements BasicRepository<PostEntity> {
   constructor(
     @InjectRepository(PostEntity)
     private readonly repo: Repository<PostEntity>,
@@ -32,7 +38,7 @@ export class PostsRepository {
     return this.repo.save(data);
   }
 
-  async softDelete(id: number): Promise<void> {
-    await this.repo.softDelete(id);
+  async softDelete(options: FindOptionsWhere<PostEntity>): Promise<void> {
+    await this.repo.softDelete(options);
   }
 }
