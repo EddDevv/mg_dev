@@ -37,4 +37,11 @@ export const ResponseMessages = {
     update: 'Success updating of comment',
     remove: 'Success comment remove',
   },
+  portfolio: {
+    create: 'Success creation of portfolio',
+    findAll: 'Get list of portfolios',
+    findOne: 'Get portfolio data',
+    update: 'Success update',
+    remove: 'Success remove',
+  },
 };

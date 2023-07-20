@@ -1,7 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { BasicEntity } from '../../config/basic.entity';
-import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, OneToMany, OneToOne } from 'typeorm';
 import { UserEntity } from '../users/user.entity';
+import { PortfolioEntity } from '../portfolio/portfolio.entity';
 
 export interface IBusinessAccount {
   id: number;
@@ -35,6 +36,9 @@ export class BusinessAccountEntity
 
   @Column()
   userId: number;
+
+  @OneToMany(() => PortfolioEntity, (portfolio) => portfolio.business)
+  portfolios: PortfolioEntity[];
 
   constructor(businessName: string) {
     super();

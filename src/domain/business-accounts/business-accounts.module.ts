@@ -10,6 +10,6 @@ import { BusinessAccountsRepository } from '../../infrastructure/repositories/bu
   imports: [TypeOrmModule.forFeature([BusinessAccountEntity]), UserModule],
   controllers: [BusinessAccountController],
   providers: [BusinessAccountService, BusinessAccountsRepository],
-  exports: [BusinessAccountService],
+  exports: [BusinessAccountService, BusinessAccountsRepository],
 })
 export class BusinessAccountModule {}
