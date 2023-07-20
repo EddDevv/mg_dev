@@ -100,6 +100,11 @@ export class CommentsService {
   }
 
   async remove(id: number): Promise<void> {
-    await this.commentsRepository.softDelete(id);
+    const comment = await this.commentsRepository.findOne({ where: { id } });
+    if (!comment) {
+      throw new NotFoundException(CustomExceptions.comments.NotFound);
+    }
+
+    await this.commentsRepository.softDelete({ id: comment.id });
   }
 }
