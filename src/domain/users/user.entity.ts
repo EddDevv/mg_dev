@@ -74,7 +74,9 @@ export class UserEntity extends BasicEntity implements IUser {
   @OneToMany(() => PostEntity, (post) => post.user)
   posts: PostEntity[];
 
-  @OneToOne(() => BusinessAccountEntity, (business) => business.user)
+  @OneToOne(() => BusinessAccountEntity, (business) => business.user, {
+    cascade: ['insert', 'update', 'remove', 'soft-remove'],
+  })
   business: BusinessAccountEntity;
 
   @OneToMany(() => SubscriptionsEntity, (subs) => subs.user)
