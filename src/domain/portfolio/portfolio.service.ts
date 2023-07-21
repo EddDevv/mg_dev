@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { PortfolioCreateRequest, PortfolioUpdateRequest } from 'src/application/dto/portfolio/portfolio.request';
+import { PortfolioCreateRequest, PortfolioGetListRequest, PortfolioUpdateRequest } from 'src/application/dto/portfolio/portfolio.request';
 import { CustomExceptions } from 'src/config/messages/custom.exceptions';
 import { BusinessAccountsRepository } from 'src/infrastructure/repositories/business-accounts.repository';
 import { PortfolioRepository } from 'src/infrastructure/repositories/portfolio.repository';
@@ -24,12 +24,12 @@ export class PortfolioService {
     return new PortfolioResponse(new Portfolio(portfolio));
   }
 
-  async getAllPortfolioByBusinessId(
-    businessId: number,
-  ): Promise<PortfolioListResponse> {
+  async getAllPortfolio({
+    businessId,
+  }: PortfolioGetListRequest): Promise<PortfolioListResponse> {
     const [portfolios, count] = await this.portfolioRepository.findAndCount({
       where: {
-        businessId,
+        businessId
       },
     });
 
@@ -75,7 +75,7 @@ export class PortfolioService {
     return new PortfolioResponse(new Portfolio(portfolio));
   }
 
-  async deletePortfolio(id: number): Promise<void> {
+  async delete(id: number): Promise<void> {
     const portfolio = await this.portfolioRepository.findOne({ where: { id } });
     if (!portfolio) {
       throw new NotFoundException(CustomExceptions.portfolio.NotFound);
