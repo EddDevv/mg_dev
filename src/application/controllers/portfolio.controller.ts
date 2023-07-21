@@ -50,7 +50,7 @@ export class PortfolioController {
     type: PortfolioListResponse,
     description: ResponseMessages.portfolio.findAll,
   })
-  @Get('/list')
+  @Get()
   getAllPortfolio(
     @Query() query: PortfolioGetListRequest,
   ): Promise<PortfolioListResponse> {
