@@ -29,6 +29,7 @@ export const ResponseMessages = {
     findOne: 'Get post data',
     update: 'Success update',
     remove: 'Success remove',
+    addView: 'Success added view to post',
   },
   comments: {
     create: 'Success creation of comment',

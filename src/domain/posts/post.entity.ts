@@ -11,7 +11,7 @@ export interface IPost {
   userId: number;
   // likes: number;
   comments: CommentEntity[];
-  // views: number;
+  views: number;
   // shares: number;
 }
 
@@ -33,6 +33,9 @@ export class PostEntity extends BasicEntity implements IPost {
 
   @OneToMany(() => CommentEntity, (comment) => comment.post)
   comments: CommentEntity[];
+
+  @Column({ default: 0 })
+  views: number;
 
   constructor(user: UserEntity, userId: number, text: string) {
     super();
