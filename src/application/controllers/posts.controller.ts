@@ -8,11 +8,14 @@ import {
   Patch,
   UseGuards,
   Req,
+  Query,
 } from '@nestjs/common';
 import { PostsService } from 'src/domain/posts/post.service';
 import {
   PostsAddViewRequest,
   PostsCreateRequest,
+  PostsGetListRequest,
+  PostsGetRequest,
   PostsUpdateRequest,
 } from '../dto/posts/posts.request';
 import { PostListResponse, PostResponse } from '../dto/posts/posts.response';
@@ -43,17 +46,17 @@ export class PostsController {
   })
   @ApiNotFoundResponse({ description: CustomExceptions.posts.NotFound })
   @Get(':id')
-  getPost(@Param('id') id: number): Promise<PostResponse> {
-    return this.postsService.getPost(id);
+  getPost(@Param() param: PostsGetRequest): Promise<PostResponse> {
+    return this.postsService.getPost(param);
   }
 
   @ApiOkResponse({
     type: PostListResponse,
     description: ResponseMessages.posts.findAll,
   })
-  @Get()
-  getAllPosts(@Param('userId') userId: number): Promise<PostListResponse> {
-    return this.postsService.getAllPosts(userId);
+  @Get('/list')
+  getAllPosts(@Query() query: PostsGetListRequest): Promise<PostListResponse> {
+    return this.postsService.getAllPosts(query);
   }
 
   @ApiCreatedResponse({

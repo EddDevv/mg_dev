@@ -5,6 +5,8 @@ import { PostsRepository } from 'src/infrastructure/repositories/posts.repositor
 import {
   PostsAddViewRequest,
   PostsCreateRequest,
+  PostsGetListRequest,
+  PostsGetRequest,
   PostsUpdateRequest,
 } from 'src/application/dto/posts/posts.request';
 import {
@@ -30,7 +32,7 @@ export class PostsService {
     private readonly likesRepository: LikesRepository,
   ) {}
 
-  async getPost(id: number): Promise<PostResponse> {
+  async getPost({ id }: PostsGetRequest): Promise<PostResponse> {
     const post = await this.postsRepository.findOne({
       where: { id },
       relations: ['user'],
@@ -42,7 +44,9 @@ export class PostsService {
     return new PostResponse(new Post(post));
   }
 
-  async getAllPosts(userId: number): Promise<PostListResponse> {
+  async getAllPosts({
+    userId,
+  }: PostsGetListRequest): Promise<PostListResponse> {
     const [posts, count] = await this.postsRepository.findAndCount({
       relations: ['user', 'user.business'],
       where: {

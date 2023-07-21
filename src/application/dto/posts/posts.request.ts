@@ -20,8 +20,19 @@ export class PostsCreateRequest
   text: string;
 }
 
+export class PostsGetRequest {
+  @ApiProperty()
+  id: number;
+}
+
+export class PostsGetListRequest {
+  @ApiProperty()
+  userId: number;
+}
+
 export class PostsUpdateRequest
-  implements Omit<IPost, 'userId' | 'user' | 'shareId' | 'comments' | 'views' | 'likes'>
+  implements
+    Omit<IPost, 'userId' | 'user' | 'shareId' | 'comments' | 'views' | 'likes'>
 {
   @ApiProperty({
     example:
