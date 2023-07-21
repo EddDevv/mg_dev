@@ -27,8 +27,8 @@ export class BusinessAccountEntity
     example: '123456789',
     description: 'The registration number of the business',
   })
-  @Column()
-  registrationNumber: string;
+  @Column({ nullable: true })
+  registrationNumber: string | null;
 
   @OneToOne(() => UserEntity, (user) => user.business)
   @JoinColumn()
@@ -40,9 +40,13 @@ export class BusinessAccountEntity
   @OneToMany(() => PortfolioEntity, (portfolio) => portfolio.business)
   portfolios: PortfolioEntity[];
 
-  constructor(businessName: string) {
+  @OneToMany(() => PortfolioEntity, (portfolio) => portfolio.business)
+  portfolios: PortfolioEntity[];
+
+  constructor(userId: number, businessName: string) {
     super();
     //this.user = user todo user
     this.businessName = businessName;
+    this.userId = userId;
   }
 }
