@@ -6,7 +6,9 @@ import {
 } from '../../../config/basic.response';
 import { Comment } from '../comments/comments.response';
 
-export class Post implements Omit<IPost, 'user' | 'userId' | 'comments'> {
+export class Post
+  implements Omit<IPost, 'user' | 'userId' | 'comments' | 'likes'>
+{
   @ApiProperty()
   id: number;
 
