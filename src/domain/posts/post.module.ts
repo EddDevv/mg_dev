@@ -9,12 +9,14 @@ import { UserModule } from '../users/user.module';
 import { BusinessAccountModule } from '../business-accounts/business-accounts.module';
 import { JwtService } from '@nestjs/jwt';
 import { CommentEntity } from '../comments/comment.entity';
+import { LikesModule } from '../likes/likes.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([PostEntity]),
     UserModule,
     BusinessAccountModule,
+    LikesModule,
   ],
   providers: [PostsService, PostsRepository, JwtService],
   controllers: [PostsController],

@@ -7,6 +7,7 @@ import {
   Post,
   Patch,
   UseGuards,
+  Req,
 } from '@nestjs/common';
 import { PostsService } from 'src/domain/posts/post.service';
 import {
@@ -20,10 +21,15 @@ import {
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiTags,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { CustomExceptions } from 'src/config/messages/custom.exceptions';
 import { AuthGuard } from '../guards/auth.guard';
 import { ResponseMessages } from '../../config/messages/response.messages';
+import { IRequestUser } from '../../config/user-request.interface';
+import { LikePostRequest } from '../dto/likes/likes.request';
+import { JwtGuard } from '../guards/jwt.guard';
+import { LikePost, LikeListPostResponse } from '../dto/likes/likes.response';
 
 @ApiTags('Posts')
 @Controller('posts')
@@ -83,5 +89,27 @@ export class PostsController {
   @Delete(':id')
   deletePost(@Param('id') id: number): Promise<void> {
     return this.postsService.deletePost(id);
+  }
+
+  @ApiOkResponse({ type: LikePost, description: ResponseMessages.posts.like })
+  @ApiUnauthorizedResponse({ description: CustomExceptions.auth.Unauthorized })
+  @ApiNotFoundResponse({ description: CustomExceptions.posts.NotFound })
+  @UseGuards(JwtGuard)
+  @Post('/like')
+  likePost(
+    @Req() { user }: IRequestUser,
+    @Body() body: LikePostRequest,
+  ): Promise<LikePost> {
+    return this.postsService.like(user, body);
+  }
+
+  @ApiOkResponse({
+    type: LikeListPostResponse,
+    description: ResponseMessages.posts.getLikes,
+  })
+  @ApiNotFoundResponse({ description: CustomExceptions.comments.NotFound })
+  @Get('/likes')
+  getLikes(@Param() params: LikePostRequest): Promise<LikeListPostResponse> {
+    return this.postsService.getLikes(params);
   }
 }
