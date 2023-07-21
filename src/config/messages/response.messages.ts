@@ -42,4 +42,11 @@ export const ResponseMessages = {
     like: 'Success comment like',
     getLikes: 'Get comment likes list',
   },
+  portfolio: {
+    create: 'Success creation of portfolio',
+    findAll: 'Get list of portfolios',
+    findOne: 'Get portfolio data',
+    update: 'Success update',
+    remove: 'Success remove',
+  },
 };
