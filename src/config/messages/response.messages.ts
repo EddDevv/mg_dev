@@ -29,6 +29,8 @@ export const ResponseMessages = {
     findOne: 'Get post data',
     update: 'Success update',
     remove: 'Success remove',
+    like: 'Success post like',
+    getLikes: 'Get post likes list',
   },
   comments: {
     create: 'Success creation of comment',
@@ -36,5 +38,7 @@ export const ResponseMessages = {
     findOne: 'Get comment data',
     update: 'Success updating of comment',
     remove: 'Success comment remove',
+    like: 'Success comment like',
+    getLikes: 'Get comment likes list',
   },
 };
