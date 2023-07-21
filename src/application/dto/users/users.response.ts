@@ -8,8 +8,7 @@ import {
 } from '../../../config/basic.response';
 
 export class User
-  implements
-    Omit<IUser, 'password' | 'subscriptions' | 'subscribers' | 'dateOfBirth'>
+  implements Omit<IUser, 'password' | 'subscriptions' | 'subscribers'>
 {
   @ApiProperty()
   id: number;
@@ -28,6 +27,9 @@ export class User
 
   @ApiProperty()
   role: UserRoleEnum;
+
+  @ApiProperty()
+  dateOfBirth: Date;
 
   @ApiProperty()
   email: string;
@@ -58,6 +60,7 @@ export class User
     this.gender = user.gender;
     this.role = user.role;
     this.email = user.email;
+    this.dateOfBirth = user.dateOfBirth;
     this.phoneNumber = user.phoneNumber;
     this.websiteLink = user.websiteLink;
     this.isVerified = user.isVerified;

@@ -6,6 +6,8 @@ import { PostEntity } from 'src/domain/posts/post.entity';
 import { SubscriptionsEntity } from '../domain/subscriptions/subscriptions.entity';
 import { CommentEntity } from 'src/domain/comments/comment.entity';
 import { PortfolioEntity } from 'src/domain/portfolio/portfolio.entity';
+import { LikesEntity } from '../domain/likes/likes.entity';
+
 
 export const EntitiesArray = [
   UserEntity,
@@ -16,4 +18,5 @@ export const EntitiesArray = [
   SubscriptionsEntity,
   CommentEntity,
   PortfolioEntity,
+  LikesEntity,
 ];

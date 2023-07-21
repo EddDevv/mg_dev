@@ -25,6 +25,11 @@ import {
 import { CommentResponse } from '../dto/comments/comments.response';
 import { CustomExceptions } from '../../config/messages/custom.exceptions';
 import { ResponseMessages } from '../../config/messages/response.messages';
+import { LikeCommentRequest } from '../dto/likes/likes.request';
+import {
+  LikeComment,
+  LikeListCommentResponse,
+} from '../dto/likes/likes.response';
 
 @ApiTags('Comments')
 @Controller('comments')
@@ -77,5 +82,32 @@ export class CommentsController {
   @Delete(':id')
   remove(@Param('id') id: string): Promise<void> {
     return this.commentsService.remove(+id);
+  }
+
+  @ApiOkResponse({
+    type: LikeComment,
+    description: ResponseMessages.comments.like,
+  })
+  @ApiUnauthorizedResponse({ description: CustomExceptions.auth.Unauthorized })
+  @ApiNotFoundResponse({ description: CustomExceptions.comments.NotFound })
+  @UseGuards(JwtGuard)
+  @Post('/like')
+  likeComment(
+    @Req() { user }: IRequestUser,
+    @Body() body: LikeCommentRequest,
+  ): Promise<LikeComment> {
+    return this.commentsService.likeComment(user, body);
+  }
+
+  @ApiOkResponse({
+    type: LikeListCommentResponse,
+    description: ResponseMessages.comments.getLikes,
+  })
+  @ApiNotFoundResponse({ description: CustomExceptions.comments.NotFound })
+  @Get('/likes')
+  getLikes(
+    @Param() param: LikeCommentRequest,
+  ): Promise<LikeListCommentResponse> {
+    return this.commentsService.getLikes(param);
   }
 }
