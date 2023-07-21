@@ -24,10 +24,12 @@ export class PortfolioService {
     return new PortfolioResponse(new Portfolio(portfolio));
   }
 
-  async getAllPortfolio(portfolioId: number): Promise<PortfolioListResponse> {
+  async getAllPortfolioByBusinessId(
+    businessId: number,
+  ): Promise<PortfolioListResponse> {
     const [portfolios, count] = await this.portfolioRepository.findAndCount({
       where: {
-        id: portfolioId,
+        businessId,
       },
     });
 

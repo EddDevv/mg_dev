@@ -47,11 +47,11 @@ export class PortfolioController {
     type: PortfolioListResponse,
     description: ResponseMessages.portfolio.findAll,
   })
-  @Get()
-  getAllPosts(
+  @Get('/business/:businessId')
+  getAllPortfolioByBusinessId(
     @Param('businessId') businessId: number,
   ): Promise<PortfolioListResponse> {
-    return this.portfolioService.getAllPortfolio(businessId);
+    return this.portfolioService.getAllPortfolioByBusinessId(businessId);
   }
 
   @ApiCreatedResponse({
@@ -86,7 +86,7 @@ export class PortfolioController {
   @ApiBearerAuth()
   @UseGuards(AuthGuard)
   @Delete(':id')
-  deletePost(@Param('id') id: number): Promise<void> {
+  deletePortfolio(@Param('id') id: number): Promise<void> {
     return this.portfolioService.deletePortfolio(id);
   }
 }
