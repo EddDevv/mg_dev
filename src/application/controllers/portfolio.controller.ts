@@ -7,6 +7,7 @@ import {
   Post,
   Patch,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -14,12 +15,14 @@ import {
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiTags,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { CustomExceptions } from 'src/config/messages/custom.exceptions';
 import { PortfolioService } from 'src/domain/portfolio/portfolio.service';
 import { AuthGuard } from '../guards/auth.guard';
 import {
   PortfolioCreateRequest,
+  PortfolioGetListRequest,
   PortfolioUpdateRequest,
 } from '../dto/portfolio/portfolio.request';
 import { ResponseMessages } from 'src/config/messages/response.messages';
@@ -47,11 +50,11 @@ export class PortfolioController {
     type: PortfolioListResponse,
     description: ResponseMessages.portfolio.findAll,
   })
-  @Get('/business/:businessId')
-  getAllPortfolioByBusinessId(
-    @Param('businessId') businessId: number,
+  @Get('/list')
+  getAllPortfolio(
+    @Query() query: PortfolioGetListRequest,
   ): Promise<PortfolioListResponse> {
-    return this.portfolioService.getAllPortfolioByBusinessId(businessId);
+    return this.portfolioService.getAllPortfolio(query);
   }
 
   @ApiCreatedResponse({
@@ -59,6 +62,7 @@ export class PortfolioController {
     description: ResponseMessages.portfolio.create,
   })
   @ApiNotFoundResponse({ description: CustomExceptions.portfolio.NotFound })
+  @ApiUnauthorizedResponse({ description: CustomExceptions.auth.Unauthorized })
   @Post()
   @ApiBearerAuth()
   @UseGuards(AuthGuard)
@@ -71,6 +75,7 @@ export class PortfolioController {
     description: ResponseMessages.portfolio.update,
   })
   @ApiNotFoundResponse({ description: CustomExceptions.portfolio.NotFound })
+  @ApiUnauthorizedResponse({ description: CustomExceptions.auth.Unauthorized })
   @ApiBearerAuth()
   @UseGuards(AuthGuard)
   @Patch(':id')
@@ -83,10 +88,11 @@ export class PortfolioController {
 
   @ApiOkResponse({ description: ResponseMessages.portfolio.remove })
   @ApiNotFoundResponse({ description: CustomExceptions.portfolio.NotFound })
+  @ApiUnauthorizedResponse({ description: CustomExceptions.auth.Unauthorized })
   @ApiBearerAuth()
   @UseGuards(AuthGuard)
   @Delete(':id')
-  deletePortfolio(@Param('id') id: number): Promise<void> {
-    return this.portfolioService.deletePortfolio(id);
+  delete(@Param('id') id: number): Promise<void> {
+    return this.portfolioService.delete(id);
   }
 }
