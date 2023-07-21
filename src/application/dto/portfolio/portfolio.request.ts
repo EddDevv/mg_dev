@@ -1,7 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString } from 'class-validator';
+import { IPortfolio } from 'src/domain/portfolio/portfolio.entity';
 
-export class PortfolioCreateRequest
+export class PortfolioCreateRequest implements IPortfolio
 {
   @ApiProperty({ example: '2', description: 'The Business id' })
   @IsNotEmpty()
@@ -17,7 +18,7 @@ export class PortfolioCreateRequest
   description: string;
 }
 
-export class PortfolioUpdateRequest
+export class PortfolioUpdateRequest implements Omit<IPortfolio, 'businessId'>
 {
   @ApiProperty({
     example:
@@ -26,4 +27,12 @@ export class PortfolioUpdateRequest
   })
   @IsString()
   description: string;
+}
+
+export class PortfolioGetListRequest
+  implements Omit<IPortfolio, 'description'>
+{
+  @ApiProperty({ example: '2', description: 'The Business id' })
+  @IsNotEmpty()
+  businessId: number;
 }
