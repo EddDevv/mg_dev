@@ -12,15 +12,22 @@ export class PortfolioEntity extends BasicEntity implements IPortfolio {
   @Column()
   description: string;
 
-  @ManyToOne(() => BusinessAccountEntity, (business) => business.portfolios)
+  @ManyToOne(() => BusinessAccountEntity, (business) => business.portfolios, {
+    cascade: ['insert', 'update', 'remove', 'soft-remove'],
+  })
   business: BusinessAccountEntity;
 
   @Column()
   businessId: number;
 
-  constructor(description: string, businessId: number) {
+  constructor(
+    business: BusinessAccountEntity,
+    businessId: number,
+    description: string,
+  ) {
     super();
+    this.business = business;
+    this.businessId = businessId; 
     this.description = description;
-    this.businessId = businessId;
   }
 }

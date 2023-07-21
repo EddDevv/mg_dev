@@ -55,7 +55,11 @@ export class PortfolioService {
       throw new NotFoundException(CustomExceptions.businessAccount.NotFound);
     }
 
-    const portfolio = new PortfolioEntity(description, businessId);
+    const portfolio = new PortfolioEntity(
+      businessAccount,
+      businessId,
+      description,
+    );
     await this.portfolioRepository.save(portfolio);
     return new PortfolioResponse(new Portfolio(portfolio));
   }
