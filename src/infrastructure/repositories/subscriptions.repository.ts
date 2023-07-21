@@ -2,7 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { BasicRepository } from '../../config/basic-repository.interface';
 import { SubscriptionsEntity } from '../../domain/subscriptions/subscriptions.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindManyOptions, FindOneOptions, Repository } from 'typeorm';
+import {
+  FindManyOptions,
+  FindOneOptions,
+  FindOptionsWhere,
+  Repository,
+} from 'typeorm';
 
 @Injectable()
 export class SubscriptionsRepository
@@ -35,7 +40,9 @@ export class SubscriptionsRepository
     return await this.repo.save(data);
   }
 
-  async softRemove(data: SubscriptionsEntity): Promise<void> {
-    await this.repo.softRemove(data);
+  async softDelete(
+    options: FindOptionsWhere<SubscriptionsEntity>,
+  ): Promise<void> {
+    await this.repo.softDelete(options);
   }
 }

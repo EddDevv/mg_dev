@@ -84,7 +84,7 @@ export class SubscriptionsService {
       throw new NotFoundException('Subscription not found.');
     }
 
-    await this.subscriptionsRepository.softRemove(subscription);
+    await this.subscriptionsRepository.softDelete({ id: subscription.id });
   }
 
   async getSubscribers(

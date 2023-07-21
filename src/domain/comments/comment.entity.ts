@@ -2,6 +2,7 @@ import { Entity, Column, ManyToOne, OneToMany, JoinColumn } from 'typeorm';
 import { PostEntity } from '../posts/post.entity';
 import { UserEntity } from '../users/user.entity';
 import { BasicEntity } from '../../config/basic.entity';
+import { LikesEntity } from '../likes/likes.entity';
 
 export interface IComment {
   id: number;
@@ -47,7 +48,7 @@ export class CommentEntity extends BasicEntity implements IComment {
   )
   parentComment: CommentEntity;
 
-  @Column()
+  @Column({ nullable: true })
   parentCommentId: number;
 
   @OneToMany(
@@ -56,6 +57,10 @@ export class CommentEntity extends BasicEntity implements IComment {
   )
   @JoinColumn()
   childrenComments: CommentEntity[];
+
+  @OneToMany(() => LikesEntity, (like) => like.comment)
+  @JoinColumn()
+  likes: LikesEntity[];
 
   constructor(user: UserEntity, userId: number, text) {
     super();

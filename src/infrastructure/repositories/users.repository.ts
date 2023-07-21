@@ -1,5 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { FindManyOptions, FindOneOptions, Repository } from 'typeorm';
+import {
+  FindManyOptions,
+  FindOneOptions,
+  FindOptionsWhere,
+  Repository,
+} from 'typeorm';
 import { UserEntity } from '../../domain/users/user.entity';
 import { BasicRepository } from '../../config/basic-repository.interface';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -27,7 +32,7 @@ export class UsersRepository implements BasicRepository<UserEntity> {
     return this.repo.save(data);
   }
 
-  async softRemove(data: UserEntity): Promise<void> {
-    await this.repo.softRemove(data);
+  async softDelete(options: FindOptionsWhere<UserEntity>): Promise<void> {
+    await this.repo.softDelete(options);
   }
 }

@@ -8,6 +8,7 @@ export const CustomExceptions = {
   },
   businessAccount: {
     AlreadyHave: 'You already have a business account',
+    NotFound: `Business Account not found`,
   },
   locations: {},
   user: {
@@ -20,5 +21,8 @@ export const CustomExceptions = {
   comments: {
     NotPasteData: 'Not data where paste comment',
     NotFound: `Comment not found`,
+  },
+  portfolio: {
+    NotFound: `Portfolio not found`,
   },
 };

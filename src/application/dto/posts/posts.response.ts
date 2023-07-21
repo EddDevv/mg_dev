@@ -5,8 +5,11 @@ import {
   BasicResponseArray,
 } from '../../../config/basic.response';
 import { Comment } from '../comments/comments.response';
+import { User } from '../users/users.response';
 
-export class Post implements Omit<IPost, 'user' | 'userId' | 'comments'> {
+export class Post
+  implements Omit<IPost, 'user' | 'userId' | 'comments' | 'likes'>
+{
   @ApiProperty()
   id: number;
 
@@ -16,8 +19,14 @@ export class Post implements Omit<IPost, 'user' | 'userId' | 'comments'> {
   @ApiProperty()
   text: string;
 
+  @ApiProperty({ type: User })
+  user: User;
+
   @ApiProperty()
   comments: Comment[];
+
+  @ApiProperty()
+  views: number;
 
   @ApiProperty()
   createdAt: Date;
@@ -26,6 +35,8 @@ export class Post implements Omit<IPost, 'user' | 'userId' | 'comments'> {
     this.id = post.id;
     this.shareId = post.shareId;
     this.text = post.text;
+    this.user = new User(post.user);
+    this.views = post.views;
   }
 }
 

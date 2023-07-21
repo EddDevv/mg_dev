@@ -9,6 +9,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { PostModule } from './domain/posts/post.module';
 import { SubscriptionsModule } from './domain/subscriptions/subscriptions.module';
 import { CommentModule } from './domain/comments/comment.module';
+import { PortfolioModule } from './domain/portfolio/portfolio.module';
 
 
 @Module({
@@ -27,6 +28,7 @@ import { CommentModule } from './domain/comments/comment.module';
     PostModule,
     SubscriptionsModule,
     CommentModule,
+    PortfolioModule,
   ],
 })
 export class AppModule {}

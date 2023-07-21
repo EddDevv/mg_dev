@@ -10,7 +10,7 @@ async function start() {
   app.enableCors();
   const config = new DocumentBuilder()
     .setTitle('Masterhub Documentation API')
-    .setVersion('0.0.6')
+    .setVersion('0.0.7')
     .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);

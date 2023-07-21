@@ -4,7 +4,7 @@ import { IPost } from '../../../domain/posts/post.entity';
 import { UserEntity } from '../../../domain/users/user.entity';
 
 export class PostsCreateRequest
-  implements Omit<IPost, 'user' | 'shareId' | 'comments'>
+  implements Omit<IPost, 'user' | 'shareId' | 'comments' | 'views' | 'likes'>
 {
   @ApiProperty({ example: '2', description: 'The user id' })
   @IsNotEmpty()
@@ -20,8 +20,19 @@ export class PostsCreateRequest
   text: string;
 }
 
+export class PostsGetRequest {
+  @ApiProperty()
+  id: number;
+}
+
+export class PostsGetListRequest {
+  @ApiProperty()
+  userId: number;
+}
+
 export class PostsUpdateRequest
-  implements Omit<IPost, 'userId' | 'user' | 'shareId' | 'comments'>
+  implements
+    Omit<IPost, 'userId' | 'user' | 'shareId' | 'comments' | 'views' | 'likes'>
 {
   @ApiProperty({
     example:
@@ -30,4 +41,9 @@ export class PostsUpdateRequest
   })
   @IsString()
   text: string;
+}
+
+export class PostsAddViewRequest {
+  @ApiProperty()
+  id: number;
 }
