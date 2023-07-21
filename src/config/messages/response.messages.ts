@@ -29,6 +29,7 @@ export const ResponseMessages = {
     findOne: 'Get post data',
     update: 'Success update',
     remove: 'Success remove',
+    addView: 'Success added view to post',
     like: 'Success post like',
     getLikes: 'Get post likes list',
   },

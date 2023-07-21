@@ -35,7 +35,7 @@ export class BusinessAccountService {
 
     if (!isBusiness) {
       const businessAccount = await this.businessAccountRepository.save(
-        new BusinessAccountEntity(data.businessName),
+        new BusinessAccountEntity(data.userId, data.businessName),
       );
 
       if (businessAccount) {

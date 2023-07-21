@@ -22,12 +22,16 @@ export class Post
   comments: Comment[];
 
   @ApiProperty()
+  views: number;
+
+  @ApiProperty()
   createdAt: Date;
 
   constructor(post: PostEntity) {
     this.id = post.id;
     this.shareId = post.shareId;
     this.text = post.text;
+    this.views = post.views;
   }
 }
 

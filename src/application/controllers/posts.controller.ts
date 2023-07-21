@@ -11,6 +11,7 @@ import {
 } from '@nestjs/common';
 import { PostsService } from 'src/domain/posts/post.service';
 import {
+  PostsAddViewRequest,
   PostsCreateRequest,
   PostsUpdateRequest,
 } from '../dto/posts/posts.request';
@@ -80,6 +81,15 @@ export class PostsController {
     @Body() body: PostsUpdateRequest,
   ): Promise<PostResponse> {
     return this.postsService.update(id, body);
+  }
+
+  @ApiOkResponse({ description: ResponseMessages.posts.addView })
+  @ApiUnauthorizedResponse({ description: CustomExceptions.auth.Unauthorized })
+  @ApiBearerAuth()
+  @UseGuards(JwtGuard)
+  @Post('/view')
+  addView(@Body() body: PostsAddViewRequest) {
+    return this.postsService.addView(body);
   }
 
   @ApiOkResponse({ description: ResponseMessages.posts.remove })

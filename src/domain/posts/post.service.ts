@@ -3,6 +3,7 @@ import { PostEntity } from './post.entity';
 import { UsersRepository } from 'src/infrastructure/repositories/users.repository';
 import { PostsRepository } from 'src/infrastructure/repositories/posts.repository';
 import {
+  PostsAddViewRequest,
   PostsCreateRequest,
   PostsUpdateRequest,
 } from 'src/application/dto/posts/posts.request';
@@ -69,6 +70,17 @@ export class PostsService {
     const post = new PostEntity(user, userId, text);
     await this.postsRepository.save(post);
     return new PostResponse(new Post(post));
+  }
+
+  async addView({ id }: PostsAddViewRequest): Promise<void> {
+    const post = await this.postsRepository.findOne({ where: { id } });
+    if (!post) {
+      throw new NotFoundException(CustomExceptions.posts.NotFound);
+    }
+
+    post.views += 1;
+
+    await this.postsRepository.save(post);
   }
 
   async update(

@@ -12,7 +12,7 @@ export interface IPost {
   userId: number;
   likes: LikesEntity[];
   comments: CommentEntity[];
-  // views: number;
+  views: number;
   // shares: number;
 }
 
@@ -34,6 +34,9 @@ export class PostEntity extends BasicEntity implements IPost {
 
   @OneToMany(() => CommentEntity, (comment) => comment.post)
   comments: CommentEntity[];
+  
+  @Column({ default: 0 })
+  views: number;
 
   @OneToMany(() => LikesEntity, (like) => like.post)
   @JoinColumn()
