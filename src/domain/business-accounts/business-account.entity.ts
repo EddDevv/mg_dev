@@ -40,9 +40,6 @@ export class BusinessAccountEntity
   @OneToMany(() => PortfolioEntity, (portfolio) => portfolio.business)
   portfolios: PortfolioEntity[];
 
-  @OneToMany(() => PortfolioEntity, (portfolio) => portfolio.business)
-  portfolios: PortfolioEntity[];
-
   constructor(userId: number, businessName: string) {
     super();
     //this.user = user todo user
