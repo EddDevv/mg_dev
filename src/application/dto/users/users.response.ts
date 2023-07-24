@@ -52,6 +52,9 @@ export class User
   @ApiProperty()
   lastOnline: Date;
 
+  @ApiProperty()
+  createdAt: Date;
+
   constructor(user: UserEntity) {
     this.id = user.id;
     this.firstName = user.firstName;
@@ -67,6 +70,7 @@ export class User
     this.receiveNotifications = user.receiveNotifications;
     this.onlineStatus = user.onlineStatus;
     this.lastOnline = user.lastOnline;
+    this.createdAt = user.createdAt;
   }
 }
 
