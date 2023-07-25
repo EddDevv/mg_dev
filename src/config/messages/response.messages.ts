@@ -49,4 +49,11 @@ export const ResponseMessages = {
     update: 'Success update',
     remove: 'Success remove',
   },
+  category: {
+    create: 'Success creation of category',
+    findAll: 'Get list of categories',
+    findOne: 'Get category data',
+    update: 'Success update',
+    remove: 'Success remove',
+  },
 };

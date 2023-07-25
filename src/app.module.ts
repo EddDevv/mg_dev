@@ -10,6 +10,7 @@ import { PostModule } from './domain/posts/post.module';
 import { SubscriptionsModule } from './domain/subscriptions/subscriptions.module';
 import { CommentModule } from './domain/comments/comment.module';
 import { PortfolioModule } from './domain/portfolio/portfolio.module';
+import { CategoriesModule } from './domain/categories/categories.module';
 
 
 @Module({
@@ -29,6 +30,7 @@ import { PortfolioModule } from './domain/portfolio/portfolio.module';
     SubscriptionsModule,
     CommentModule,
     PortfolioModule,
+    CategoriesModule,
   ],
 })
 export class AppModule {}
