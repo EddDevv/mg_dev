@@ -35,9 +35,7 @@ export class CategoriesController {
   })
   @ApiNotFoundResponse({ description: CustomExceptions.category.NotFound })
   @Get(':id')
-  getPortfolio(
-    @Param() param: CategoriesGetRequest,
-  ): Promise<CategoryResponse> {
+  getCategory(@Param() param: CategoriesGetRequest): Promise<CategoryResponse> {
     return this.categoriesService.getCategory(param);
   }
 
@@ -46,7 +44,7 @@ export class CategoriesController {
     description: ResponseMessages.category.findAll,
   })
   @Get()
-  getAllPortfolio(): Promise<CategoryListResponse> {
+  getAllCategories(): Promise<CategoryListResponse> {
     return this.categoriesService.getAllCategories();
   }
 

@@ -13,11 +13,11 @@ export class Category implements ICategory {
   id: number;
 
   @ApiProperty()
-  categoryName: string;
+  title: string;
 
   constructor(category: CategoriesEntity) {
     this.id = category.id;
-    this.categoryName = category.categoryName;
+    this.title = category.title;
   }
 }
 

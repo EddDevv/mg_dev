@@ -1,18 +1,22 @@
 import { BasicEntity } from '../../config/basic.entity';
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, OneToMany } from 'typeorm';
+import { ServicesEntity } from '../services/services.entity';
 
 export interface ICategory {
-  categoryName: string;
+  title: string;
 }
 
 @Entity('categories')
 export class CategoriesEntity extends BasicEntity implements ICategory {
 
   @Column()
-  categoryName: string;
+  title: string;
 
-  constructor(categoryName: string) {
+  @OneToMany(() => ServicesEntity, (service) => service.category)
+  services: ServicesEntity[];
+
+  constructor(title: string) {
     super();
-    this.categoryName = categoryName;
+    this.title = title;
   }
 }

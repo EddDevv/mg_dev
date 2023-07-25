@@ -42,24 +42,22 @@ export class CategoriesService {
     return new CategoryListResponse(resCategories, count);
   }
 
-  async create({
-    categoryName,
-  }: CategoriesCreateRequest): Promise<CategoryResponse> {
-    const category = new CategoriesEntity(categoryName);
+  async create({ title }: CategoriesCreateRequest): Promise<CategoryResponse> {
+    const category = new CategoriesEntity(title);
     await this.categoriesRepository.save(category);
     return new CategoryResponse(new Category(category));
   }
 
   async update(
     id: number,
-    { categoryName }: CategoriesUpdateRequest,
+    { title }: CategoriesUpdateRequest,
   ): Promise<CategoryResponse> {
     const category = await this.categoriesRepository.findOne({ where: { id } });
     if (!category) {
       throw new NotFoundException(CustomExceptions.category.NotFound);
     }
 
-    category.categoryName = categoryName;
+    category.title = title;
     await this.categoriesRepository.save(category);
 
     return new CategoryResponse(new Category(category));

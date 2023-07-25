@@ -56,4 +56,11 @@ export const ResponseMessages = {
     update: 'Success update',
     remove: 'Success remove',
   },
+  service: {
+    create: 'Success creation of service',
+    findAll: 'Get list of services',
+    findOne: 'Get service data',
+    update: 'Success update',
+    remove: 'Success remove',
+  },
 };

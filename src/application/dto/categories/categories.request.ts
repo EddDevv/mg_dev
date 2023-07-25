@@ -11,7 +11,7 @@ export class CategoriesCreateRequest implements ICategory {
   })
   @IsNotEmpty()
   @IsString()
-  categoryName: string;
+  title: string;
 }
 
 export class CategoriesGetRequest {
@@ -25,5 +25,5 @@ export class CategoriesUpdateRequest implements ICategory {
     description: 'The name of category',
   })
   @IsString()
-  categoryName: string;
+  title: string;
 }
