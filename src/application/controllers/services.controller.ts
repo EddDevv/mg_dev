@@ -12,6 +12,7 @@ import {
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiCreatedResponse,
+  ApiTags,
 } from '@nestjs/swagger';
 import { ResponseMessages } from 'src/config/messages/response.messages';
 import { CustomExceptions } from 'src/config/messages/custom.exceptions';
@@ -27,6 +28,7 @@ import {
   ServicesUpdateRequest,
 } from '../dto/services/services.request';
 
+@ApiTags('Services')
 @Controller('services')
 export class ServicesController {
   constructor(private readonly servicesService: ServicesService) {}

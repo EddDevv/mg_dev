@@ -11,6 +11,7 @@ import {
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiCreatedResponse,
+  ApiTags,
 } from '@nestjs/swagger';
 import { CategoriesService } from 'src/domain/categories/categories.service';
 import {
@@ -25,6 +26,7 @@ import {
   CategoriesUpdateRequest,
 } from '../dto/categories/categories.request';
 
+@ApiTags('Categories')
 @Controller('categories')
 export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) { }
