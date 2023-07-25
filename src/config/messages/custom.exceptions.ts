@@ -28,4 +28,7 @@ export const CustomExceptions = {
   category: {
     NotFound: `Category not found`,
   },
+  service: {
+    NotFound: `Service not found`,
+  },
 };

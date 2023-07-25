@@ -6,11 +6,13 @@ import {
   Patch,
   Post,
   Delete,
+  Query,
 } from '@nestjs/common';
 import {
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiCreatedResponse,
+  ApiTags,
 } from '@nestjs/swagger';
 import { CategoriesService } from 'src/domain/categories/categories.service';
 import {
@@ -25,6 +27,7 @@ import {
   CategoriesUpdateRequest,
 } from '../dto/categories/categories.request';
 
+@ApiTags('Categories')
 @Controller('categories')
 export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) { }
@@ -34,19 +37,17 @@ export class CategoriesController {
     description: ResponseMessages.category.findOne,
   })
   @ApiNotFoundResponse({ description: CustomExceptions.category.NotFound })
-  @Get(':id')
-  getPortfolio(
-    @Param() param: CategoriesGetRequest,
-  ): Promise<CategoryResponse> {
-    return this.categoriesService.getCategory(param);
+  @Get()
+  getCategory(@Query() query: CategoriesGetRequest): Promise<CategoryResponse> {
+    return this.categoriesService.getCategory(query);
   }
 
   @ApiOkResponse({
     type: CategoryListResponse,
     description: ResponseMessages.category.findAll,
   })
-  @Get()
-  getAllPortfolio(): Promise<CategoryListResponse> {
+  @Get('list')
+  getAllCategories(): Promise<CategoryListResponse> {
     return this.categoriesService.getAllCategories();
   }
 

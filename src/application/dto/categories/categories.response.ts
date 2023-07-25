@@ -8,16 +8,16 @@ import {
   ICategory,
 } from 'src/domain/categories/categories.entity';
 
-export class Category implements ICategory {
+export class Category implements Omit<ICategory, 'services'> {
   @ApiProperty()
   id: number;
 
   @ApiProperty()
-  categoryName: string;
+  title: string;
 
   constructor(category: CategoriesEntity) {
     this.id = category.id;
-    this.categoryName = category.categoryName;
+    this.title = category.title;
   }
 }
 

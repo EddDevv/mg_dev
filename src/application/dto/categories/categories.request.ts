@@ -4,14 +4,14 @@ import { IPost } from '../../../domain/posts/post.entity';
 import { UserEntity } from '../../../domain/users/user.entity';
 import { ICategory } from 'src/domain/categories/categories.entity';
 
-export class CategoriesCreateRequest implements ICategory {
+export class CategoriesCreateRequest implements Omit<ICategory, 'services'> {
   @ApiProperty({
     example: 'Nails',
     description: 'The name of category',
   })
   @IsNotEmpty()
   @IsString()
-  categoryName: string;
+  title: string;
 }
 
 export class CategoriesGetRequest {
@@ -19,11 +19,11 @@ export class CategoriesGetRequest {
   id: number;
 }
 
-export class CategoriesUpdateRequest implements ICategory {
+export class CategoriesUpdateRequest implements Omit<ICategory, 'services'> {
   @ApiProperty({
     example: 'Nails',
     description: 'The name of category',
   })
   @IsString()
-  categoryName: string;
+  title: string;
 }

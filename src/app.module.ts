@@ -11,6 +11,7 @@ import { SubscriptionsModule } from './domain/subscriptions/subscriptions.module
 import { CommentModule } from './domain/comments/comment.module';
 import { PortfolioModule } from './domain/portfolio/portfolio.module';
 import { CategoriesModule } from './domain/categories/categories.module';
+import { ServicesModule } from './domain/services/services.module';
 
 
 @Module({
@@ -31,6 +32,7 @@ import { CategoriesModule } from './domain/categories/categories.module';
     CommentModule,
     PortfolioModule,
     CategoriesModule,
+    ServicesModule,
   ],
 })
 export class AppModule {}
