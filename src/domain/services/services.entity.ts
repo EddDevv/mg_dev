@@ -5,6 +5,7 @@ import { CategoriesEntity } from '../categories/categories.entity';
 export interface IService {
   title?: string;
   categoryId?: number;
+  category: CategoriesEntity;
 }
 
 @Entity('services')

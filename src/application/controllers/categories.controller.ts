@@ -6,6 +6,7 @@ import {
   Patch,
   Post,
   Delete,
+  Query,
 } from '@nestjs/common';
 import {
   ApiNotFoundResponse,
@@ -36,16 +37,16 @@ export class CategoriesController {
     description: ResponseMessages.category.findOne,
   })
   @ApiNotFoundResponse({ description: CustomExceptions.category.NotFound })
-  @Get(':id')
-  getCategory(@Param() param: CategoriesGetRequest): Promise<CategoryResponse> {
-    return this.categoriesService.getCategory(param);
+  @Get()
+  getCategory(@Query() query: CategoriesGetRequest): Promise<CategoryResponse> {
+    return this.categoriesService.getCategory(query);
   }
 
   @ApiOkResponse({
     type: CategoryListResponse,
     description: ResponseMessages.category.findAll,
   })
-  @Get()
+  @Get('list')
   getAllCategories(): Promise<CategoryListResponse> {
     return this.categoriesService.getAllCategories();
   }

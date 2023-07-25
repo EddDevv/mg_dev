@@ -8,7 +8,7 @@ import {
   ICategory,
 } from 'src/domain/categories/categories.entity';
 
-export class Category implements ICategory {
+export class Category implements Omit<ICategory, 'services'> {
   @ApiProperty()
   id: number;
 

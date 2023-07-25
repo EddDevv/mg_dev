@@ -38,7 +38,7 @@ export class ServicesController {
     description: ResponseMessages.service.findOne,
   })
   @ApiNotFoundResponse({ description: CustomExceptions.service.NotFound })
-  @Get(':id')
+  @Get()
   getService(@Param() param: ServicesGetRequest): Promise<ServiceResponse> {
     return this.servicesService.getService(param);
   }
@@ -47,7 +47,7 @@ export class ServicesController {
     type: ServiceListResponse,
     description: ResponseMessages.service.findAll,
   })
-  @Get()
+  @Get('list')
   getAllServices(
     @Query() query: ServicesGetListRequest,
   ): Promise<ServiceListResponse> {

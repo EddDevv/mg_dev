@@ -6,7 +6,7 @@ import {
 import { IService, ServicesEntity } from 'src/domain/services/services.entity';
 import { Category } from '../categories/categories.response';
 
-export class Service implements IService {
+export class Service implements Omit<IService, 'category'> {
   @ApiProperty()
   id: number;
 
