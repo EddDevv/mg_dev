@@ -25,4 +25,10 @@ export const CustomExceptions = {
   portfolio: {
     NotFound: `Portfolio not found`,
   },
+  category: {
+    NotFound: `Category not found`,
+  },
+  service: {
+    NotFound: `Service not found`,
+  },
 };
