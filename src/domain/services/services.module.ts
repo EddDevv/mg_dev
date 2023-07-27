@@ -10,6 +10,6 @@ import { ServicesRepository } from 'src/infrastructure/repositories/services.rep
   imports: [TypeOrmModule.forFeature([ServicesEntity]), CategoriesModule],
   controllers: [ServicesController],
   providers: [ServicesService, ServicesRepository],
-  exports: [ServicesService],
+  exports: [ServicesService, ServicesRepository],
 })
 export class ServicesModule {}

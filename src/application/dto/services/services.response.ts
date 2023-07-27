@@ -4,22 +4,21 @@ import {
   BasicResponseArray,
 } from '../../../config/basic.response';
 import { IService, ServicesEntity } from 'src/domain/services/services.entity';
-import { Category } from '../categories/categories.response';
 
-export class Service implements Omit<IService, 'category'> {
+export class Service implements Omit<IService, 'category' | 'portfolios'> {
   @ApiProperty()
   id: number;
 
   @ApiProperty()
   title: string;
 
-  @ApiProperty({ type: Category })
-  category: Category;
+  @ApiProperty()
+  categoryId: number;
 
   constructor(service: ServicesEntity) {
     this.id = service.id;
     this.title = service.title;
-    this.category = new Category(service.category);
+    this.categoryId = service.categoryId;
   }
 }
 

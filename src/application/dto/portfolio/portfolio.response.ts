@@ -7,8 +7,16 @@ import {
   IPortfolio,
   PortfolioEntity,
 } from 'src/domain/portfolio/portfolio.entity';
+import { Category } from '../categories/categories.response';
+import { Service } from '../services/services.response';
 
-export class Portfolio implements IPortfolio {
+export class Portfolio
+  implements
+    Omit<
+      IPortfolio,
+      'business' | 'category' | 'service' | 'categoryId' | 'serviceId'
+    >
+{
   @ApiProperty()
   id: number;
 
@@ -18,10 +26,18 @@ export class Portfolio implements IPortfolio {
   @ApiProperty()
   businessId: number;
 
+  @ApiProperty()
+  category: Category;
+
+  @ApiProperty()
+  service: Service;
+
   constructor(portfolio: PortfolioEntity) {
     this.id = portfolio.id;
     this.description = portfolio.description;
     this.businessId = portfolio.businessId;
+    this.category = new Category(portfolio.category);
+    this.service = new Service(portfolio.service);
   }
 }
 
