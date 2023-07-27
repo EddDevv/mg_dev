@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   Patch,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -16,7 +17,7 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { UserUpdateRequest } from '../dto/users/users.request';
+import { UserGetRequest, UserUpdateRequest } from '../dto/users/users.request';
 import {
   User,
   UserResponse,
@@ -36,7 +37,7 @@ export class UserController {
     type: UsersListResponse,
     description: ResponseMessages.user.findAll,
   })
-  @Get()
+  @Get('/list')
   findAll(): Promise<UsersListResponse> {
     return this.userService.findAll();
   }
@@ -45,9 +46,9 @@ export class UserController {
     type: User,
     description: ResponseMessages.user.findOne,
   })
-  @Get(':id')
-  findOne(@Param('id') id: string): Promise<UserResponse> {
-    return this.userService.findOne(+id);
+  @Get()
+  findOne(@Query() query: UserGetRequest): Promise<UserResponse> {
+    return this.userService.findOne(query);
   }
 
   @ApiOkResponse({

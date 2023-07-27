@@ -6,6 +6,7 @@ import {
 import { UserService } from 'src/domain/users/user.service';
 import {
   BusinessAccountsCreateRequest,
+  BusinessAccountsGetRequest,
   BusinessAccountsUpdateRequest,
 } from '../../application/dto/business-accounts/business-accounts.request';
 import { BusinessAccountsRepository } from '../../infrastructure/repositories/business-accounts.repository';
@@ -63,7 +64,9 @@ export class BusinessAccountService {
     return new BusinessAccountsListResponse(accountsResponse, count);
   }
 
-  async findOne(id: number): Promise<BusinessAccountResponse> {
+  async findOne({
+    id,
+  }: BusinessAccountsGetRequest): Promise<BusinessAccountResponse> {
     const businessAccount = await this.businessAccountRepository.findOne({
       where: { id },
     });

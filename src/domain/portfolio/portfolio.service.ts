@@ -5,6 +5,7 @@ import { BusinessAccountsRepository } from 'src/infrastructure/repositories/busi
 import { PortfolioRepository } from 'src/infrastructure/repositories/portfolio.repository';
 import { PortfolioEntity } from './portfolio.entity';
 import { Portfolio, PortfolioListResponse, PortfolioResponse } from 'src/application/dto/portfolio/portfolio.response';
+import { PostsGetRequest } from 'src/application/dto/posts/posts.request';
 
 @Injectable()
 export class PortfolioService {
@@ -13,7 +14,7 @@ export class PortfolioService {
     private readonly businessAccountsRepository: BusinessAccountsRepository,
   ) {}
 
-  async getPortfolio(id: number): Promise<PortfolioResponse> {
+  async getPortfolio({ id }: PostsGetRequest): Promise<PortfolioResponse> {
     const portfolio = await this.portfolioRepository.findOne({
       where: { id },
     });

@@ -29,10 +29,14 @@ export class PortfolioUpdateRequest implements Omit<IPortfolio, 'businessId'>
   description: string;
 }
 
+export class PortfolioGetRequest
+{
+  @ApiProperty({ example: '2', description: 'The Portfolio id' })
+  id: number;
+}
+
 export class PortfolioGetListRequest
-  implements Omit<IPortfolio, 'description'>
 {
   @ApiProperty({ example: '2', description: 'The Business id' })
-  @IsNotEmpty()
   businessId: number;
 }

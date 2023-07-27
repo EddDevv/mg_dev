@@ -12,7 +12,10 @@ import {
   UsersListResponse,
 } from '../../application/dto/users/users.response';
 import { CustomExceptions } from '../../config/messages/custom.exceptions';
-import { UserUpdateRequest } from '../../application/dto/users/users.request';
+import {
+  UserGetRequest,
+  UserUpdateRequest,
+} from '../../application/dto/users/users.request';
 
 @Injectable()
 export class UserService {
@@ -28,7 +31,7 @@ export class UserService {
     return new UsersListResponse(resUser, 0);
   }
 
-  async findOne(id: number): Promise<UserResponse> {
+  async findOne({ id }: UserGetRequest): Promise<UserResponse> {
     const user = await this.userRepository.findOne({ where: { id } });
     if (!user) {
       throw new NotFoundException('User not found');

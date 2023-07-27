@@ -45,9 +45,9 @@ export class PostsController {
     description: ResponseMessages.posts.findOne,
   })
   @ApiNotFoundResponse({ description: CustomExceptions.posts.NotFound })
-  @Get(':id')
-  getPost(@Param() param: PostsGetRequest): Promise<PostResponse> {
-    return this.postsService.getPost(param);
+  @Get()
+  getPost(@Query() query: PostsGetRequest): Promise<PostResponse> {
+    return this.postsService.getPost(query);
   }
 
   @ApiOkResponse({
@@ -122,7 +122,7 @@ export class PostsController {
   })
   @ApiNotFoundResponse({ description: CustomExceptions.comments.NotFound })
   @Get('/likes')
-  getLikes(@Param() params: LikePostRequest): Promise<LikeListPostResponse> {
-    return this.postsService.getLikes(params);
+  getLikes(@Query() query: LikePostRequest): Promise<LikeListPostResponse> {
+    return this.postsService.getLikes(query);
   }
 }

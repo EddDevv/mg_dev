@@ -8,10 +8,12 @@ import {
   Patch,
   UseGuards,
   Req,
+  Query,
 } from '@nestjs/common';
 import { CommentsService } from 'src/domain/comments/comment.service';
 import {
   CommentsCreateRequest,
+  CommentsGetRequest,
   CommentsUpdateRequest,
 } from '../dto/comments/comments.request';
 import { JwtGuard } from '../guards/jwt.guard';
@@ -56,9 +58,9 @@ export class CommentsController {
     description: ResponseMessages.comments.findOne,
   })
   @ApiNotFoundResponse({ description: CustomExceptions.comments.NotFound })
-  @Get(':id')
-  findOne(@Param('id') id: string): Promise<CommentResponse> {
-    return this.commentsService.findOne(+id);
+  @Get()
+  findOne(@Query() query: CommentsGetRequest): Promise<CommentResponse> {
+    return this.commentsService.findOne(query);
   }
 
   @ApiOkResponse({
@@ -106,8 +108,8 @@ export class CommentsController {
   @ApiNotFoundResponse({ description: CustomExceptions.comments.NotFound })
   @Get('/likes')
   getLikes(
-    @Param() param: LikeCommentRequest,
+    @Query() query: LikeCommentRequest,
   ): Promise<LikeListCommentResponse> {
-    return this.commentsService.getLikes(param);
+    return this.commentsService.getLikes(query);
   }
 }

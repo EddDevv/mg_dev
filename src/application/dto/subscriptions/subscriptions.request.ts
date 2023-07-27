@@ -16,3 +16,8 @@ export class SubscriptionsUnsubscribeRequest {
   @IsNumber()
   userId: number;
 }
+
+export class SubscriptionsGetRequest {
+  @ApiProperty()
+  userId: number;
+}

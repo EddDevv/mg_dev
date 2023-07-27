@@ -5,6 +5,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import {
+  SubscriptionsGetRequest,
   SubscriptionsSubscribeRequest,
   SubscriptionsUnsubscribeRequest,
 } from '../../application/dto/subscriptions/subscriptions.request';
@@ -87,9 +88,9 @@ export class SubscriptionsService {
     await this.subscriptionsRepository.softDelete({ id: subscription.id });
   }
 
-  async getSubscribers(
-    userId: number,
-  ): Promise<SubscriptionsGetSubscribersResponse> {
+  async getSubscribers({
+    userId,
+  }: SubscriptionsGetRequest): Promise<SubscriptionsGetSubscribersResponse> {
     const [subs, count]: [SubscriptionsEntity[], number] =
       await this.subscriptionsRepository.findAndCount({
         where: {
@@ -109,7 +110,9 @@ export class SubscriptionsService {
     return new SubscriptionsGetSubscribersResponse(subscribers, count);
   }
 
-  async getSubscriptions(userId: number): Promise<SubscriptionsGetResponse> {
+  async getSubscriptions({
+    userId,
+  }: SubscriptionsGetRequest): Promise<SubscriptionsGetResponse> {
     const [subs, count] = await this.subscriptionsRepository.findAndCount({
       where: {
         subscriberId: userId,

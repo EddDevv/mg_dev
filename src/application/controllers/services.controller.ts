@@ -47,7 +47,7 @@ export class ServicesController {
     type: ServiceListResponse,
     description: ResponseMessages.service.findAll,
   })
-  @Get('list')
+  @Get('/list')
   getAllServices(
     @Query() query: ServicesGetListRequest,
   ): Promise<ServiceListResponse> {
