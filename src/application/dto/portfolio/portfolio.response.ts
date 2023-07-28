@@ -26,10 +26,10 @@ export class Portfolio
   @ApiProperty()
   businessId: number;
 
-  @ApiProperty()
+  @ApiProperty({ type: Category })
   category: Category;
 
-  @ApiProperty()
+  @ApiProperty({ type: Service })
   service: Service;
 
   constructor(portfolio: PortfolioEntity) {
