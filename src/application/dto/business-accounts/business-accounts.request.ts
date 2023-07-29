@@ -15,3 +15,8 @@ export class BusinessAccountsCreateRequest {
 export class BusinessAccountsUpdateRequest extends PartialType(
   BusinessAccountsCreateRequest,
 ) {}
+
+export class BusinessAccountsGetRequest {
+  @ApiProperty()
+  id: number;
+}

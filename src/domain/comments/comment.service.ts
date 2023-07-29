@@ -13,6 +13,7 @@ import {
 } from 'src/application/dto/comments/comments.response';
 import {
   CommentsCreateRequest,
+  CommentsGetRequest,
   CommentsUpdateRequest,
 } from '../../application/dto/comments/comments.request';
 import { User } from '../../application/dto/users/users.response';
@@ -79,10 +80,10 @@ export class CommentsService {
     return new CommentResponse(new Comment(comment));
   }
 
-  async findOne(id: number): Promise<CommentResponse> {
+  async findOne({ id }: CommentsGetRequest): Promise<CommentResponse> {
     const comment = await this.commentsRepository.findOne({
       where: { id },
-      relations: ['user', 'post', 'replies'],
+      relations: ['user', 'post'], //'replies'],
     });
     if (!comment) {
       throw new NotFoundException(CustomExceptions.comments.NotFound);

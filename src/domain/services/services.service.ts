@@ -25,7 +25,6 @@ export class ServicesService {
   async getService({ id }: ServicesGetRequest): Promise<ServiceResponse> {
     const service = await this.servicesRepository.findOne({
       where: { id },
-      relations: ['category'],
     });
     if (!service) {
       throw new NotFoundException(CustomExceptions.service.NotFound);
@@ -38,7 +37,6 @@ export class ServicesService {
     categoryId,
   }: ServicesGetListRequest): Promise<ServiceListResponse> {
     const [services, count] = await this.servicesRepository.findAndCount({
-      relations: ['category'],
       where: {
         categoryId,
       },

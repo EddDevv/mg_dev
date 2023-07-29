@@ -4,6 +4,7 @@ import {
   Get,
   Param,
   Post,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -16,6 +17,7 @@ import {
 } from '@nestjs/swagger';
 import { SubscriptionsService } from '../../domain/subscriptions/subscriptions.service';
 import {
+  SubscriptionsGetRequest,
   SubscriptionsSubscribeRequest,
   SubscriptionsUnsubscribeRequest,
 } from '../dto/subscriptions/subscriptions.request';
@@ -64,21 +66,21 @@ export class SubscriptionsController {
     type: SubscriptionsGetSubscribersResponse,
     description: ResponseMessages.subscriptions.getSubscribers,
   })
-  @Get('/subscribers/:userId')
+  @Get('/subscribers')
   getSubscribers(
-    @Param('userId') userId: number,
+    @Query() query: SubscriptionsGetRequest,
   ): Promise<SubscriptionsGetSubscribersResponse> {
-    return this.subscriptionService.getSubscribers(userId);
+    return this.subscriptionService.getSubscribers(query);
   }
 
   @ApiOkResponse({
     type: SubscriptionsGetResponse,
     description: ResponseMessages.subscriptions.getSubscriptions,
   })
-  @Get('/:userId')
+  @Get()
   getSubscriptions(
-    @Param('userId') userId: number,
+    @Query() query: SubscriptionsGetRequest,
   ): Promise<SubscriptionsGetResponse> {
-    return this.subscriptionService.getSubscriptions(userId);
+    return this.subscriptionService.getSubscriptions(query);
   }
 }

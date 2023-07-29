@@ -46,7 +46,7 @@ export class CategoriesController {
     type: CategoryListResponse,
     description: ResponseMessages.category.findAll,
   })
-  @Get('list')
+  @Get('/list')
   getAllCategories(): Promise<CategoryListResponse> {
     return this.categoriesService.getAllCategories();
   }
