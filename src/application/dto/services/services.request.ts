@@ -2,7 +2,9 @@ import { ApiProperty, PartialType } from '@nestjs/swagger';
 import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 import { IService } from 'src/domain/services/services.entity';
 
-export class ServicesCreateRequest implements Omit<IService, 'category'> {
+export class ServicesCreateRequest
+  implements Omit<IService, 'category' | 'portfolios'>
+{
   @ApiProperty({ example: '2', description: 'The category id' })
   @IsNotEmpty()
   categoryId: number;
@@ -26,7 +28,8 @@ export class ServicesGetListRequest {
   categoryId: number;
 }
 
-export class ServicesUpdateRequest implements Omit<IService, 'category'>
+export class ServicesUpdateRequest
+  implements Omit<IService, 'category' | 'portfolios'>
 {
 
   @ApiProperty({ example: '2', description: 'The category id', nullable: true })

@@ -4,7 +4,9 @@ import { IPost } from '../../../domain/posts/post.entity';
 import { UserEntity } from '../../../domain/users/user.entity';
 import { ICategory } from 'src/domain/categories/categories.entity';
 
-export class CategoriesCreateRequest implements Omit<ICategory, 'services'> {
+export class CategoriesCreateRequest
+  implements Omit<ICategory, 'services' | 'portfolios'>
+{
   @ApiProperty({
     example: 'Nails',
     description: 'The name of category',
@@ -19,7 +21,9 @@ export class CategoriesGetRequest {
   id: number;
 }
 
-export class CategoriesUpdateRequest implements Omit<ICategory, 'services'> {
+export class CategoriesUpdateRequest
+  implements Omit<ICategory, 'services' | 'portfolios'>
+{
   @ApiProperty({
     example: 'Nails',
     description: 'The name of category',
