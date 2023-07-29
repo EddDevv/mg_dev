@@ -39,6 +39,7 @@
     "class-validator": "^0.14.0",
     "cookie-parser": "^1.4.6",
     "cross-env": "^7.0.3",
+    "nestjs-redoc": "^2.2.2",
     "pg": "^8.11.1",
     "pg-hstore": "^2.3.4",
     "pm2": "^5.3.0",
