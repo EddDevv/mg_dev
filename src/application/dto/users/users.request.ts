@@ -52,6 +52,11 @@ export class UserCreateRequest {
   confirmPassword: string;
 }
 
+export class UserGetRequest {
+  @ApiProperty()
+  id: number;
+}
+
 export class UserUpdateRequest
   implements
     Omit<

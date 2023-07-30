@@ -1,7 +1,8 @@
-import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { BusinessAccountService } from '../../domain/business-accounts/business-accounts.service';
 import {
   BusinessAccountsCreateRequest,
+  BusinessAccountsGetRequest,
   BusinessAccountsUpdateRequest,
 } from '../dto/business-accounts/business-accounts.request';
 import { User, UserResponse } from '../dto/users/users.response';
@@ -42,7 +43,7 @@ export class BusinessAccountController {
     type: BusinessAccountsListResponse,
     description: ResponseMessages.businessAccount.findAll,
   })
-  @Get()
+  @Get('/list')
   findAll(): Promise<BusinessAccountsListResponse> {
     return this.businessAccountService.findAll();
   }
@@ -52,9 +53,11 @@ export class BusinessAccountController {
     description: ResponseMessages.businessAccount.findOne,
   })
   @ApiNotFoundResponse({ description: CustomExceptions.user.NotFound })
-  @Get(':id')
-  findOne(@Param('id') id: string): Promise<BusinessAccountResponse> {
-    return this.businessAccountService.findOne(+id);
+  @Get()
+  findOne(
+    @Query() query: BusinessAccountsGetRequest,
+  ): Promise<BusinessAccountResponse> {
+    return this.businessAccountService.findOne(query);
   }
 
   @ApiOkResponse({ description: ResponseMessages.businessAccount.update })

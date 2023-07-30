@@ -23,6 +23,7 @@ import { AuthGuard } from '../guards/auth.guard';
 import {
   PortfolioCreateRequest,
   PortfolioGetListRequest,
+  PortfolioGetRequest,
   PortfolioUpdateRequest,
 } from '../dto/portfolio/portfolio.request';
 import { ResponseMessages } from 'src/config/messages/response.messages';
@@ -41,16 +42,18 @@ export class PortfolioController {
     description: ResponseMessages.portfolio.findOne,
   })
   @ApiNotFoundResponse({ description: CustomExceptions.portfolio.NotFound })
-  @Get(':id')
-  getPortfolio(@Param('id') id: number): Promise<PortfolioResponse> {
-    return this.portfolioService.getPortfolio(id);
+  @Get()
+  getPortfolio(
+    @Query() query: PortfolioGetRequest,
+  ): Promise<PortfolioResponse> {
+    return this.portfolioService.getPortfolio(query);
   }
 
   @ApiOkResponse({
     type: PortfolioListResponse,
     description: ResponseMessages.portfolio.findAll,
   })
-  @Get()
+  @Get('/list')
   getAllPortfolio(
     @Query() query: PortfolioGetListRequest,
   ): Promise<PortfolioListResponse> {

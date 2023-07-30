@@ -23,6 +23,11 @@ export class CommentsCreateRequest {
   parentCommentId: number;
 }
 
+export class CommentsGetRequest {
+  @ApiProperty()
+  id: number;
+}
+
 export class CommentsUpdateRequest {
   @ApiProperty({
     example:
