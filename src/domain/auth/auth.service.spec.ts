@@ -20,14 +20,15 @@ import { BadRequestException, NotFoundException } from '@nestjs/common';
 describe('AuthService (unit)', () => {
   let authService: AuthService;
 
-  const mockUserDatabase: UserEntity[] = [
-    new UserEntity(
-      'TestFirstName',
-      'TestLastName',
-      'test@test.ru',
-      '$2a$10$PwBnARXX49Iqg9HZ.ldwpukZcdJGRRrVEjowgSp.iKUeH.aJh8rb6',
-    ),
-  ];
+  const mockUserEntity: UserEntity = new UserEntity(
+    'TestFirstName',
+    'TestLastName',
+    'test@test.ru',
+    '$2a$10$PwBnARXX49Iqg9HZ.ldwpukZcdJGRRrVEjowgSp.iKUeH.aJh8rb6',
+  );
+  mockUserEntity.id = 1;
+
+  const mockUserDatabase: UserEntity[] = [mockUserEntity];
 
   const mockUserRepository = {
     save: jest.fn((dto: AuthRegisterRequest): UserEntity => {
@@ -37,7 +38,7 @@ describe('AuthService (unit)', () => {
     findOne: jest.fn(async (data) => {
       const response = mockUserDatabase.map((user) => {
         if (data.where.id) {
-          if (data.where.id == 1) {
+          if (data.where.id == user.id) {
             return user;
           }
         }
