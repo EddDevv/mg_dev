@@ -18,18 +18,23 @@ import { BadRequestException, NotFoundException } from '@nestjs/common';
 describe('BusinessAccountService (unit)', () => {
   let businessAccountService: BusinessAccountService;
 
+  const mockBusinessAccountEntity: BusinessAccountEntity =
+    new BusinessAccountEntity(1, 'Nails-corporation');
+  mockBusinessAccountEntity.id = 1;
+
   const mockBusinessDatabase: BusinessAccountEntity[] = [
-    new BusinessAccountEntity(1, 'Nails-corporation'),
+    mockBusinessAccountEntity,
   ];
 
-  const mockUserDatabase: UserEntity[] = [
-    new UserEntity(
-      'TestFirstName',
-      'TestLastName',
-      'test@test.ru',
-      '$2a$10$PwBnARXX49Iqg9HZ.ldwpukZcdJGRRrVEjowgSp.iKUeH.aJh8rb6',
-    ),
-  ];
+  const mockUserEntity: UserEntity = new UserEntity(
+    'TestFirstName',
+    'TestLastName',
+    'test@test.ru',
+    '$2a$10$PwBnARXX49Iqg9HZ.ldwpukZcdJGRRrVEjowgSp.iKUeH.aJh8rb6',
+  );
+  mockUserEntity.id = 1;
+
+  const mockUserDatabase: UserEntity[] = [mockUserEntity];
 
   const mockBusinessRepository = {
     save: jest.fn(
@@ -38,14 +43,14 @@ describe('BusinessAccountService (unit)', () => {
       },
     ),
     findAndCount: jest.fn(async () => {
-      const response = [mockBusinessDatabase, 1];
+      const response = [mockBusinessDatabase, mockBusinessDatabase.length];
       return response;
     }),
 
     findOne: jest.fn(async (data) => {
       const response = mockBusinessDatabase.map((business) => {
         if (data.where.id) {
-          if (data.where.id == 1) {
+          if (data.where.id == business.id) {
             return business;
           }
         }
@@ -106,6 +111,7 @@ describe('BusinessAccountService (unit)', () => {
     describe('Correct data', () => {
       it('should be an instanceof UserResponse', async () => {
         const response = await businessAccountService.create(mockValidRequest);
+        console.log(response);
         expect(response instanceof UserResponse).toBe(true);
       });
     });
@@ -139,7 +145,6 @@ describe('BusinessAccountService (unit)', () => {
     describe('Correct data', () => {
       it('should be an instanceof BusinessAccountResponse', async () => {
         const response = await businessAccountService.findOne(mockValidRequest);
-        console.log(response);
         expect(response instanceof BusinessAccountResponse).toBe(true);
       });
     });
