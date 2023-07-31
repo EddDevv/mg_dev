@@ -12,7 +12,7 @@ import { CommentModule } from './domain/comments/comment.module';
 import { PortfolioModule } from './domain/portfolio/portfolio.module';
 import { CategoriesModule } from './domain/categories/categories.module';
 import { ServicesModule } from './domain/services/services.module';
-
+import { EventsModule } from './domain/events/events.module';
 
 @Module({
   controllers: [],
@@ -33,6 +33,7 @@ import { ServicesModule } from './domain/services/services.module';
     PortfolioModule,
     CategoriesModule,
     ServicesModule,
+    EventsModule,
   ],
 })
 export class AppModule {}
