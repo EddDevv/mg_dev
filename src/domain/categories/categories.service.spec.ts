@@ -21,9 +21,10 @@ import { CategoryListResponse, CategoryResponse } from 'src/application/dto/cate
 describe('BusinessAccountService (unit)', () => {
   let categoriesService: CategoriesService;
 
-  const mockCategoriesDatabase: CategoriesEntity[] = [
-    new CategoriesEntity('Nails'),
-  ];
+  const mockCategoriesEntity: CategoriesEntity = new CategoriesEntity('Nails');
+  mockCategoriesEntity.id = 1;
+
+  const mockCategoriesDatabase: CategoriesEntity[] = [mockCategoriesEntity];
 
   const mockCategoriesRepository = {
     save: jest.fn((dto: CategoriesCreateRequest): CategoriesEntity => {
@@ -36,7 +37,7 @@ describe('BusinessAccountService (unit)', () => {
 
     findOne: jest.fn(async (data) => {
       const response = mockCategoriesDatabase.map((category) => {
-        if (data.where.id == 1) {
+        if (data.where.id == category.id) {
           return category;
         }
       });
