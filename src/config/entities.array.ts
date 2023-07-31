@@ -9,7 +9,7 @@ import { PortfolioEntity } from 'src/domain/portfolio/portfolio.entity';
 import { LikesEntity } from '../domain/likes/likes.entity';
 import { CategoriesEntity } from 'src/domain/categories/categories.entity';
 import { ServicesEntity } from 'src/domain/services/services.entity';
-
+import { EventsEntity } from '../domain/events/events.entity';
 
 export const EntitiesArray = [
   UserEntity,
@@ -23,4 +23,5 @@ export const EntitiesArray = [
   LikesEntity,
   CategoriesEntity,
   ServicesEntity,
+  EventsEntity,
 ];
