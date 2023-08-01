@@ -74,68 +74,60 @@ describe('CommentsService (unit)', () => {
 
   const mockCommentsRepository = {
     findOne: jest.fn(async (data) => {
-      const response = mockCommentsDatabase.map((commet) => {
+      for (let index = 0; index < mockCommentsDatabase.length; index++) {
+        const commet = mockCommentsDatabase[index];
         if (data.where.id == commet.id) {
           return commet;
         }
-      });
-
-      return response[0];
+      }
+      return undefined;
     }),
     save: jest.fn((dto: CommentEntity): CommentEntity => {
-      const response = new CommentEntity(dto.user, dto.userId, dto.text);
-      return response;
+      return new CommentEntity(dto.user, dto.userId, dto.text);
     }),
     softDelete: jest.fn(async () => null),
   };
 
   const mockUsersRepository = {
     findOne: jest.fn(async (data) => {
-      const response = mockUserDatabase.map((user) => {
+      for (let index = 0; index < mockUserDatabase.length; index++) {
+        const user = mockUserDatabase[index];
         if (data.where.id == user.id) {
           return user;
         }
-      });
-
-      return response[0];
+      }
+      return undefined;
     }),
   };
 
   const mockPostsRepository = {
     findOne: jest.fn(async (data) => {
-      const response = mockPostDatabase.map((post) => {
+      for (let index = 0; index < mockPostDatabase.length; index++) {
+        const post = mockPostDatabase[index];
         if (data.where.id == post.id) {
           return post;
         }
-      });
-
-      return response[0];
+      }
+      return undefined;
     }),
   };
 
   const mockLikesRepository = {
     save: jest.fn((dto: LikesEntity): LikesEntity => {
-      const response = new LikesEntity(
-        dto.user,
-        dto.userId,
-        dto.post,
-        dto.comment,
-      );
-      return response;
+      return new LikesEntity(dto.user, dto.userId, dto.post, dto.comment);
     }),
     findOne: jest.fn(async (data) => {
-      const response = mockLikeDatabase.map((like) => {
+      for (let index = 0; index < mockLikeDatabase.length; index++) {
+        const like = mockLikeDatabase[index];
         if (data.where.id == like.id) {
           return like;
         }
-      });
-
-      return response[0];
+      }
+      return undefined;
     }),
 
     findAndCount: jest.fn(async () => {
-      const response = [mockLikeDatabase, mockLikeDatabase.length];
-      return response;
+      return [mockLikeDatabase, mockLikeDatabase.length];
     }),
   };
 
