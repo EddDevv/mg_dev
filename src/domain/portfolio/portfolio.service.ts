@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import {
   PortfolioCreateRequest,
   PortfolioGetListRequest,
@@ -87,7 +87,7 @@ export class PortfolioService {
     }
 
     if (service.categoryId != categoryId) {
-      throw new NotFoundException(CustomExceptions.service.NotConform);
+      throw new BadRequestException(CustomExceptions.service.NotConform);
     }
 
     const portfolio = new PortfolioEntity(
