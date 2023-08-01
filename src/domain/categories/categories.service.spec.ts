@@ -1,22 +1,17 @@
-import { UserService } from '../users/user.service';
-import { UserEntity } from '../users/user.entity';
 import { Test, TestingModule } from '@nestjs/testing';
-import { User, UserResponse } from '../../application/dto/users/users.response';
-import { BusinessAccountsRepository } from 'src/infrastructure/repositories/business-accounts.repository';
-import {
-  BusinessAccountsCreateRequest,
-  BusinessAccountsGetRequest,
-} from 'src/application/dto/business-accounts/business-accounts.request';
-import {
-  BusinessAccountResponse,
-  BusinessAccountsListResponse,
-} from 'src/application/dto/business-accounts/business-accounts.response';
-import { BadRequestException, NotFoundException } from '@nestjs/common';
+import { NotFoundException } from '@nestjs/common';
 import { CategoriesService } from './categories.service';
 import { CategoriesEntity } from './categories.entity';
 import { CategoriesRepository } from 'src/infrastructure/repositories/categories.repository';
-import { CategoriesCreateRequest, CategoriesGetRequest, CategoriesUpdateRequest } from 'src/application/dto/categories/categories.request';
-import { CategoryListResponse, CategoryResponse } from 'src/application/dto/categories/categories.response';
+import {
+  CategoriesCreateRequest,
+  CategoriesGetRequest,
+  CategoriesUpdateRequest,
+} from 'src/application/dto/categories/categories.request';
+import {
+  CategoryListResponse,
+  CategoryResponse,
+} from 'src/application/dto/categories/categories.response';
 
 describe('BusinessAccountService (unit)', () => {
   let categoriesService: CategoriesService;
@@ -31,17 +26,17 @@ describe('BusinessAccountService (unit)', () => {
       return new CategoriesEntity(dto.title);
     }),
     findAndCount: jest.fn(async () => {
-      const response = [mockCategoriesDatabase, 1];
-      return response;
+      return [mockCategoriesDatabase, mockCategoriesDatabase.length];
     }),
 
     findOne: jest.fn(async (data) => {
-      const response = mockCategoriesDatabase.map((category) => {
+      for (let index = 0; index < mockCategoriesDatabase.length; index++) {
+        const category = mockCategoriesDatabase[index];
         if (data.where.id == category.id) {
           return category;
         }
-      });
-      return response[0];
+      }
+      return undefined;
     }),
     softDelete: jest.fn(async () => null),
   };
