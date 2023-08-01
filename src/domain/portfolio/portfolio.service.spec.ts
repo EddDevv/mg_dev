@@ -70,7 +70,7 @@ describe('CommentsService (unit)', () => {
 
   const mockPortfolioRepository = {
     save: jest.fn((dto: PortfolioEntity): PortfolioEntity => {
-      const response = new PortfolioEntity(
+      return new PortfolioEntity(
         dto.business,
         dto.businessId,
         dto.category,
@@ -79,58 +79,56 @@ describe('CommentsService (unit)', () => {
         dto.serviceId,
         dto.description,
       );
-      return response;
     }),
 
     findAndCount: jest.fn(async () => {
-      const response = [mockPortfolioDatabase, mockPortfolioDatabase.length];
-      return response;
+      return [mockPortfolioDatabase, mockPortfolioDatabase.length];
     }),
     findOne: jest.fn(async (data) => {
-      let foundPortfolio = undefined;
-      mockPortfolioDatabase.map((portfolio) => {
+      for (let index = 0; index < mockPortfolioDatabase.length; index++) {
+        const portfolio = mockPortfolioDatabase[index];
         if (data.where.id == portfolio.id) {
-          foundPortfolio = portfolio;
+          return portfolio;
         }
-      });
-      return foundPortfolio;
+      }
+      return undefined;
     }),
     softDelete: jest.fn(async () => null),
   };
 
   const mockBusinessAccountsRepository = {
     findOne: jest.fn(async (data) => {
-      let foundBusiness = undefined;
-      mockBusinessDatabase.map((business) => {
+      for (let index = 0; index < mockBusinessDatabase.length; index++) {
+        const business = mockBusinessDatabase[index];
         if (data.where.id == business.id) {
-          foundBusiness = business;
+          return business;
         }
-      });
-      return foundBusiness;
+      }
+      return undefined;
     }),
   };
 
   const mockCategoriesRepository = {
     findOne: jest.fn(async (data) => {
-      let foundCategory = undefined;
-      mockCategoryDatabase.map((category) => {
+      for (let index = 0; index < mockCategoryDatabase.length; index++) {
+        const category = mockCategoryDatabase[index];
         if (data.where.id == category.id) {
-          foundCategory = category;
+          return category;
         }
-      });
-      return foundCategory;
+      }
+      return undefined;
     }),
   };
 
   const mockServicesRepository = {
     findOne: jest.fn(async (data) => {
-      let foundService = undefined;
-      mockServiceDatabase.map((service) => {
+      for (let index = 0; index < mockServiceDatabase.length; index++) {
+        const service = mockServiceDatabase[index];
         if (data.where.id == service.id) {
-          foundService = service;
+          return service;
         }
-      });
-      return foundService;
+      }
+      return undefined;
     }),
   };
 
