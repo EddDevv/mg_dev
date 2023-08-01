@@ -36,6 +36,13 @@ describe('BusinessAccountService (unit)', () => {
 
   const mockUserDatabase: UserEntity[] = [mockUserEntity];
 
+  type WhereClause = {
+    where: {
+      id?: number;
+      userId?: number;
+    };
+  };
+
   const mockBusinessRepository = {
     save: jest.fn(
       (dto: BusinessAccountsCreateRequest): BusinessAccountEntity => {
@@ -43,35 +50,30 @@ describe('BusinessAccountService (unit)', () => {
       },
     ),
     findAndCount: jest.fn(async () => {
-      const response = [mockBusinessDatabase, mockBusinessDatabase.length];
-      return response;
+      return [mockBusinessDatabase, mockBusinessDatabase.length];
     }),
 
-    findOne: jest.fn(async (data) => {
-      const response = mockBusinessDatabase.map((business) => {
-        if (data.where.id) {
-          if (data.where.id == business.id) {
-            return business;
-          }
+    findOne: jest.fn(async ({ where }: WhereClause) => {
+      for (let index = 0; index < mockBusinessDatabase.length; index++) {
+        const business = mockBusinessDatabase[index];
+        if (where.id && where.id == business.id) {
+          return business;
         }
-        if (data.where.userId) {
-          if (business.userId == data.where.userId) {
-            return business;
-          }
+        if (where.userId && business.userId == where.userId) {
+          return business;
         }
-      });
-      return response[0];
+      }
+      return undefined;
     }),
   };
 
   const mockUserService = {
     updateRole: jest.fn((id: number) => {
-      const response = mockUserDatabase.map((user) => {
-        if (id == 2) {
-          return new UserResponse(new User(user));
-        }
-      });
-      return response[0];
+      for (let index = 0; index < mockUserDatabase.length; index++) {
+        const user = mockUserDatabase[index];
+        return new UserResponse(new User(user));
+      }
+      return undefined;
     }),
   };
 
@@ -111,7 +113,6 @@ describe('BusinessAccountService (unit)', () => {
     describe('Correct data', () => {
       it('should be an instanceof UserResponse', async () => {
         const response = await businessAccountService.create(mockValidRequest);
-        console.log(response);
         expect(response instanceof UserResponse).toBe(true);
       });
     });
