@@ -44,11 +44,9 @@ describe('BusinessAccountService (unit)', () => {
   };
 
   const mockBusinessRepository = {
-    save: jest.fn(
-      (dto: BusinessAccountsCreateRequest): BusinessAccountEntity => {
-        return new BusinessAccountEntity(dto.userId, dto.businessName);
-      },
-    ),
+    save: jest.fn((dto: BusinessAccountEntity): BusinessAccountEntity => {
+      return new BusinessAccountEntity(dto.userId, dto.businessName);
+    }),
     findAndCount: jest.fn(async () => {
       return [mockBusinessDatabase, mockBusinessDatabase.length];
     }),
