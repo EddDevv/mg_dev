@@ -31,8 +31,13 @@ describe('AuthService (unit)', () => {
   const mockUserDatabase: UserEntity[] = [mockUserEntity];
 
   const mockUserRepository = {
-    save: jest.fn((dto: AuthRegisterRequest): UserEntity => {
-      return new UserEntity(dto.firstName, 's', dto.email, dto.password);
+    save: jest.fn((dto: UserEntity): UserEntity => {
+      return new UserEntity(
+        dto.firstName,
+        dto.lastName,
+        dto.email,
+        dto.password,
+      );
     }),
 
     findOne: jest.fn(async (data) => {
