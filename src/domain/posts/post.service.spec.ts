@@ -24,7 +24,7 @@ import {
   LikePost,
 } from 'src/application/dto/likes/likes.response';
 
-describe('CommentsService (unit)', () => {
+describe('PostsService (unit)', () => {
   let postsService: PostsService;
 
   const mockUserEntity: UserEntity = new UserEntity(
