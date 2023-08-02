@@ -1,7 +1,8 @@
-import { Column, Entity, ManyToMany, JoinTable } from 'typeorm';
+import { Column, Entity, ManyToMany, JoinTable, OneToMany, JoinColumn } from 'typeorm';
 import { BasicEntity } from '../../config/basic.entity';
 import { EventMeetType } from '../../config/enums/events.enum';
 import { CategoriesEntity } from '../categories/categories.entity';
+import { RecordsEntity } from '../records/records.entity';
 
 @Entity('events')
 export class EventsEntity extends BasicEntity {
@@ -29,4 +30,8 @@ export class EventsEntity extends BasicEntity {
   @ManyToMany(() => CategoriesEntity, (category) => category.events)
   @JoinTable()
   categories: CategoriesEntity[];
+
+  @OneToMany(() => RecordsEntity, (record) => record.event)
+  @JoinColumn()
+  records: RecordsEntity[];
 }

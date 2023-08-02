@@ -6,6 +6,7 @@ import { PostEntity } from '../posts/post.entity';
 import { BusinessAccountEntity } from '../business-accounts/business-account.entity';
 import { SubscriptionsEntity } from '../subscriptions/subscriptions.entity';
 import { CommentEntity } from '../comments/comment.entity';
+import { RecordsEntity } from '../records/records.entity';
 
 export interface IUser {
   id: number;
@@ -87,6 +88,9 @@ export class UserEntity extends BasicEntity implements IUser {
 
   @OneToMany(() => SubscriptionsEntity, (subs) => subs.subscriber)
   subscriptions: UserEntity[];
+
+  @OneToMany(() => RecordsEntity, (record) => record.user)
+  records: RecordsEntity[];
 
   // @HasOne(() => BusinessAccount)
   // businessAccount: BusinessAccount;
