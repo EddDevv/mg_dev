@@ -1,6 +1,6 @@
 {
   "name": "mg-back",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "",
   "author": "",
   "private": true,
@@ -93,6 +93,9 @@
       "**/*.(t|j)s"
     ],
     "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "moduleNameMapper": {
+      "^src/(.*)$": "<rootDir>/$1"
+    }
   }
 }
