@@ -20,7 +20,7 @@ import {
   PortfolioResponse,
 } from 'src/application/dto/portfolio/portfolio.response';
 
-describe('CommentsService (unit)', () => {
+describe('PortfolioService (unit)', () => {
   let portfolioService: PortfolioService;
 
   const mockCategoriesEntity: CategoriesEntity = new CategoriesEntity('Nails');
