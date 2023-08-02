@@ -92,15 +92,6 @@ export class UserEntity extends BasicEntity implements IUser {
   @OneToMany(() => RecordsEntity, (record) => record.user)
   records: RecordsEntity[];
 
-  // @HasOne(() => BusinessAccount)
-  // businessAccount: BusinessAccount;
-
-  // @HasOne(() => Location)
-  // location: Location;
-
-  // @Column()
-  // locationId: number | null;
-
   constructor(
     firstname: string,
     lastName: string,

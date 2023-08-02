@@ -4,6 +4,19 @@ import { EventMeetType } from '../../config/enums/events.enum';
 import { CategoriesEntity } from '../categories/categories.entity';
 import { RecordsEntity } from '../records/records.entity';
 
+export interface IEvent {
+  id: number;
+  title: string;
+  description: string;
+  place: string;
+  meetType: EventMeetType;
+  seatsNumber: number;
+  startDate: Date;
+  endDate: Date;
+  categories: CategoriesEntity[];
+  records: RecordsEntity[];
+}
+
 @Entity('events')
 export class EventsEntity extends BasicEntity {
   @Column()
