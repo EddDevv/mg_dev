@@ -22,7 +22,7 @@ describe('CategoriesService (unit)', () => {
   const mockCategoriesDatabase: CategoriesEntity[] = [mockCategoriesEntity];
 
   const mockCategoriesRepository = {
-    save: jest.fn((dto: CategoriesCreateRequest): CategoriesEntity => {
+    save: jest.fn((dto: CategoriesEntity): CategoriesEntity => {
       return new CategoriesEntity(dto.title);
     }),
     findAndCount: jest.fn(async () => {
