@@ -64,15 +64,8 @@ describe('SubscriptionsService (unit)', () => {
     };
   };
 
-  type SubscriptionsSubscribe = {
-    user: UserEntity;
-    userId: number;
-    subscriber: UserEntity;
-    subscriberId: number;
-  };
-
   const mockSubscriptionsRepository = {
-    save: jest.fn((dto: SubscriptionsSubscribe): SubscriptionsEntity => {
+    save: jest.fn((dto: SubscriptionsEntity): SubscriptionsEntity => {
       return new SubscriptionsEntity(
         dto.user,
         dto.userId,
