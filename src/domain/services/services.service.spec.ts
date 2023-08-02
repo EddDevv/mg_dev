@@ -34,12 +34,8 @@ describe('ServicesService (unit)', () => {
   const mockServiceDatabase: ServicesEntity[] = [mockServicesEntity];
 
   const mockServicesRepository = {
-    save: jest.fn((dto: ServicesCreateRequest): ServicesEntity => {
-      return new ServicesEntity(
-        mockCategoriesEntity,
-        dto.categoryId,
-        dto.title,
-      );
+    save: jest.fn((dto: ServicesEntity): ServicesEntity => {
+      return new ServicesEntity(dto.category, dto.categoryId, dto.title);
     }),
     findOne: jest.fn(async (data) => {
       for (let index = 0; index < mockServiceDatabase.length; index++) {
