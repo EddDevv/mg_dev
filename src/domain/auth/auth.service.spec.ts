@@ -30,6 +30,13 @@ describe('AuthService (unit)', () => {
 
   const mockUserDatabase: UserEntity[] = [mockUserEntity];
 
+  type WhereClause = {
+    where: {
+      id?: number;
+      email?: string;
+    };
+  };
+
   const mockUserRepository = {
     save: jest.fn((dto: UserEntity): UserEntity => {
       return new UserEntity(
@@ -40,21 +47,17 @@ describe('AuthService (unit)', () => {
       );
     }),
 
-    findOne: jest.fn(async (data) => {
-      const response = mockUserDatabase.map((user) => {
-        if (data.where.id) {
-          if (data.where.id == user.id) {
-            return user;
-          }
+    findOne: jest.fn(async ({ where }: WhereClause) => {
+      for (let index = 0; index < mockUserDatabase.length; index++) {
+        const user = mockUserDatabase[index];
+        if (where.id && where.id == user.id) {
+          return user;
         }
-        if (data.where.email) {
-          if (user.email == data.where.email) {
-            return user;
-          }
+        if (where.email && user.email == where.email) {
+          return user;
         }
-      });
-
-      return response[0];
+      }
+      return undefined;
     }),
   };
 
