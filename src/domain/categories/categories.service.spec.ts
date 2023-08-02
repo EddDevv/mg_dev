@@ -13,7 +13,7 @@ import {
   CategoryResponse,
 } from 'src/application/dto/categories/categories.response';
 
-describe('BusinessAccountService (unit)', () => {
+describe('CategoriesService (unit)', () => {
   let categoriesService: CategoriesService;
 
   const mockCategoriesEntity: CategoriesEntity = new CategoriesEntity('Nails');
