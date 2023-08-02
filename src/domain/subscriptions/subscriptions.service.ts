@@ -76,13 +76,13 @@ export class SubscriptionsService {
 
     const subscription = await this.subscriptionsRepository.findOne({
       where: {
-        subscriberId: user.id,
         userId,
+        subscriberId: user.id,
       },
     });
 
     if (!subscription) {
-      throw new NotFoundException('Subscription not found.');
+      throw new NotFoundException('Subscription not found');
     }
 
     await this.subscriptionsRepository.softDelete({ id: subscription.id });

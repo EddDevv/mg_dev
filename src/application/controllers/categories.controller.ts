@@ -55,7 +55,6 @@ export class CategoriesController {
     type: CategoryResponse,
     description: ResponseMessages.category.create,
   })
-  @ApiNotFoundResponse({ description: CustomExceptions.category.NotFound })
   @Post()
   create(@Body() body: CategoriesCreateRequest): Promise<CategoryResponse> {
     return this.categoriesService.create(body);
