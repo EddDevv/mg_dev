@@ -17,7 +17,7 @@ export class Event implements Omit<IEvent, 'categories' | 'records'> {
   @ApiProperty()
   place: string;
 
-  @ApiProperty()
+  @ApiProperty({ type: EventMeetType })
   meetType: EventMeetType;
 
   @ApiProperty()
