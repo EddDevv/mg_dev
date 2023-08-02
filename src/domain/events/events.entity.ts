@@ -1,6 +1,7 @@
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, ManyToMany, JoinTable } from 'typeorm';
 import { BasicEntity } from '../../config/basic.entity';
 import { EventMeetType } from '../../config/enums/events.enum';
+import { CategoriesEntity } from '../categories/categories.entity';
 
 @Entity('events')
 export class EventsEntity extends BasicEntity {
@@ -24,4 +25,8 @@ export class EventsEntity extends BasicEntity {
 
   @Column()
   endDate: Date;
+
+  @ManyToMany(() => CategoriesEntity, (category) => category.events)
+  @JoinTable()
+  categories: CategoriesEntity[];
 }
