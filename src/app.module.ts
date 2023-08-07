@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthModule } from './domain/auth/auth.module';
 import { BusinessAccountModule } from './domain/business-accounts/business-accounts.module';
 import { LocationsModule } from './domain/locations/locations.module';
@@ -12,7 +12,8 @@ import { CommentModule } from './domain/comments/comment.module';
 import { PortfolioModule } from './domain/portfolio/portfolio.module';
 import { CategoriesModule } from './domain/categories/categories.module';
 import { ServicesModule } from './domain/services/services.module';
-
+import { AcceptLanguageResolver, I18nModule, QueryResolver } from 'nestjs-i18n';
+import * as path from 'path';
 
 @Module({
   controllers: [],
@@ -21,6 +22,18 @@ import { ServicesModule } from './domain/services/services.module';
     ConfigModule.forRoot({
       envFilePath: `.${process.env.NODE_ENV}.env`,
       isGlobal: true,
+    }),
+    I18nModule.forRoot({
+      fallbackLanguage: 'en',
+      loaderOptions: {
+        path: path.join(__dirname, '/i18n/'),
+        watch: true,
+      },
+      resolvers: [
+        { use: QueryResolver, options: ['lang'] },
+        AcceptLanguageResolver,
+      ],
+      typesOutputPath: path.join(__dirname, '/generated/i18n.generated.ts'),
     }),
     TypeOrmModule.forRootAsync(databaseProviders),
     AuthModule,
