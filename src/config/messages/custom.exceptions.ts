@@ -32,4 +32,11 @@ export const CustomExceptions = {
     NotFound: `Service not found`,
     NotConform: `Service not conform category`,
   },
+  event: {
+    NotFound: `Event not found`,
+  },
+  record: {
+    NotFound: `Record not found`,
+    AlreadyHave: 'You already have a record',
+  },
 };

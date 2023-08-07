@@ -1,7 +1,8 @@
 import { BasicEntity } from '../../config/basic.entity';
-import { Column, Entity, OneToMany } from 'typeorm';
+import { Column, Entity, ManyToMany, OneToMany } from 'typeorm';
 import { ServicesEntity } from '../services/services.entity';
 import { PortfolioEntity } from '../portfolio/portfolio.entity';
+import { EventsEntity } from '../events/events.entity';
 
 export interface ICategory {
   title: string;
@@ -19,6 +20,9 @@ export class CategoriesEntity extends BasicEntity implements ICategory {
 
   @OneToMany(() => PortfolioEntity, (portfolio) => portfolio.category)
   portfolios: PortfolioEntity[];
+
+  @ManyToMany(() => EventsEntity, (event) => event.categories)
+  events: EventsEntity[];
 
   constructor(title: string) {
     super();
