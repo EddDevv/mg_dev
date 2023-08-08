@@ -11,9 +11,10 @@ import { SubscriptionsModule } from './domain/subscriptions/subscriptions.module
 import { CommentModule } from './domain/comments/comment.module';
 import { PortfolioModule } from './domain/portfolio/portfolio.module';
 import { CategoriesModule } from './domain/categories/categories.module';
-import { ServicesModule } from './domain/services/services.module';
 import { AcceptLanguageResolver, I18nModule, QueryResolver } from 'nestjs-i18n';
 import * as path from 'path';
+import { EventsModule } from './domain/events/events.module';
+import { RecordsModule } from './domain/records/records.module';
 
 @Module({
   controllers: [],
@@ -46,6 +47,8 @@ import * as path from 'path';
     PortfolioModule,
     CategoriesModule,
     ServicesModule,
+    EventsModule,
+    RecordsModule,
   ],
 })
 export class AppModule {}

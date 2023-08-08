@@ -63,4 +63,11 @@ export const ResponseMessages = {
     update: 'Success update',
     remove: 'Success remove',
   },
+  record: {
+    create: 'Success creation of record',
+    findAll: 'Get list of records',
+    findOne: 'Get record data',
+    update: 'Success update',
+    remove: 'Success remove',
+  },
 };

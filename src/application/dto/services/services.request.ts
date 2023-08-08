@@ -1,6 +1,7 @@
-import { ApiProperty, PartialType } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
+import { IsNotEmpty, IsString } from 'class-validator';
 import { IService } from 'src/domain/services/services.entity';
+import { FindOptionsOrderValue } from 'typeorm';
 
 export class ServicesCreateRequest
   implements Omit<IService, 'category' | 'portfolios'>
@@ -26,6 +27,9 @@ export class ServicesGetRequest {
 export class ServicesGetListRequest {
   @ApiProperty()
   categoryId: number;
+
+  @ApiProperty()
+  createdAt: FindOptionsOrderValue;
 }
 
 export class ServicesUpdateRequest
