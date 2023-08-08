@@ -1,8 +1,16 @@
-import { Column, Entity, ManyToMany, JoinTable, OneToMany, JoinColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  ManyToMany,
+  JoinTable,
+  OneToMany,
+  JoinColumn,
+} from 'typeorm';
 import { BasicEntity } from '../../config/basic.entity';
 import { EventMeetType } from '../../config/enums/events.enum';
 import { CategoriesEntity } from '../categories/categories.entity';
 import { RecordsEntity } from '../records/records.entity';
+import { EventCreateRequest } from '../../application/dto/events/events.request';
 
 export interface IEvent {
   id: number;
@@ -25,9 +33,6 @@ export class EventsEntity extends BasicEntity {
   @Column({ length: 5000 })
   description: string;
 
-  @Column()
-  place: string;
-
   @Column({ enum: EventMeetType })
   meetType: EventMeetType;
 
@@ -47,4 +52,21 @@ export class EventsEntity extends BasicEntity {
   @OneToMany(() => RecordsEntity, (record) => record.event)
   @JoinColumn()
   records: RecordsEntity[];
+
+  constructor(
+    title: string,
+    description: string,
+    meetType: EventMeetType,
+    seatsNumber: number,
+    startDate: Date,
+    endDate: Date,
+  ) {
+    super();
+    this.title = title;
+    this.description = description;
+    this.meetType = meetType;
+    this.seatsNumber = seatsNumber;
+    this.startDate = startDate;
+    this.endDate = endDate;
+  }
 }
