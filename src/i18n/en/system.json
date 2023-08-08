@@ -1,0 +1,105 @@
+{
+  "Validation": {
+    "required": "This {{field}} is required",
+    "email": "This field must be a valid email address",
+    "phone": "This field must be a valid phone number",
+    "minSymbols": "This field must be at least {{count}} characters",
+    "maxSymbols": "This field must be at most {{count}} characters",
+    "minCount": "This field must be at least {{count}}",
+    "maxCount": "This field must be at most {{count}}",
+    "confirmed": "Passwords must match",
+    "date": "Incorrect date format",
+    "relative_start_date": "The start date must not be later than the end date",
+    "relative_end_date": "The end date must not be earlier than the start date."
+  },
+  "Fields": {
+    "name": "Name",
+    "email": "Email",
+    "password": "Password",
+    "phone": "Phone",
+    "phone_number": "Phone number",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "gender": "Gender",
+    "birthday": "Birthday",
+    "country": "Country",
+    "city": "City",
+    "street": "Street",
+    "house": "House",
+    "flat": "Flat",
+    "metro": "Metro",
+    "zip": "Zip",
+    "position": "Position",
+    "start_of_work": "Start of work",
+    "end_of_work": "End of work",
+    "responsibilities": "Responsibilities"
+  },
+  "Placeholder": {
+    "email": "Example@gmail.com",
+    "name": "Ivanova Maria",
+    "password": "Password123",
+    "data_not_specified": "Not specified",
+    "description": "Enter description",
+    "responsibilities": "Manicure, extension",
+    "publish": "Publish"
+  },
+  "Errors": {
+    "main": "Something went wrong. Please, try again later",
+    "language_not_changed": "Failed to change language",
+    "server_error": "Server error",
+    "query": {
+      "main": "Query error"
+    },
+    "mutation": {
+      "main": "Mutation error",
+      "profile_update": "Profile update failed",
+      "profile_delete": "Profile removal failed",
+      "subscription_create": "Subscription creation failed",
+      "subscription_remove": "Subscription removal failed",
+      "post_create": "Post creation failed",
+      "post_update": "Post update failed",
+      "post_delete": "Post removal failed",
+      "portfolio_create": "Failed to create portfolio",
+      "portfolio_update": "Failed to update portfolio",
+      "portfolio_delete": "Failed to delete portfolio",
+      "comment_create": "Failed to create comment",
+      "comment_update": "Failed to update comment",
+      "comment_delete": "Failed to delete comment",
+      "business_account_create": "Failed to create business account",
+      "business_account_update": "Failed to update business account"
+    }
+  },
+  "Notifications": {
+    "language_changed": "Language has changed",
+    "copied_link_to_clipboard": "Link copied to clipboard",
+    "query": {
+      "success": "Query successfully executed"
+    },
+    "mutation": {
+      "success": "Mutation successfully executed",
+      "profile_updated": "Profile updated successfully",
+      "profile_deleted": "Profile deleted successfully",
+      "subscription_created": "Subscription created successfully",
+      "subscription_removed": "Subscription removed successfully",
+      "post_created": "Post created successfully",
+      "post_updated": "Post updated successfully",
+      "post_deleted": "Post deleted successfully",
+      "portfolio_created": "Portfolio successfully created",
+      "portfolio_updated": "Portfolio successfully updated",
+      "portfolio_deleted": "Portfolio successfully deleted",
+      "comment_created": "Comment successfully created",
+      "comment_updated": "Comment successfully updated",
+      "comment_deleted": "Comment successfully deleted",
+      "business_account_created": "Business account successfully created",
+      "business_account_updated": "Business account successfully updated"
+    }
+  },
+  "Information": {
+    "resend": {
+      "code": "Send code again via {{count}}sec.",
+      "message_one": "Resend after {{count}} second",
+      "message_other": "Resend after {{count}} seconds"
+    },
+    "no_description": "No description"
+  }
+}
