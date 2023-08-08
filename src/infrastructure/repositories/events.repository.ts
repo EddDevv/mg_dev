@@ -22,6 +22,12 @@ export class EventsRepository implements BasicRepository<EventsEntity> {
     return this.repo.find(options);
   }
 
+  findAndCount(
+    options: FindManyOptions<EventsEntity>,
+  ): Promise<[EventsEntity[], number]> {
+    return this.repo.findAndCount(options);
+  }
+
   findOne(
     options: FindOneOptions<EventsEntity>,
   ): Promise<EventsEntity | undefined> {

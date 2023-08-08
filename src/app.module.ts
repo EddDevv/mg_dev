@@ -15,6 +15,7 @@ import { AcceptLanguageResolver, I18nModule, QueryResolver } from 'nestjs-i18n';
 import * as path from 'path';
 import { EventsModule } from './domain/events/events.module';
 import { RecordsModule } from './domain/records/records.module';
+import { ServicesModule } from './domain/services/services.module';
 
 @Module({
   controllers: [],
