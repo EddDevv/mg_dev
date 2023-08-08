@@ -1,8 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { EventMeetType } from 'src/config/enums/events.enum';
-import { CategoriesEntity } from 'src/domain/categories/categories.entity';
 import { EventsEntity, IEvent } from 'src/domain/events/events.entity';
-import { RecordsEntity } from 'src/domain/records/records.entity';
 
 export class Event implements Omit<IEvent, 'categories' | 'records'> {
   @ApiProperty()
@@ -17,7 +15,7 @@ export class Event implements Omit<IEvent, 'categories' | 'records'> {
   @ApiProperty()
   place: string;
 
-  @ApiProperty()
+  @ApiProperty({ enum: EventMeetType })
   meetType: EventMeetType;
 
   @ApiProperty()

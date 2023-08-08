@@ -1,0 +1,106 @@
+{
+  "Validation": {
+    "required": "Поле {{field}} является обязательным",
+    "email": "Неверный формат email",
+    "phone": "Неверный формат телефона",
+    "minSymbols": "Это поле должно иметь не менее {{count}} символов",
+    "maxSymbols": "Это поле должно иметь не более {{count}} символов",
+    "minCount": "Это поле должно иметь значение не менее {{count}}",
+    "maxCount": "Это поле должно иметь значение не более {{count}}",
+    "confirmed": "Пароли должны совпадать",
+    "date": "Неверный формат даты",
+    "relative_start_date": "Дата начала не должна быть позже ее окончания",
+    "relative_end_date": "Дата окончания не должна быть раньше ее начала"
+  },
+  "Fields": {
+    "name": "Имя",
+    "email": "Email",
+    "password": "Пароль",
+    "phone": "Телефон",
+    "phone_number": "Номер телефона",
+    "firstName": "Имя",
+    "lastName": "Фамилия",
+    "gender": "Пол",
+    "birthday": "Дата рождения",
+    "country": "Страна",
+    "city": "Город",
+    "street": "Улица",
+    "house": "Дом",
+    "flat": "Квартира",
+    "metro": "Метро",
+    "zip": "Индекс",
+    "position": "Должность",
+    "start_of_work": "Дата начала работы",
+    "end_of_work": "Дата окончания работы",
+    "responsibilities": "Обязанности"
+  },
+  "Placeholder": {
+    "email": "Example@gmail.com",
+    "name": "Иванова Мария",
+    "password": "Password123",
+    "data_not_specified": "Данные не указаны",
+    "description": "Введите описание",
+    "responsibilities": "Маникюр, наращивание",
+    "publish": "Опубликовать"
+  },
+  "Errors": {
+    "main": "Что-то пошло не так. Попробуйте позже",
+    "language_not_changed": "Не удалось изменить язык",
+    "server_error": "Ошибка сервера",
+    "query": {
+      "main": "Ошибка запроса"
+    },
+    "mutation": {
+      "main": "Ошибка мутации",
+      "profile_update": "Не удалось обновить профиль",
+      "profile_delete": "Не удалось удалить профиль",
+      "subscription_create": "Не удалось подписаться на пользователя",
+      "subscription_remove": "Не удалось отписаться от пользователя",
+      "post_create": "Не удалось создать публикацию",
+      "post_update": "Не удалось обновить публикацию",
+      "post_delete": "Не удалось удалить публикацию",
+      "portfolio_create": "Не удалось создать портфолио",
+      "portfolio_update": "Не удалось обновить портфолио",
+      "portfolio_delete": "Не удалось удалить портфолио",
+      "comment_create": "Не удалось создать комментарий",
+      "comment_update": "Не удалось обновить комментарий",
+      "comment_delete": "Не удалось удалить комментарий",
+      "business_account_create": "Не удалось создать бизнес-аккаунт",
+      "business_account_update": "Не удалось обновить бизнес-аккаунт"
+    }
+  },
+  "Notifications": {
+    "language_changed": "Язык изменен",
+    "copied_link_to_clipboard": "Ссылка скопирована в буфер обмена",
+    "query": {
+      "success": "Запрос успешно выполнен"
+    },
+    "mutation": {
+      "success": "Мутация успешно выполнена",
+      "profile_updated": "Профиль успешно обновлен",
+      "profile_deleted": "Профиль успешно удален",
+      "subscription_created": "Подписка успешно оформлена",
+      "subscription_removed": "Подписка успешно удалена",
+      "post_created": "Публикация успешно создана",
+      "post_updated": "Публикация успешно обновлена",
+      "post_deleted": "Публикация успешно удалена",
+      "portfolio_created": "Портфолио успешно создано",
+      "portfolio_updated": "Портфолио успешно обновлено",
+      "portfolio_deleted": "Портфолио успешно удалено",
+      "comment_created": "Комментарий успешно создан",
+      "comment_updated": "Комментарий успешно обновлен",
+      "comment_deleted": "Комментарий успешно удален",
+      "business_account_created": "Бизнес-аккаунт успешно создан",
+      "business_account_updated": "Бизнес-аккаунт успешно обновлен"
+    }
+  },
+  "Information": {
+    "resend": {
+      "code": "Отправить код повторно через {{count}}сек.",
+      "message_one": "Повторная отправка через {{count}} секунду",
+      "message_few": "Повторная отправка через {{count}} секунды",
+      "message_many": "Повторная отправка через {{count}} секунд"
+    },
+    "no_description": "Описание отсутствует"
+  }
+}

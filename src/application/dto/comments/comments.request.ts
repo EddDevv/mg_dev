@@ -1,8 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsOptional, IsString, MinLength } from 'class-validator';
-import { UserEntity } from '../../../domain/users/user.entity';
-import { PostEntity } from '../../../domain/posts/post.entity';
-import { CommentEntity } from '../../../domain/comments/comment.entity';
 
 export class CommentsCreateRequest {
   @ApiProperty({
