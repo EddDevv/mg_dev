@@ -1,11 +1,20 @@
-import { Body, Controller, Get, Param, Patch, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { BusinessAccountService } from '../../domain/business-accounts/business-accounts.service';
 import {
   BusinessAccountsCreateRequest,
+  BusinessAccountsGetListRequest,
   BusinessAccountsGetRequest,
   BusinessAccountsUpdateRequest,
 } from '../dto/business-accounts/business-accounts.request';
-import { User, UserResponse } from '../dto/users/users.response';
+import { UserResponse } from '../dto/users/users.response';
 import {
   ApiBadRequestResponse,
   ApiCreatedResponse,
@@ -44,8 +53,10 @@ export class BusinessAccountController {
     description: ResponseMessages.businessAccount.findAll,
   })
   @Get('/list')
-  findAll(): Promise<BusinessAccountsListResponse> {
-    return this.businessAccountService.findAll();
+  findAll(
+    @Query() query: BusinessAccountsGetListRequest,
+  ): Promise<BusinessAccountsListResponse> {
+    return this.businessAccountService.findAll(query);
   }
 
   @ApiOkResponse({

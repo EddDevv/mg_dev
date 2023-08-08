@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString } from 'class-validator';
 import { IPortfolio } from 'src/domain/portfolio/portfolio.entity';
+import { FindOptionsOrderValue } from 'typeorm';
 
 export class PortfolioCreateRequest
   implements Omit<IPortfolio, 'business' | 'category' | 'service'>
@@ -56,4 +57,7 @@ export class PortfolioGetListRequest
 {
   @ApiProperty({ example: '2', description: 'The Business id' })
   businessId: number;
+
+  @ApiProperty()
+  createdAt: FindOptionsOrderValue;
 }

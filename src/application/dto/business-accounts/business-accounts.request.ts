@@ -1,5 +1,6 @@
 import { ApiProperty, PartialType } from '@nestjs/swagger';
 import { IsNotEmpty, IsString } from 'class-validator';
+import { FindOptionsOrderValue } from 'typeorm';
 
 export class BusinessAccountsCreateRequest {
   @ApiProperty({ example: '2', description: 'The user id' })
@@ -19,4 +20,9 @@ export class BusinessAccountsUpdateRequest extends PartialType(
 export class BusinessAccountsGetRequest {
   @ApiProperty()
   id: number;
+}
+
+export class BusinessAccountsGetListRequest {
+  @ApiProperty()
+  createdAt: FindOptionsOrderValue;
 }

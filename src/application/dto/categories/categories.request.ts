@@ -1,8 +1,7 @@
-import { ApiProperty, PartialType } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
-import { IPost } from '../../../domain/posts/post.entity';
-import { UserEntity } from '../../../domain/users/user.entity';
+import { ApiProperty } from '@nestjs/swagger';
+import { IsNotEmpty, IsString } from 'class-validator';
 import { ICategory } from 'src/domain/categories/categories.entity';
+import { FindOptionsOrderValue } from 'typeorm';
 
 export class CategoriesCreateRequest
   implements Omit<ICategory, 'services' | 'portfolios'>
@@ -19,6 +18,11 @@ export class CategoriesCreateRequest
 export class CategoriesGetRequest {
   @ApiProperty()
   id: number;
+}
+
+export class CategoriesGetListRequest {
+  @ApiProperty()
+  createdAt: FindOptionsOrderValue;
 }
 
 export class CategoriesUpdateRequest
