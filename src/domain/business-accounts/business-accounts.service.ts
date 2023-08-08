@@ -6,15 +6,13 @@ import {
 import { UserService } from 'src/domain/users/user.service';
 import {
   BusinessAccountsCreateRequest,
+  BusinessAccountsGetListRequest,
   BusinessAccountsGetRequest,
   BusinessAccountsUpdateRequest,
 } from '../../application/dto/business-accounts/business-accounts.request';
 import { BusinessAccountsRepository } from '../../infrastructure/repositories/business-accounts.repository';
-import { User, UserResponse } from '../../application/dto/users/users.response';
-import {
-  IBusinessAccount,
-  BusinessAccountEntity,
-} from './business-account.entity';
+import { UserResponse } from '../../application/dto/users/users.response';
+import { BusinessAccountEntity } from './business-account.entity';
 import {
   BusinessAccountsListResponse,
   BusinessAccounts,
@@ -49,9 +47,13 @@ export class BusinessAccountService {
     }
   }
 
-  async findAll(): Promise<BusinessAccountsListResponse> {
+  async findAll({
+    createdAt,
+  }: BusinessAccountsGetListRequest): Promise<BusinessAccountsListResponse> {
     const [businessAccounts, count] =
-      await this.businessAccountRepository.findAndCount({});
+      await this.businessAccountRepository.findAndCount({
+        order: { createdAt: createdAt },
+      });
 
     if (count == 0) {
       return new BusinessAccountsListResponse([], 0);

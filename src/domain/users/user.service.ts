@@ -13,6 +13,7 @@ import {
 } from '../../application/dto/users/users.response';
 import { CustomExceptions } from '../../config/messages/custom.exceptions';
 import {
+  UserGetListRequest,
   UserGetRequest,
   UserUpdateRequest,
 } from '../../application/dto/users/users.request';
@@ -21,8 +22,10 @@ import {
 export class UserService {
   constructor(private readonly userRepository: UsersRepository) {}
 
-  async findAll(): Promise<UsersListResponse> {
-    const users = await this.userRepository.find({});
+  async findAll({ createdAt }: UserGetListRequest): Promise<UsersListResponse> {
+    const users = await this.userRepository.find({
+      order: { createdAt: createdAt },
+    });
 
     const resUser = users.map((user) => {
       return new User(user);
