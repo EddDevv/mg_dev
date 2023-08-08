@@ -1,13 +1,24 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-import { RecordCreateRequest, RecordUpdateRequest, RecordsGetListRequest, RecordsGetRequest } from 'src/application/dto/records/records.request';
-import { Record, RecordListEventResponse, RecordResponse } from 'src/application/dto/records/records.response';
-import { User } from 'src/application/dto/users/users.response';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import {
+  RecordCreateRequest,
+  RecordUpdateRequest,
+  RecordsGetListRequest,
+  RecordsGetRequest,
+} from 'src/application/dto/records/records.request';
+import {
+  Record,
+  RecordListEventResponse,
+  RecordResponse,
+} from 'src/application/dto/records/records.response';
 import { CustomExceptions } from 'src/config/messages/custom.exceptions';
 import { EventsRepository } from 'src/infrastructure/repositories/events.repository';
 import { RecordsRepository } from 'src/infrastructure/repositories/records.repository';
 import { UsersRepository } from 'src/infrastructure/repositories/users.repository';
 import { RecordsEntity } from './records.entity';
-import { Event } from 'src/application/dto/events/events.response';
 
 @Injectable()
 export class RecordsService {
@@ -31,12 +42,14 @@ export class RecordsService {
 
   async getAllRecords({
     eventId,
+    createdAt,
   }: RecordsGetListRequest): Promise<RecordListEventResponse> {
     const [records, count] = await this.recordsRepository.findAndCount({
       relations: ['event', 'user'],
       where: {
         eventId,
       },
+      order: { createdAt: createdAt },
     });
 
     if (count == 0) {

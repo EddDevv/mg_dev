@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import {
   PortfolioCreateRequest,
   PortfolioGetListRequest,
@@ -40,12 +44,14 @@ export class PortfolioService {
 
   async getAllPortfolio({
     businessId,
+    createdAt,
   }: PortfolioGetListRequest): Promise<PortfolioListResponse> {
     const [portfolios, count] = await this.portfolioRepository.findAndCount({
       relations: ['category', 'service'],
       where: {
         businessId,
       },
+      order: { createdAt: createdAt },
     });
 
     if (count == 0) {

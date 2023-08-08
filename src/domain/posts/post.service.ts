@@ -46,12 +46,15 @@ export class PostsService {
 
   async getAllPosts({
     userId,
+    createdAt,
+    views,
   }: PostsGetListRequest): Promise<PostListResponse> {
     const [posts, count] = await this.postsRepository.findAndCount({
       relations: ['user', 'user.business'],
       where: {
         userId,
       },
+      order: { createdAt: createdAt, views: views },
     });
 
     if (count == 0) {

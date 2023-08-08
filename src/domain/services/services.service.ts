@@ -35,11 +35,13 @@ export class ServicesService {
 
   async getAllServices({
     categoryId,
+    createdAt,
   }: ServicesGetListRequest): Promise<ServiceListResponse> {
     const [services, count] = await this.servicesRepository.findAndCount({
       where: {
         categoryId,
       },
+      order: { createdAt: createdAt },
     });
 
     if (count == 0) {
