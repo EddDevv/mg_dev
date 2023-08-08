@@ -53,11 +53,20 @@ export class EventsEntity extends BasicEntity {
   @JoinColumn()
   records: RecordsEntity[];
 
-  constructor(event: EventCreateRequest) {
+  constructor(
+    title: string,
+    description: string,
+    meetType: EventMeetType,
+    seatsNumber: number,
+    startDate: Date,
+    endDate: Date,
+  ) {
     super();
-    this.meetType = event.meetType;
-    this.seatsNumber = event.seatsNumber;
-    this.startDate = event.startDate;
-    this.endDate = event.endDate;
+    this.title = title;
+    this.description = description;
+    this.meetType = meetType;
+    this.seatsNumber = seatsNumber;
+    this.startDate = startDate;
+    this.endDate = endDate;
   }
 }

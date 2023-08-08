@@ -20,8 +20,22 @@ import { count } from 'rxjs';
 export class EventsService {
   constructor(private readonly eventsRepository: EventsRepository) {}
 
-  async createEvent(body: EventCreateRequest): Promise<EventResponse> {
-    const event = new EventsEntity(body);
+  async createEvent({
+    title,
+    description,
+    meetType,
+    seatsNumber,
+    startDate,
+    endDate,
+  }: EventCreateRequest): Promise<EventResponse> {
+    const event = new EventsEntity(
+      title,
+      description,
+      meetType,
+      seatsNumber,
+      startDate,
+      endDate,
+    );
     await this.eventsRepository.save(event);
 
     return new EventResponse(new Event(event));
