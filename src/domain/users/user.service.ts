@@ -17,10 +17,15 @@ import {
   UserGetRequest,
   UserUpdateRequest,
 } from '../../application/dto/users/users.request';
+import { I18nContext, I18nService } from 'nestjs-i18n';
+import { UserEntity } from './user.entity';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly userRepository: UsersRepository) {}
+  constructor(
+    private readonly userRepository: UsersRepository,
+    private readonly i18n: I18nService,
+  ) {}
 
   async findAll({ createdAt }: UserGetListRequest): Promise<UsersListResponse> {
     const users = await this.userRepository.find({
@@ -50,11 +55,19 @@ export class UserService {
   ): Promise<UserResponse> {
     const bdUser = await this.userRepository.findOne({ where: { id } });
     if (!bdUser) {
-      throw new NotFoundException(CustomExceptions.user.NotFound);
+      throw new NotFoundException(
+        this.i18n.t('exceptions.user.NotFound', {
+          lang: I18nContext.current().lang,
+        }),
+      );
     }
 
     if (user.id !== bdUser.id) {
-      throw new ForbiddenException(CustomExceptions.user.NotSelfUpdate);
+      throw new ForbiddenException(
+        this.i18n.t('exceptions.user.NotSelfUpdate', {
+          lang: I18nContext.current().lang,
+        }),
+      );
     }
 
     Object.assign(bdUser, updateUserDto);
@@ -63,23 +76,29 @@ export class UserService {
     return new UserResponse(new User(bdUser));
   }
 
-  async updateRole(id: number): Promise<UserResponse> {
-    const user = await this.userRepository.findOne({ where: { id } });
-
+  async updateRole(user: UserEntity): Promise<UserResponse> {
     if (user && user.role !== UserRoleEnum.Business) {
       user.role = UserRoleEnum.Business;
       await this.userRepository.save(user);
 
       return new UserResponse(new User(user));
     } else {
-      throw new BadRequestException('You already have a business account');
+      throw new BadRequestException(
+        this.i18n.t('exceptions.businessAccount.AlreadyHave', {
+          lang: I18nContext.current().lang,
+        }),
+      );
     }
   }
 
   async remove(id: number): Promise<void> {
     const user = await this.userRepository.findOne({ where: { id } });
     if (!user) {
-      throw new NotFoundException(CustomExceptions.user.NotFound);
+      throw new NotFoundException(
+        this.i18n.t('exceptions.user.NotFound', {
+          lang: I18nContext.current().lang,
+        }),
+      );
     }
     await this.userRepository.softDelete({ id: user.id });
   }

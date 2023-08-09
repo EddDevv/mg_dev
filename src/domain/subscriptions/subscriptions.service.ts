@@ -19,12 +19,14 @@ import { SubscriptionsEntity } from './subscriptions.entity';
 import { CustomExceptions } from '../../config/messages/custom.exceptions';
 import { UsersRepository } from '../../infrastructure/repositories/users.repository';
 import { User } from '../../application/dto/users/users.response';
+import { I18nContext, I18nService } from 'nestjs-i18n';
 
 @Injectable()
 export class SubscriptionsService {
   constructor(
     private readonly subscriptionsRepository: SubscriptionsRepository,
     private readonly usersRepository: UsersRepository,
+    private readonly i18n: I18nService,
   ) {}
 
   async subscribe({
@@ -32,7 +34,11 @@ export class SubscriptionsService {
     subscriberId,
   }: SubscriptionsSubscribeRequest): Promise<Subscription> {
     if (userId === subscriberId) {
-      throw new BadRequestException('Cannot subscribe from yourself');
+      throw new BadRequestException(
+        this.i18n.t('exceptions.subscription.SubYourself', {
+          lang: I18nContext.current().lang,
+        }),
+      );
     }
 
     const user = await this.usersRepository.findOne({ where: { id: userId } });
@@ -51,7 +57,11 @@ export class SubscriptionsService {
       where: { userId, subscriberId },
     });
     if (existingSubscription) {
-      throw new ForbiddenException('You already have a subscription');
+      throw new ForbiddenException(
+        this.i18n.t('exceptions.subscription.AlreadyHave', {
+          lang: I18nContext.current().lang,
+        }),
+      );
     }
 
     const subscription = new SubscriptionsEntity(
@@ -70,7 +80,11 @@ export class SubscriptionsService {
     { userId }: SubscriptionsUnsubscribeRequest,
   ): Promise<void> {
     if (user.id === userId) {
-      throw new BadRequestException('Cannot unsubscribe from yourself');
+      throw new BadRequestException(
+        this.i18n.t('exceptions.subscription.UnSubYourself', {
+          lang: I18nContext.current().lang,
+        }),
+      );
     }
 
     const subscription = await this.subscriptionsRepository.findOne({
@@ -81,7 +95,11 @@ export class SubscriptionsService {
     });
 
     if (!subscription) {
-      throw new NotFoundException('Subscription not found');
+      throw new NotFoundException(
+        this.i18n.t('exceptions.subscription.NotFound', {
+          lang: I18nContext.current().lang,
+        }),
+      );
     }
 
     await this.subscriptionsRepository.softDelete({ id: subscription.id });
@@ -89,7 +107,7 @@ export class SubscriptionsService {
 
   async getSubscribers({
     userId,
-    createdAt
+    createdAt,
   }: SubscriptionsGetRequest): Promise<SubscriptionsGetSubscribersResponse> {
     const [subs, count]: [SubscriptionsEntity[], number] =
       await this.subscriptionsRepository.findAndCount({

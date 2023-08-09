@@ -16,9 +16,9 @@ import {
   AuthRegisterResponse,
   AuthTokensResponse,
 } from '../../application/dto/auth/auth.response';
-import { CustomExceptions } from '../../config/messages/custom.exceptions';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { I18nContext, I18nService } from 'nestjs-i18n';
 
 @Injectable()
 export class AuthService {
@@ -26,6 +26,7 @@ export class AuthService {
     private readonly userService: UsersRepository,
     private jwtService: JwtService,
     private readonly configService: ConfigService,
+    private readonly i18n: I18nService,
   ) {}
 
   async register({
@@ -37,11 +38,19 @@ export class AuthService {
     const existingUser = await this.userService.findOne({ where: { email } });
 
     if (existingUser) {
-      throw new BadRequestException(CustomExceptions.auth.AlreadyRegistered);
+      throw new BadRequestException(
+        this.i18n.t('exceptions.auth.AlreadyRegistered', {
+          lang: I18nContext.current().lang,
+        }),
+      );
     }
 
     if (!this.checkPasswordRepeat(password, repeatPassword)) {
-      throw new BadRequestException(CustomExceptions.auth.NotTheSamePasswords);
+      throw new BadRequestException(
+        this.i18n.t('exceptions.auth.NotTheSamePasswords', {
+          lang: I18nContext.current().lang,
+        }),
+      );
     }
 
     const hashedPassword = await this.hashPassword(password);
@@ -75,11 +84,19 @@ export class AuthService {
     const user = await this.userService.findOne({ where: { email } });
 
     if (!user) {
-      throw new NotFoundException(CustomExceptions.user.NotFound);
+      throw new NotFoundException(
+        this.i18n.t('exceptions.user.NotFound', {
+          lang: I18nContext.current().lang,
+        }),
+      );
     }
 
     if (!(await this.comparePassword(password, user.password))) {
-      throw new BadRequestException(CustomExceptions.auth.InvalidCred);
+      throw new BadRequestException(
+        this.i18n.t('exceptions.auth.InvalidCred', {
+          lang: I18nContext.current().lang,
+        }),
+      );
     }
 
     const tokens = await this.generateTokens(user);
@@ -97,14 +114,22 @@ export class AuthService {
         where: { id: decodedToken.id },
       });
       if (!user) {
-        throw new BadRequestException(CustomExceptions.auth.InvalidRefresh);
+        throw new BadRequestException(
+          this.i18n.t('exceptions.auth.InvalidRefresh', {
+            lang: I18nContext.current().lang,
+          }),
+        );
       }
 
       const accessToken = await this.generateAccessToken(user);
 
       return new AuthRefreshResponse(accessToken);
     } catch (error) {
-      throw new BadRequestException(CustomExceptions.auth.InvalidRefresh);
+      throw new BadRequestException(
+        this.i18n.t('exceptions.auth.InvalidRefresh', {
+          lang: I18nContext.current().lang,
+        }),
+      );
     }
   }
 

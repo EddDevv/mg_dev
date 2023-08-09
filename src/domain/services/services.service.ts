@@ -10,16 +10,17 @@ import {
   ServiceListResponse,
   ServiceResponse,
 } from 'src/application/dto/services/services.response';
-import { CustomExceptions } from 'src/config/messages/custom.exceptions';
 import { CategoriesRepository } from 'src/infrastructure/repositories/categories.repository';
 import { ServicesRepository } from 'src/infrastructure/repositories/services.repository';
 import { ServicesEntity } from './services.entity';
+import { I18nContext, I18nService } from 'nestjs-i18n';
 
 @Injectable()
 export class ServicesService {
   constructor(
     private readonly servicesRepository: ServicesRepository,
     private readonly categoriesRepository: CategoriesRepository,
+    private readonly i18n: I18nService,
   ) {}
 
   async getService({ id }: ServicesGetRequest): Promise<ServiceResponse> {
@@ -27,7 +28,11 @@ export class ServicesService {
       where: { id },
     });
     if (!service) {
-      throw new NotFoundException(CustomExceptions.service.NotFound);
+      throw new NotFoundException(
+        this.i18n.t('exceptions.service.NotFound', {
+          lang: I18nContext.current().lang,
+        }),
+      );
     }
 
     return new ServiceResponse(new Service(service));
@@ -63,7 +68,11 @@ export class ServicesService {
       where: { id: categoryId },
     });
     if (!category) {
-      throw new NotFoundException(CustomExceptions.category.NotFound);
+      throw new NotFoundException(
+        this.i18n.t('exceptions.category.NotFound', {
+          lang: I18nContext.current().lang,
+        }),
+      );
     }
 
     const service = new ServicesEntity(category, categoryId, title);
@@ -80,7 +89,11 @@ export class ServicesService {
       relations: ['category'],
     });
     if (!service) {
-      throw new NotFoundException(CustomExceptions.service.NotFound);
+      throw new NotFoundException(
+        this.i18n.t('exceptions.service.NotFound', {
+          lang: I18nContext.current().lang,
+        }),
+      );
     }
 
     if (categoryId) {
@@ -88,7 +101,11 @@ export class ServicesService {
         where: { id: categoryId },
       });
       if (!category) {
-        throw new NotFoundException(CustomExceptions.category.NotFound);
+        throw new NotFoundException(
+          this.i18n.t('exceptions.category.NotFound', {
+            lang: I18nContext.current().lang,
+          }),
+        );
       }
       service.category = category;
       service.categoryId = categoryId;
@@ -106,7 +123,11 @@ export class ServicesService {
   async delete(id: number): Promise<void> {
     const service = await this.servicesRepository.findOne({ where: { id } });
     if (!service) {
-      throw new NotFoundException(CustomExceptions.service.NotFound);
+      throw new NotFoundException(
+        this.i18n.t('exceptions.service.NotFound', {
+          lang: I18nContext.current().lang,
+        }),
+      );
     }
 
     await this.servicesRepository.softDelete({ id: service.id });

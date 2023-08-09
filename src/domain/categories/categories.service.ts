@@ -10,20 +10,27 @@ import {
   CategoryListResponse,
   CategoryResponse,
 } from 'src/application/dto/categories/categories.response';
-import { CustomExceptions } from 'src/config/messages/custom.exceptions';
 import { CategoriesRepository } from 'src/infrastructure/repositories/categories.repository';
 import { CategoriesEntity } from './categories.entity';
+import { I18nContext, I18nService } from 'nestjs-i18n';
 
 @Injectable()
 export class CategoriesService {
-  constructor(private readonly categoriesRepository: CategoriesRepository) {}
+  constructor(
+    private readonly categoriesRepository: CategoriesRepository,
+    private readonly i18n: I18nService,
+  ) {}
 
   async getCategory({ id }: CategoriesGetRequest): Promise<CategoryResponse> {
     const category = await this.categoriesRepository.findOne({
-      where: { id }
+      where: { id },
     });
     if (!category) {
-      throw new NotFoundException(CustomExceptions.category.NotFound);
+      throw new NotFoundException(
+        this.i18n.t('exceptions.category.NotFound', {
+          lang: I18nContext.current().lang,
+        }),
+      );
     }
 
     return new CategoryResponse(new Category(category));
@@ -59,7 +66,11 @@ export class CategoriesService {
   ): Promise<CategoryResponse> {
     const category = await this.categoriesRepository.findOne({ where: { id } });
     if (!category) {
-      throw new NotFoundException(CustomExceptions.category.NotFound);
+      throw new NotFoundException(
+        this.i18n.t('exceptions.category.NotFound', {
+          lang: I18nContext.current().lang,
+        }),
+      );
     }
 
     category.title = title;
@@ -71,7 +82,11 @@ export class CategoriesService {
   async delete(id: number): Promise<void> {
     const category = await this.categoriesRepository.findOne({ where: { id } });
     if (!category) {
-      throw new NotFoundException(CustomExceptions.category.NotFound);
+      throw new NotFoundException(
+        this.i18n.t('exceptions.category.NotFound', {
+          lang: I18nContext.current().lang,
+        }),
+      );
     }
 
     await this.categoriesRepository.softDelete({ id: category.id });

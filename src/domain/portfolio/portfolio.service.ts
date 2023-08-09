@@ -8,7 +8,6 @@ import {
   PortfolioGetListRequest,
   PortfolioUpdateRequest,
 } from 'src/application/dto/portfolio/portfolio.request';
-import { CustomExceptions } from 'src/config/messages/custom.exceptions';
 import { BusinessAccountsRepository } from 'src/infrastructure/repositories/business-accounts.repository';
 import { PortfolioRepository } from 'src/infrastructure/repositories/portfolio.repository';
 import { PortfolioEntity } from './portfolio.entity';
@@ -20,6 +19,7 @@ import {
 import { PostsGetRequest } from 'src/application/dto/posts/posts.request';
 import { CategoriesRepository } from 'src/infrastructure/repositories/categories.repository';
 import { ServicesRepository } from 'src/infrastructure/repositories/services.repository';
+import { I18nContext, I18nService } from 'nestjs-i18n';
 
 @Injectable()
 export class PortfolioService {
@@ -28,6 +28,7 @@ export class PortfolioService {
     private readonly businessAccountsRepository: BusinessAccountsRepository,
     private readonly categoriesRepository: CategoriesRepository,
     private readonly servicesRepository: ServicesRepository,
+    private readonly i18n: I18nService,
   ) {}
 
   async getPortfolio({ id }: PostsGetRequest): Promise<PortfolioResponse> {
@@ -36,7 +37,11 @@ export class PortfolioService {
       relations: ['category', 'service'],
     });
     if (!portfolio) {
-      throw new NotFoundException(CustomExceptions.portfolio.NotFound);
+      throw new NotFoundException(
+        this.i18n.t('exceptions.portfolio.NotFound', {
+          lang: I18nContext.current().lang,
+        }),
+      );
     }
 
     return new PortfolioResponse(new Portfolio(portfolio));
@@ -75,25 +80,41 @@ export class PortfolioService {
       where: { id: businessId },
     });
     if (!businessAccount) {
-      throw new NotFoundException(CustomExceptions.businessAccount.NotFound);
+      throw new NotFoundException(
+        this.i18n.t('exceptions.businessAccount.NotFound', {
+          lang: I18nContext.current().lang,
+        }),
+      );
     }
 
     const category = await this.categoriesRepository.findOne({
       where: { id: categoryId },
     });
     if (!category) {
-      throw new NotFoundException(CustomExceptions.category.NotFound);
+      throw new NotFoundException(
+        this.i18n.t('exceptions.category.NotFound', {
+          lang: I18nContext.current().lang,
+        }),
+      );
     }
 
     const service = await this.servicesRepository.findOne({
       where: { id: serviceId },
     });
     if (!service) {
-      throw new NotFoundException(CustomExceptions.service.NotFound);
+      throw new NotFoundException(
+        this.i18n.t('exceptions.service.NotFound', {
+          lang: I18nContext.current().lang,
+        }),
+      );
     }
 
     if (service.categoryId != categoryId) {
-      throw new BadRequestException(CustomExceptions.service.NotConform);
+      throw new BadRequestException(
+        this.i18n.t('exceptions.service.NotConform', {
+          lang: I18nContext.current().lang,
+        }),
+      );
     }
 
     const portfolio = new PortfolioEntity(
@@ -118,7 +139,11 @@ export class PortfolioService {
       relations: ['category', 'service'],
     });
     if (!portfolio) {
-      throw new NotFoundException(CustomExceptions.portfolio.NotFound);
+      throw new NotFoundException(
+        this.i18n.t('exceptions.portfolio.NotFound', {
+          lang: I18nContext.current().lang,
+        }),
+      );
     }
 
     if (categoryId && serviceId) {
@@ -126,7 +151,11 @@ export class PortfolioService {
         where: { id: categoryId },
       });
       if (!category) {
-        throw new NotFoundException(CustomExceptions.category.NotFound);
+        throw new NotFoundException(
+          this.i18n.t('exceptions.category.NotFound', {
+            lang: I18nContext.current().lang,
+          }),
+        );
       }
 
       const service = await this.servicesRepository.findOne({
@@ -134,11 +163,19 @@ export class PortfolioService {
       });
 
       if (!service) {
-        throw new NotFoundException(CustomExceptions.service.NotFound);
+        throw new NotFoundException(
+          this.i18n.t('exceptions.service.NotFound', {
+            lang: I18nContext.current().lang,
+          }),
+        );
       }
 
       if (category.id != service.categoryId) {
-        throw new NotFoundException(CustomExceptions.service.NotConform);
+        throw new NotFoundException(
+          this.i18n.t('exceptions.service.NotConform', {
+            lang: I18nContext.current().lang,
+          }),
+        );
       }
 
       portfolio.category = category;
@@ -160,7 +197,11 @@ export class PortfolioService {
   async delete(id: number): Promise<void> {
     const portfolio = await this.portfolioRepository.findOne({ where: { id } });
     if (!portfolio) {
-      throw new NotFoundException(CustomExceptions.portfolio.NotFound);
+      throw new NotFoundException(
+        this.i18n.t('exceptions.portfolio.NotFound', {
+          lang: I18nContext.current().lang,
+        }),
+      );
     }
 
     await this.portfolioRepository.softDelete(id);

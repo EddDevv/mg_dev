@@ -14,11 +14,11 @@ import {
   RecordListEventResponse,
   RecordResponse,
 } from 'src/application/dto/records/records.response';
-import { CustomExceptions } from 'src/config/messages/custom.exceptions';
 import { EventsRepository } from 'src/infrastructure/repositories/events.repository';
 import { RecordsRepository } from 'src/infrastructure/repositories/records.repository';
 import { UsersRepository } from 'src/infrastructure/repositories/users.repository';
 import { RecordsEntity } from './records.entity';
+import { I18nContext, I18nService } from 'nestjs-i18n';
 
 @Injectable()
 export class RecordsService {
@@ -26,6 +26,7 @@ export class RecordsService {
     private readonly recordsRepository: RecordsRepository,
     private readonly eventsRepository: EventsRepository,
     private readonly usersRepository: UsersRepository,
+    private readonly i18n: I18nService,
   ) {}
 
   async getRecord({ id }: RecordsGetRequest): Promise<RecordResponse> {
@@ -34,7 +35,11 @@ export class RecordsService {
       relations: ['event', 'user'],
     });
     if (!record) {
-      throw new NotFoundException(CustomExceptions.record.NotFound);
+      throw new NotFoundException(
+        this.i18n.t('exceptions.record.NotFound', {
+          lang: I18nContext.current().lang,
+        }),
+      );
     }
 
     return new RecordResponse(new Record(record));
@@ -72,21 +77,33 @@ export class RecordsService {
     });
 
     if (recordExists) {
-      throw new BadRequestException(CustomExceptions.record.AlreadyHave);
+      throw new BadRequestException(
+        this.i18n.t('exceptions.record.AlreadyHave', {
+          lang: I18nContext.current().lang,
+        }),
+      );
     }
 
     const event = await this.eventsRepository.findOne({
       where: { id: eventId },
     });
     if (!event) {
-      throw new NotFoundException(CustomExceptions.event.NotFound);
+      throw new NotFoundException(
+        this.i18n.t('exceptions.event.NotFound', {
+          lang: I18nContext.current().lang,
+        }),
+      );
     }
 
     const user = await this.usersRepository.findOne({
       where: { id: userId },
     });
     if (!user) {
-      throw new NotFoundException(CustomExceptions.user.NotFound);
+      throw new NotFoundException(
+        this.i18n.t('exceptions.user.NotFound', {
+          lang: I18nContext.current().lang,
+        }),
+      );
     }
 
     const record = new RecordsEntity( user, user.id, event, event.id);
@@ -104,12 +121,20 @@ export class RecordsService {
     });
 
     if (recordExists) {
-      throw new BadRequestException(CustomExceptions.record.AlreadyHave);
+      throw new BadRequestException(
+        this.i18n.t('exceptions.record.AlreadyHave', {
+          lang: I18nContext.current().lang,
+        }),
+      );
     }
 
     const record = await this.recordsRepository.findOne({ where: { id } });
     if (!record) {
-      throw new NotFoundException(CustomExceptions.record.NotFound);
+      throw new NotFoundException(
+        this.i18n.t('exceptions.record.NotFound', {
+          lang: I18nContext.current().lang,
+        }),
+      );
     }
 
     if (userId) {
@@ -117,7 +142,11 @@ export class RecordsService {
         where: { id: userId },
       });
       if (!user) {
-        throw new NotFoundException(CustomExceptions.user.NotFound);
+        throw new NotFoundException(
+          this.i18n.t('exceptions.user.NotFound', {
+            lang: I18nContext.current().lang,
+          }),
+        );
       }
       record.user = user;
       record.userId = user.id;
@@ -128,7 +157,11 @@ export class RecordsService {
         where: { id: eventId },
       });
       if (!event) {
-        throw new NotFoundException(CustomExceptions.event.NotFound);
+        throw new NotFoundException(
+          this.i18n.t('exceptions.event.NotFound', {
+            lang: I18nContext.current().lang,
+          }),
+        );
       }
       record.event = event;
       record.eventId = event.id;
@@ -142,7 +175,11 @@ export class RecordsService {
   async delete(id: number): Promise<void> {
     const record = await this.recordsRepository.findOne({ where: { id } });
     if (!record) {
-      throw new NotFoundException(CustomExceptions.record.NotFound);
+      throw new NotFoundException(
+        this.i18n.t('exceptions.record.NotFound', {
+          lang: I18nContext.current().lang,
+        }),
+      );
     }
 
     await this.recordsRepository.softDelete({ id: record.id });

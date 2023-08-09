@@ -14,7 +14,6 @@ import {
   PostListResponse,
   PostResponse,
 } from 'src/application/dto/posts/posts.response';
-import { CustomExceptions } from 'src/config/messages/custom.exceptions';
 import { User } from '../../application/dto/users/users.response';
 import { LikePostRequest } from '../../application/dto/likes/likes.request';
 import {
@@ -23,6 +22,7 @@ import {
 } from '../../application/dto/likes/likes.response';
 import { LikesEntity } from '../likes/likes.entity';
 import { LikesRepository } from '../../infrastructure/repositories/likes.repository';
+import { I18nContext, I18nService } from 'nestjs-i18n';
 
 @Injectable()
 export class PostsService {
@@ -30,6 +30,7 @@ export class PostsService {
     private readonly postsRepository: PostsRepository,
     private readonly usersRepository: UsersRepository,
     private readonly likesRepository: LikesRepository,
+    private readonly i18n: I18nService,
   ) {}
 
   async getPost({ id }: PostsGetRequest): Promise<PostResponse> {
@@ -38,7 +39,11 @@ export class PostsService {
       relations: ['user'],
     });
     if (!post) {
-      throw new NotFoundException(CustomExceptions.posts.NotFound);
+      throw new NotFoundException(
+        this.i18n.t('exceptions.posts.NotFound', {
+          lang: I18nContext.current().lang,
+        }),
+      );
     }
 
     return new PostResponse(new Post(post));
@@ -71,7 +76,11 @@ export class PostsService {
   async create({ userId, text }: PostsCreateRequest): Promise<PostResponse> {
     const user = await this.usersRepository.findOne({ where: { id: userId } });
     if (!user) {
-      throw new NotFoundException(CustomExceptions.user.NotFound);
+      throw new NotFoundException(
+        this.i18n.t('exceptions.user.NotFound', {
+          lang: I18nContext.current().lang,
+        }),
+      );
     }
 
     const post = new PostEntity(user, userId, text);
@@ -82,7 +91,11 @@ export class PostsService {
   async addView({ id }: PostsAddViewRequest): Promise<void> {
     const post = await this.postsRepository.findOne({ where: { id } });
     if (!post) {
-      throw new NotFoundException(CustomExceptions.posts.NotFound);
+      throw new NotFoundException(
+        this.i18n.t('exceptions.posts.NotFound', {
+          lang: I18nContext.current().lang,
+        }),
+      );
     }
 
     post.views += 1;
@@ -96,7 +109,11 @@ export class PostsService {
   ): Promise<PostResponse> {
     const post = await this.postsRepository.findOne({ where: { id } });
     if (!post) {
-      throw new NotFoundException(CustomExceptions.posts.NotFound);
+      throw new NotFoundException(
+        this.i18n.t('exceptions.posts.NotFound', {
+          lang: I18nContext.current().lang,
+        }),
+      );
     }
 
     post.text = text;
@@ -108,7 +125,11 @@ export class PostsService {
   async deletePost(id: number): Promise<void> {
     const post = await this.postsRepository.findOne({ where: { id } });
     if (!post) {
-      throw new NotFoundException(CustomExceptions.posts.NotFound);
+      throw new NotFoundException(
+        this.i18n.t('exceptions.posts.NotFound', {
+          lang: I18nContext.current().lang,
+        }),
+      );
     }
 
     await this.postsRepository.softDelete({ id: post.id });
@@ -117,7 +138,11 @@ export class PostsService {
   async like(user: User, { postId }: LikePostRequest): Promise<LikePost> {
     const post = await this.postsRepository.findOne({ where: { id: postId } });
     if (!post) {
-      throw new NotFoundException(CustomExceptions.posts.NotFound);
+      throw new NotFoundException(
+        this.i18n.t('exceptions.posts.NotFound', {
+          lang: I18nContext.current().lang,
+        }),
+      );
     }
 
     const existUser = await this.usersRepository.findOne({
@@ -135,7 +160,11 @@ export class PostsService {
       where: { id: postId },
     });
     if (!post) {
-      throw new NotFoundException(CustomExceptions.posts.NotFound);
+      throw new NotFoundException(
+        this.i18n.t('exceptions.posts.NotFound', {
+          lang: I18nContext.current().lang,
+        }),
+      );
     }
 
     const [likes, count] = await this.likesRepository.findAndCount({

@@ -13,12 +13,14 @@ import {
   EventViewRequest,
 } from '../../application/dto/events/events.request';
 import { EventsEntity } from './events.entity';
-import { CustomExceptions } from '../../config/messages/custom.exceptions';
-import { count } from 'rxjs';
+import { I18nContext, I18nService } from 'nestjs-i18n';
 
 @Injectable()
 export class EventsService {
-  constructor(private readonly eventsRepository: EventsRepository) {}
+  constructor(
+    private readonly eventsRepository: EventsRepository,
+    private readonly i18n: I18nService,
+  ) {}
 
   async createEvent({
     title,
@@ -49,7 +51,11 @@ export class EventsService {
     });
 
     if (!event) {
-      throw new NotFoundException(CustomExceptions.event.NotFound);
+      throw new NotFoundException(
+        this.i18n.t('exceptions.event.NotFound', {
+          lang: I18nContext.current().lang,
+        }),
+      );
     }
 
     return new EventResponse(new Event(event));
@@ -82,7 +88,11 @@ export class EventsService {
       },
     });
     if (!event) {
-      throw new NotFoundException(CustomExceptions.event.NotFound);
+      throw new NotFoundException(
+        this.i18n.t('exceptions.event.NotFound', {
+          lang: I18nContext.current().lang,
+        }),
+      );
     }
 
     Object.assign(event, body);
