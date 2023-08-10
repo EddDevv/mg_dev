@@ -22,7 +22,7 @@ import {
   EventUpdateRequest,
   EventViewRequest,
 } from '../dto/events/events.request';
-import { ApiOkResponse } from '@nestjs/swagger';
+import { ApiOkResponse, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { AuthGuard } from '../guards/auth.guard';
 import { IRequestUser } from '../../config/user-request.interface';
 import { RecordResponse } from '../dto/records/records.response';
@@ -67,6 +67,8 @@ export class EventsController {
     return this.eventsService.deleteEvent(query);
   }
 
+  @ApiOkResponse({ type: RecordResponse })
+  @ApiUnauthorizedResponse()
   @UseGuards(AuthGuard)
   @Post('/sign-up')
   signUp(
