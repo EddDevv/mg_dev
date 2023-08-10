@@ -3,6 +3,7 @@ import { Post } from '../posts/posts.response';
 import { User } from '../users/users.response';
 import { Comment } from '../comments/comments.response';
 import { BasicResponseArray } from '../../../config/basic.response';
+import moment from 'moment';
 
 export class Like {
   @ApiProperty({ type: User })
@@ -17,6 +18,7 @@ export class Like {
   constructor(user: User, post: Post, comment: Comment) {
     this.user = user;
     this.post = post;
+    this.post.createdAt = moment(post.createdAt).format('YYYY-MM-DD');
     this.comment = comment;
   }
 }

@@ -6,7 +6,6 @@ import {
 import { UserService } from 'src/domain/users/user.service';
 import {
   BusinessAccountsCreateRequest,
-  BusinessAccountsGetListRequest,
   BusinessAccountsGetRequest,
   BusinessAccountsUpdateRequest,
 } from '../../application/dto/business-accounts/business-accounts.request';
@@ -19,6 +18,7 @@ import {
   BusinessAccountResponse,
 } from '../../application/dto/business-accounts/business-accounts.response';
 import { CustomExceptions } from '../../config/messages/custom.exceptions';
+import moment from 'moment';
 
 @Injectable()
 export class BusinessAccountService {
@@ -47,13 +47,9 @@ export class BusinessAccountService {
     }
   }
 
-  async findAll({
-    createdAt,
-  }: BusinessAccountsGetListRequest): Promise<BusinessAccountsListResponse> {
+  async findAll(): Promise<BusinessAccountsListResponse> {
     const [businessAccounts, count] =
-      await this.businessAccountRepository.findAndCount({
-        order: { createdAt: createdAt },
-      });
+      await this.businessAccountRepository.findAndCount({});
 
     if (count == 0) {
       return new BusinessAccountsListResponse([], 0);

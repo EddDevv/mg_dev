@@ -24,15 +24,6 @@ export class ServicesGetRequest {
   id: number;
 }
 
-export class ServicesGetListRequest {
-  @ApiProperty()
-  categoryId: number;
-
-  @ApiProperty()
-  @IsDateString()
-  createdAt: string;
-}
-
 export class ServicesUpdateRequest
   implements Omit<IService, 'category' | 'portfolios'>
 {

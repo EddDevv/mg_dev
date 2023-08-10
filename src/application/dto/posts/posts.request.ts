@@ -1,7 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDateString, IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsString } from 'class-validator';
 import { IPost } from '../../../domain/posts/post.entity';
-import { FindOptionsOrderValue } from 'typeorm';
 
 export class PostsCreateRequest
   implements Omit<IPost, 'user' | 'shareId' | 'comments' | 'views' | 'likes'>
@@ -28,13 +27,6 @@ export class PostsGetRequest {
 export class PostsGetListRequest {
   @ApiProperty()
   userId: number;
-
-  @ApiProperty()
-  @IsDateString()
-  createdAt: string;
-
-  @ApiProperty()
-  views: FindOptionsOrderValue;
 }
 
 export class PostsUpdateRequest

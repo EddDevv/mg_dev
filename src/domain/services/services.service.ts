@@ -1,7 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import {
   ServicesCreateRequest,
-  ServicesGetListRequest,
   ServicesGetRequest,
   ServicesUpdateRequest,
 } from 'src/application/dto/services/services.request';
@@ -33,16 +32,8 @@ export class ServicesService {
     return new ServiceResponse(new Service(service));
   }
 
-  async getAllServices({
-    categoryId,
-    createdAt,
-  }: ServicesGetListRequest): Promise<ServiceListResponse> {
-    const [services, count] = await this.servicesRepository.findAndCount({
-      where: {
-        categoryId,
-      },
-      order: { createdAt: createdAt },
-    });
+  async getAllServices(): Promise<ServiceListResponse> {
+    const [services, count] = await this.servicesRepository.findAndCount({});
 
     if (count == 0) {
       return new ServiceListResponse([], 0);

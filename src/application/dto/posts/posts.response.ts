@@ -6,6 +6,7 @@ import {
 } from '../../../config/basic.response';
 import { Comment } from '../comments/comments.response';
 import { User } from '../users/users.response';
+import moment from 'moment';
 
 export class Post
   implements Omit<IPost, 'user' | 'userId' | 'comments' | 'likes'>
@@ -29,7 +30,7 @@ export class Post
   views: number;
 
   @ApiProperty()
-  createdAt: Date;
+  createdAt: string;
 
   constructor(post: PostEntity) {
     this.id = post.id;
@@ -37,6 +38,7 @@ export class Post
     this.text = post.text;
     this.user = new User(post.user);
     this.views = post.views;
+    this.createdAt = moment(post.createdAt).format('YYYY-MM-DD');
   }
 }
 

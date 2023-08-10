@@ -50,11 +50,3 @@ export class PortfolioGetRequest {
   @ApiProperty({ example: '2', description: 'The Portfolio id' })
   id: number;
 }
-
-export class PortfolioGetListRequest {
-  @ApiProperty({ example: '2', description: 'The Business id' })
-  businessId: number;
-
-  @ApiProperty()
-  createdAt: string;
-}

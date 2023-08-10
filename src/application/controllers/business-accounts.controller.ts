@@ -10,7 +10,6 @@ import {
 import { BusinessAccountService } from '../../domain/business-accounts/business-accounts.service';
 import {
   BusinessAccountsCreateRequest,
-  BusinessAccountsGetListRequest,
   BusinessAccountsGetRequest,
   BusinessAccountsUpdateRequest,
 } from '../dto/business-accounts/business-accounts.request';
@@ -53,10 +52,8 @@ export class BusinessAccountController {
     description: ResponseMessages.businessAccount.findAll,
   })
   @Get('/list')
-  findAll(
-    @Query() query: BusinessAccountsGetListRequest,
-  ): Promise<BusinessAccountsListResponse> {
-    return this.businessAccountService.findAll(query);
+  findAll(@Query() query): Promise<BusinessAccountsListResponse> {
+    return this.businessAccountService.findAll();
   }
 
   @ApiOkResponse({

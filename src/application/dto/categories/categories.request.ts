@@ -20,11 +20,6 @@ export class CategoriesGetRequest {
   id: number;
 }
 
-export class CategoriesGetListRequest {
-  @ApiProperty()
-  createdAt: string;
-}
-
 export class CategoriesUpdateRequest
   implements Omit<ICategory, 'services' | 'portfolios'>
 {

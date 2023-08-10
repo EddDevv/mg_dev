@@ -26,6 +26,7 @@ import {
   LikePost,
 } from '../../application/dto/likes/likes.response';
 import { LikesRepository } from '../../infrastructure/repositories/likes.repository';
+import { Post } from '../../application/dto/posts/posts.response';
 
 @Injectable()
 export class CommentsService {
@@ -155,7 +156,7 @@ export class CommentsService {
     });
 
     const likesResponse = likes.map((like) => {
-      return new LikePost(like.user, like.post);
+      return new LikePost(new User(like.user), new Post(like.post));
     });
 
     return new LikeListCommentResponse(likesResponse, count);
