@@ -5,8 +5,11 @@ import {
   BasicResponse,
   BasicResponseArray,
 } from '../../../config/basic.response';
+import moment from 'moment';
 
-export class Event implements Omit<IEvent, 'categories' | 'records'> {
+export class Event
+  implements Omit<IEvent, 'categories' | 'records' | 'startDate' | 'endDate'>
+{
   @ApiProperty()
   id: number;
 
@@ -26,10 +29,10 @@ export class Event implements Omit<IEvent, 'categories' | 'records'> {
   seatsNumber: number;
 
   @ApiProperty()
-  startDate: Date;
+  startDate: string;
 
   @ApiProperty()
-  endDate: Date;
+  endDate: string;
 
   constructor(event: EventsEntity) {
     this.id = event.id;
@@ -37,8 +40,8 @@ export class Event implements Omit<IEvent, 'categories' | 'records'> {
     this.description = event.description;
     this.meetType = event.meetType;
     this.seatsNumber = event.seatsNumber;
-    this.startDate = event.startDate;
-    this.endDate = event.endDate;
+    this.startDate = moment(event.startDate).format('YYYY-MM-DD');
+    this.endDate = moment(event.endDate).format('YYYY-MM-DD');
   }
 }
 

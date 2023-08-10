@@ -61,8 +61,8 @@ export class EventsService {
       seatsNumber,
       userEntity,
       user.id,
-      startDate,
-      endDate,
+      new Date(startDate),
+      new Date(endDate),
     );
     await this.eventsRepository.save(event);
 

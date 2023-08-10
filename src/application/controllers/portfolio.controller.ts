@@ -22,7 +22,6 @@ import { PortfolioService } from 'src/domain/portfolio/portfolio.service';
 import { AuthGuard } from '../guards/auth.guard';
 import {
   PortfolioCreateRequest,
-  PortfolioGetListRequest,
   PortfolioGetRequest,
   PortfolioUpdateRequest,
 } from '../dto/portfolio/portfolio.request';
@@ -54,10 +53,8 @@ export class PortfolioController {
     description: ResponseMessages.portfolio.findAll,
   })
   @Get('/list')
-  getAllPortfolio(
-    @Query() query: PortfolioGetListRequest,
-  ): Promise<PortfolioListResponse> {
-    return this.portfolioService.getAllPortfolio(query);
+  getAllPortfolio(@Query() query): Promise<PortfolioListResponse> {
+    return this.portfolioService.getAllPortfolio();
   }
 
   @ApiCreatedResponse({

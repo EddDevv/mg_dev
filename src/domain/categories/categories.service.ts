@@ -1,7 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import {
   CategoriesCreateRequest,
-  CategoriesGetListRequest,
   CategoriesGetRequest,
   CategoriesUpdateRequest,
 } from 'src/application/dto/categories/categories.request';
@@ -20,7 +19,7 @@ export class CategoriesService {
 
   async getCategory({ id }: CategoriesGetRequest): Promise<CategoryResponse> {
     const category = await this.categoriesRepository.findOne({
-      where: { id }
+      where: { id },
     });
     if (!category) {
       throw new NotFoundException(CustomExceptions.category.NotFound);
@@ -29,12 +28,10 @@ export class CategoriesService {
     return new CategoryResponse(new Category(category));
   }
 
-  async getAllCategories({
-    createdAt,
-  }: CategoriesGetListRequest): Promise<CategoryListResponse> {
-    const [categories, count] = await this.categoriesRepository.findAndCount({
-      order: { createdAt: createdAt },
-    });
+  async getAllCategories(): Promise<CategoryListResponse> {
+    const [categories, count] = await this.categoriesRepository.findAndCount(
+      {},
+    );
 
     if (count == 0) {
       return new CategoryListResponse([], 0);

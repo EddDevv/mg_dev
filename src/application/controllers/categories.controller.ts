@@ -23,7 +23,6 @@ import { ResponseMessages } from 'src/config/messages/response.messages';
 import { CustomExceptions } from 'src/config/messages/custom.exceptions';
 import {
   CategoriesCreateRequest,
-  CategoriesGetListRequest,
   CategoriesGetRequest,
   CategoriesUpdateRequest,
 } from '../dto/categories/categories.request';
@@ -31,7 +30,7 @@ import {
 @ApiTags('Categories')
 @Controller('categories')
 export class CategoriesController {
-  constructor(private readonly categoriesService: CategoriesService) { }
+  constructor(private readonly categoriesService: CategoriesService) {}
 
   @ApiOkResponse({
     type: CategoryResponse,
@@ -48,10 +47,8 @@ export class CategoriesController {
     description: ResponseMessages.category.findAll,
   })
   @Get('/list')
-  getAllCategories(
-    @Query() query: CategoriesGetListRequest,
-  ): Promise<CategoryListResponse> {
-    return this.categoriesService.getAllCategories(query);
+  getAllCategories(@Query() query): Promise<CategoryListResponse> {
+    return this.categoriesService.getAllCategories();
   }
 
   @ApiCreatedResponse({

@@ -23,7 +23,6 @@ import {
 } from '../dto/services/services.response';
 import {
   ServicesCreateRequest,
-  ServicesGetListRequest,
   ServicesGetRequest,
   ServicesUpdateRequest,
 } from '../dto/services/services.request';
@@ -48,10 +47,8 @@ export class ServicesController {
     description: ResponseMessages.service.findAll,
   })
   @Get('/list')
-  getAllServices(
-    @Query() query: ServicesGetListRequest,
-  ): Promise<ServiceListResponse> {
-    return this.servicesService.getAllServices(query);
+  getAllServices(@Query() query): Promise<ServiceListResponse> {
+    return this.servicesService.getAllServices();
   }
 
   @ApiCreatedResponse({

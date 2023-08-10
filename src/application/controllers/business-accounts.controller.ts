@@ -53,7 +53,7 @@ export class BusinessAccountController {
   })
   @Get('/list')
   findAll(@Query() query): Promise<BusinessAccountsListResponse> {
-    return this.businessAccountService.findAll(query);
+    return this.businessAccountService.findAll();
   }
 
   @ApiOkResponse({

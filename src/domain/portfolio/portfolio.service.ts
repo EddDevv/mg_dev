@@ -5,7 +5,6 @@ import {
 } from '@nestjs/common';
 import {
   PortfolioCreateRequest,
-  PortfolioGetListRequest,
   PortfolioUpdateRequest,
 } from 'src/application/dto/portfolio/portfolio.request';
 import { CustomExceptions } from 'src/config/messages/custom.exceptions';
@@ -42,17 +41,8 @@ export class PortfolioService {
     return new PortfolioResponse(new Portfolio(portfolio));
   }
 
-  async getAllPortfolio({
-    businessId,
-    createdAt,
-  }: PortfolioGetListRequest): Promise<PortfolioListResponse> {
-    const [portfolios, count] = await this.portfolioRepository.findAndCount({
-      relations: ['category', 'service'],
-      where: {
-        businessId,
-      },
-      order: { createdAt: createdAt },
-    });
+  async getAllPortfolio(): Promise<PortfolioListResponse> {
+    const [portfolios, count] = await this.portfolioRepository.findAndCount({});
 
     if (count == 0) {
       return new PortfolioListResponse([], 0);

@@ -6,7 +6,6 @@ import {
 import { UserService } from 'src/domain/users/user.service';
 import {
   BusinessAccountsCreateRequest,
-  BusinessAccountsGetListRequest,
   BusinessAccountsGetRequest,
   BusinessAccountsUpdateRequest,
 } from '../../application/dto/business-accounts/business-accounts.request';
@@ -48,9 +47,7 @@ export class BusinessAccountService {
     }
   }
 
-  async findAll({
-    createdAt,
-  }: BusinessAccountsGetListRequest): Promise<BusinessAccountsListResponse> {
+  async findAll(): Promise<BusinessAccountsListResponse> {
     const [businessAccounts, count] =
       await this.businessAccountRepository.findAndCount({});
 

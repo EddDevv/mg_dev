@@ -141,7 +141,7 @@ export class PostsService {
     });
 
     const likesResponse = likes.map((like) => {
-      return new LikePost(like.user, like.post);
+      return new LikePost(new User(like.user), new Post(like.post));
     });
 
     return new LikeListPostResponse(likesResponse, count);

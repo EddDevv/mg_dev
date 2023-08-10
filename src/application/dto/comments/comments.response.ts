@@ -6,6 +6,7 @@ import {
 } from '../../../config/basic.response';
 import { Post } from '../posts/posts.response';
 import { User } from '../users/users.response';
+import moment from 'moment';
 
 export class Comment
   implements
@@ -20,6 +21,7 @@ export class Comment
       | 'parentComment'
       | 'parentCommentId'
       | 'childrenComments'
+      | 'createdAt'
     >
 {
   @ApiProperty()
@@ -41,11 +43,12 @@ export class Comment
   post: Post;
 
   @ApiProperty()
-  createdAt: Date;
+  createdAt: string;
 
   constructor(comment: CommentEntity) {
     this.id = comment.id;
     this.text = comment.text;
+    this.createdAt = moment(comment.createdAt).format('YYYY-MM-DD');
   }
 }
 
