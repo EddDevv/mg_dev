@@ -5,7 +5,9 @@ import {
 } from '../../../config/basic.response';
 import { IService, ServicesEntity } from 'src/domain/services/services.entity';
 
-export class Service implements Omit<IService, 'category' | 'portfolios'> {
+export class Service
+  implements Omit<IService, 'category' | 'portfolios' | 'business'>
+{
   @ApiProperty()
   id: number;
 
@@ -13,12 +15,28 @@ export class Service implements Omit<IService, 'category' | 'portfolios'> {
   title: string;
 
   @ApiProperty()
+  price: number;
+
+  @ApiProperty()
+  description: string;
+
+  @ApiProperty()
+  departureToClient: boolean;
+
+  @ApiProperty()
   categoryId: number;
+
+  @ApiProperty()
+  businessId: number;
 
   constructor(service: ServicesEntity) {
     this.id = service.id;
     this.title = service.title;
+    this.price = service.price;
+    this.description = service.description;
+    this.departureToClient = service.departureToClient;
     this.categoryId = service.categoryId;
+    this.businessId = service.businessId;
   }
 }
 

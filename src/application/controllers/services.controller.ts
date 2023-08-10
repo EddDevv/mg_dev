@@ -39,8 +39,8 @@ export class ServicesController {
   })
   @ApiNotFoundResponse({ description: CustomExceptions.service.NotFound })
   @Get()
-  getService(@Param() param: ServicesGetRequest): Promise<ServiceResponse> {
-    return this.servicesService.getService(param);
+  getService(@Query() query: ServicesGetRequest): Promise<ServiceResponse> {
+    return this.servicesService.getService(query);
   }
 
   @ApiOkResponse({
