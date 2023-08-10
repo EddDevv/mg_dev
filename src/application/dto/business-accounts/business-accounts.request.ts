@@ -24,5 +24,5 @@ export class BusinessAccountsGetRequest {
 
 export class BusinessAccountsGetListRequest {
   @ApiProperty()
-  createdAt: FindOptionsOrderValue;
+  createdAt: string;
 }

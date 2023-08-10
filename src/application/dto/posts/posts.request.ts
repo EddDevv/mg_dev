@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsDateString, IsNotEmpty, IsString } from 'class-validator';
 import { IPost } from '../../../domain/posts/post.entity';
 import { FindOptionsOrderValue } from 'typeorm';
 
@@ -30,7 +30,8 @@ export class PostsGetListRequest {
   userId: number;
 
   @ApiProperty()
-  createdAt: FindOptionsOrderValue;
+  @IsDateString()
+  createdAt: string;
 
   @ApiProperty()
   views: FindOptionsOrderValue;

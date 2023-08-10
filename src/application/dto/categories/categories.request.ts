@@ -22,7 +22,7 @@ export class CategoriesGetRequest {
 
 export class CategoriesGetListRequest {
   @ApiProperty()
-  createdAt: FindOptionsOrderValue;
+  createdAt: string;
 }
 
 export class CategoriesUpdateRequest
