@@ -28,11 +28,11 @@ export class EventCreateRequest {
 
   @ApiProperty()
   @IsDateString()
-  startDate: Date;
+  startDate: string;
 
   @ApiProperty()
   @IsDateString()
-  endDate: Date;
+  endDate: string;
 }
 
 export class EventViewRequest {
@@ -56,11 +56,11 @@ export class EventUpdateRequest {
 
   @ApiProperty()
   @IsDateString()
-  startDate: Date;
+  startDate: string;
 
   @ApiProperty()
   @IsDateString()
-  endDate: Date;
+  endDate: string;
 }
 
 export class EventDeleteRequest {
