@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { User, UserResponse } from '../users/users.response';
+import { User } from '../users/users.response';
 import {
   ISubscriptions,
   SubscriptionsEntity,

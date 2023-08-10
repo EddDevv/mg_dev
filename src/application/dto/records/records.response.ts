@@ -1,6 +1,9 @@
-import { ApiProperty, OmitType } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 import { User } from '../users/users.response';
-import { BasicResponse, BasicResponseArray } from '../../../config/basic.response';
+import {
+  BasicResponse,
+  BasicResponseArray,
+} from '../../../config/basic.response';
 import { Event } from '../events/events.response';
 import { IRecord, RecordsEntity } from 'src/domain/records/records.entity';
 

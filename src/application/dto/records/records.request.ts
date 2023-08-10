@@ -1,6 +1,5 @@
 import { IRecord } from 'src/domain/records/records.entity';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDateString } from 'class-validator';
 
 export class RecordCreateRequest implements Omit<IRecord, 'user' | 'event'> {
   @ApiProperty()

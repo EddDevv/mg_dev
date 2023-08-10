@@ -3,7 +3,7 @@ import { Post } from '../posts/posts.response';
 import { User } from '../users/users.response';
 import { Comment } from '../comments/comments.response';
 import { BasicResponseArray } from '../../../config/basic.response';
-import moment from 'moment';
+import * as moment from 'moment';
 
 export class Like {
   @ApiProperty({ type: User })

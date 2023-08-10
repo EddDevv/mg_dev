@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDateString, IsNumber } from 'class-validator';
+import { IsNumber } from 'class-validator';
 
 export class SubscriptionsSubscribeRequest {
   @ApiProperty({ example: 2, description: 'The user id that subscribes' })

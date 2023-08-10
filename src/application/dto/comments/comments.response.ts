@@ -6,7 +6,7 @@ import {
 } from '../../../config/basic.response';
 import { Post } from '../posts/posts.response';
 import { User } from '../users/users.response';
-import moment from 'moment';
+import * as moment from 'moment';
 
 export class Comment
   implements
