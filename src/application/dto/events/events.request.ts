@@ -67,3 +67,9 @@ export class EventDeleteRequest {
   @ApiProperty()
   id: number;
 }
+
+export class EventSignUpRequest {
+  @ApiProperty()
+  @IsNumber()
+  eventId: number;
+}

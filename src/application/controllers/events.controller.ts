@@ -6,6 +6,8 @@ import {
   Patch,
   Post,
   Query,
+  Req,
+  UseGuards,
 } from '@nestjs/common';
 import { EventsService } from '../../domain/events/events.service';
 import {
@@ -16,18 +18,26 @@ import {
   EventCreateRequest,
   EventDeleteRequest,
   EventListRequest,
+  EventSignUpRequest,
   EventUpdateRequest,
   EventViewRequest,
 } from '../dto/events/events.request';
 import { ApiOkResponse } from '@nestjs/swagger';
+import { AuthGuard } from '../guards/auth.guard';
+import { IRequestUser } from '../../config/user-request.interface';
+import { RecordResponse } from '../dto/records/records.response';
 
 @Controller('/events')
 export class EventsController {
   constructor(private readonly eventsService: EventsService) {}
   @ApiOkResponse({ type: EventResponse })
+  @UseGuards(AuthGuard)
   @Post('/create')
-  createEvent(@Body() body: EventCreateRequest): Promise<EventResponse> {
-    return this.eventsService.createEvent(body);
+  createEvent(
+    @Req() { user }: IRequestUser,
+    @Body() body: EventCreateRequest,
+  ): Promise<EventResponse> {
+    return this.eventsService.createEvent(user, body);
   }
 
   @ApiOkResponse({ type: EventResponse })
@@ -55,5 +65,14 @@ export class EventsController {
   @Delete('/:id')
   deleteEvent(@Query() query: EventDeleteRequest): Promise<void> {
     return this.eventsService.deleteEvent(query);
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('/sign-up')
+  signUp(
+    @Req() { user }: IRequestUser,
+    @Body() body: EventSignUpRequest,
+  ): Promise<RecordResponse> {
+    return this.eventsService.signUp(user, body);
   }
 }
