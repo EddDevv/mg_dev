@@ -13,7 +13,7 @@ import {
   EventViewRequest,
 } from '../../application/dto/events/events.request';
 import { EventsEntity } from './events.entity';
-import { I18nContext, I18nService } from 'nestjs-i18n';
+import { I18nService } from 'nestjs-i18n';
 
 @Injectable()
 export class EventsService {
@@ -43,7 +43,10 @@ export class EventsService {
     return new EventResponse(new Event(event));
   }
 
-  async viewEvent({ id }: EventViewRequest): Promise<EventResponse> {
+  async viewEvent(
+    { id }: EventViewRequest,
+    lang: string,
+  ): Promise<EventResponse> {
     const event = await this.eventsRepository.findOne({
       where: {
         id,
@@ -53,7 +56,7 @@ export class EventsService {
     if (!event) {
       throw new NotFoundException(
         this.i18n.t('exceptions.event.NotFound', {
-          lang: I18nContext.current().lang,
+          lang: lang,
         }),
       );
     }
@@ -81,6 +84,7 @@ export class EventsService {
   async updateEvent(
     { id }: EventViewRequest,
     body: EventUpdateRequest,
+    lang: string,
   ): Promise<EventResponse> {
     const event = await this.eventsRepository.findOne({
       where: {
@@ -90,7 +94,7 @@ export class EventsService {
     if (!event) {
       throw new NotFoundException(
         this.i18n.t('exceptions.event.NotFound', {
-          lang: I18nContext.current().lang,
+          lang: lang,
         }),
       );
     }

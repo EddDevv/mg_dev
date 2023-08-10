@@ -9,6 +9,7 @@ import {
   UseGuards,
   Req,
   Query,
+  Headers,
 } from '@nestjs/common';
 import { CommentsService } from 'src/domain/comments/comment.service';
 import {
@@ -47,10 +48,11 @@ export class CommentsController {
   @UseGuards(JwtGuard)
   @Post()
   create(
+    @Headers('accept-language') lang: string,
     @Req() { user }: IRequestUser,
     @Body() body: CommentsCreateRequest,
   ): Promise<CommentResponse> {
-    return this.commentsService.create(user, body);
+    return this.commentsService.create(user, body, lang);
   }
 
   @ApiOkResponse({
@@ -59,8 +61,11 @@ export class CommentsController {
   })
   @ApiNotFoundResponse({ description: CustomExceptions.comments.NotFound })
   @Get()
-  findOne(@Query() query: CommentsGetRequest): Promise<CommentResponse> {
-    return this.commentsService.findOne(query);
+  findOne(
+    @Headers('accept-language') lang: string,
+    @Query() query: CommentsGetRequest,
+  ): Promise<CommentResponse> {
+    return this.commentsService.findOne(query, lang);
   }
 
   @ApiOkResponse({
@@ -72,18 +77,22 @@ export class CommentsController {
   @UseGuards(JwtGuard)
   @Patch(':id')
   update(
+    @Headers('accept-language') lang: string,
     @Param('id') id: string,
     @Body() updateCommentDto: CommentsUpdateRequest,
   ): Promise<CommentResponse> {
-    return this.commentsService.update(+id, updateCommentDto);
+    return this.commentsService.update(+id, updateCommentDto, lang);
   }
 
   @ApiOkResponse({ description: ResponseMessages.comments.remove })
   @ApiUnauthorizedResponse({ description: CustomExceptions.auth.Unauthorized })
   @UseGuards(JwtGuard)
   @Delete(':id')
-  remove(@Param('id') id: string): Promise<void> {
-    return this.commentsService.remove(+id);
+  remove(
+    @Headers('accept-language') lang: string,
+    @Param('id') id: string,
+  ): Promise<void> {
+    return this.commentsService.remove(+id, lang);
   }
 
   @ApiOkResponse({
@@ -95,10 +104,11 @@ export class CommentsController {
   @UseGuards(JwtGuard)
   @Post('/like')
   likeComment(
+    @Headers('accept-language') lang: string,
     @Req() { user }: IRequestUser,
     @Body() body: LikeCommentRequest,
   ): Promise<LikeComment> {
-    return this.commentsService.likeComment(user, body);
+    return this.commentsService.likeComment(user, body, lang);
   }
 
   @ApiOkResponse({
@@ -108,8 +118,9 @@ export class CommentsController {
   @ApiNotFoundResponse({ description: CustomExceptions.comments.NotFound })
   @Get('/likes')
   getLikes(
+    @Headers('accept-language') lang: string,
     @Query() query: LikeCommentRequest,
   ): Promise<LikeListCommentResponse> {
-    return this.commentsService.getLikes(query);
+    return this.commentsService.getLikes(query, lang);
   }
 }

@@ -7,6 +7,7 @@ import {
   Post,
   Delete,
   Query,
+  Headers,
 } from '@nestjs/common';
 import {
   ApiNotFoundResponse,
@@ -39,8 +40,11 @@ export class ServicesController {
   })
   @ApiNotFoundResponse({ description: CustomExceptions.service.NotFound })
   @Get()
-  getService(@Param() param: ServicesGetRequest): Promise<ServiceResponse> {
-    return this.servicesService.getService(param);
+  getService(
+    @Headers('accept-language') lang: string,
+    @Query() query: ServicesGetRequest,
+  ): Promise<ServiceResponse> {
+    return this.servicesService.getService(query, lang);
   }
 
   @ApiOkResponse({
@@ -60,8 +64,11 @@ export class ServicesController {
   })
   @ApiNotFoundResponse({ description: CustomExceptions.service.NotFound })
   @Post()
-  create(@Body() body: ServicesCreateRequest): Promise<ServiceResponse> {
-    return this.servicesService.create(body);
+  create(
+    @Headers('accept-language') lang: string,
+    @Body() body: ServicesCreateRequest,
+  ): Promise<ServiceResponse> {
+    return this.servicesService.create(body, lang);
   }
 
   @ApiOkResponse({
@@ -71,16 +78,20 @@ export class ServicesController {
   @ApiNotFoundResponse({ description: CustomExceptions.service.NotFound })
   @Patch(':id')
   update(
+    @Headers('accept-language') lang: string,
     @Param('id') id: number,
     @Body() body: ServicesUpdateRequest,
   ): Promise<ServiceResponse> {
-    return this.servicesService.update(id, body);
+    return this.servicesService.update(id, body, lang);
   }
 
   @ApiOkResponse({ description: ResponseMessages.service.remove })
   @ApiNotFoundResponse({ description: CustomExceptions.service.NotFound })
   @Delete(':id')
-  delete(@Param('id') id: number): Promise<void> {
-    return this.servicesService.delete(id);
+  delete(
+    @Headers('accept-language') lang: string,
+    @Param('id') id: number,
+  ): Promise<void> {
+    return this.servicesService.delete(id, lang);
   }
 }

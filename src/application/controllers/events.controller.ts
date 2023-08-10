@@ -6,6 +6,7 @@ import {
   Patch,
   Post,
   Query,
+  Headers,
 } from '@nestjs/common';
 import { EventsService } from '../../domain/events/events.service';
 import {
@@ -32,8 +33,11 @@ export class EventsController {
 
   @ApiOkResponse({ type: EventResponse })
   @Get()
-  viewEvent(@Query() query: EventViewRequest): Promise<EventResponse> {
-    return this.eventsService.viewEvent(query);
+  viewEvent(
+    @Headers('accept-language') lang: string,
+    @Query() query: EventViewRequest,
+  ): Promise<EventResponse> {
+    return this.eventsService.viewEvent(query, lang);
   }
 
   @ApiOkResponse({ type: EventListResponse })
@@ -45,10 +49,11 @@ export class EventsController {
   @ApiOkResponse({ type: EventResponse })
   @Patch()
   updateEvent(
+    @Headers('accept-language') lang: string,
     @Query() query: EventViewRequest,
     @Body() body: EventUpdateRequest,
   ): Promise<EventResponse> {
-    return this.eventsService.updateEvent(query, body);
+    return this.eventsService.updateEvent(query, body, lang);
   }
 
   @ApiOkResponse()

@@ -12,7 +12,7 @@ import {
 } from 'src/application/dto/categories/categories.response';
 import { CategoriesRepository } from 'src/infrastructure/repositories/categories.repository';
 import { CategoriesEntity } from './categories.entity';
-import { I18nContext, I18nService } from 'nestjs-i18n';
+import { I18nService } from 'nestjs-i18n';
 
 @Injectable()
 export class CategoriesService {
@@ -21,14 +21,17 @@ export class CategoriesService {
     private readonly i18n: I18nService,
   ) {}
 
-  async getCategory({ id }: CategoriesGetRequest): Promise<CategoryResponse> {
+  async getCategory(
+    { id }: CategoriesGetRequest,
+    lang: string,
+  ): Promise<CategoryResponse> {
     const category = await this.categoriesRepository.findOne({
       where: { id },
     });
     if (!category) {
       throw new NotFoundException(
         this.i18n.t('exceptions.category.NotFound', {
-          lang: I18nContext.current().lang,
+          lang: lang,
         }),
       );
     }
@@ -63,12 +66,13 @@ export class CategoriesService {
   async update(
     id: number,
     { title }: CategoriesUpdateRequest,
+    lang: string,
   ): Promise<CategoryResponse> {
     const category = await this.categoriesRepository.findOne({ where: { id } });
     if (!category) {
       throw new NotFoundException(
         this.i18n.t('exceptions.category.NotFound', {
-          lang: I18nContext.current().lang,
+          lang: lang,
         }),
       );
     }
@@ -79,12 +83,12 @@ export class CategoriesService {
     return new CategoryResponse(new Category(category));
   }
 
-  async delete(id: number): Promise<void> {
+  async delete(id: number, lang: string,): Promise<void> {
     const category = await this.categoriesRepository.findOne({ where: { id } });
     if (!category) {
       throw new NotFoundException(
         this.i18n.t('exceptions.category.NotFound', {
-          lang: I18nContext.current().lang,
+          lang: lang,
         }),
       );
     }

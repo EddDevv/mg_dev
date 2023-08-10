@@ -19,7 +19,7 @@ import { SubscriptionsEntity } from './subscriptions.entity';
 import { CustomExceptions } from '../../config/messages/custom.exceptions';
 import { UsersRepository } from '../../infrastructure/repositories/users.repository';
 import { User } from '../../application/dto/users/users.response';
-import { I18nContext, I18nService } from 'nestjs-i18n';
+import { I18nService } from 'nestjs-i18n';
 
 @Injectable()
 export class SubscriptionsService {
@@ -29,14 +29,14 @@ export class SubscriptionsService {
     private readonly i18n: I18nService,
   ) {}
 
-  async subscribe({
-    userId,
-    subscriberId,
-  }: SubscriptionsSubscribeRequest): Promise<Subscription> {
+  async subscribe(
+    { userId, subscriberId }: SubscriptionsSubscribeRequest,
+    lang: string,
+  ): Promise<Subscription> {
     if (userId === subscriberId) {
       throw new BadRequestException(
         this.i18n.t('exceptions.subscription.SubYourself', {
-          lang: I18nContext.current().lang,
+          lang: lang,
         }),
       );
     }
@@ -59,7 +59,7 @@ export class SubscriptionsService {
     if (existingSubscription) {
       throw new ForbiddenException(
         this.i18n.t('exceptions.subscription.AlreadyHave', {
-          lang: I18nContext.current().lang,
+          lang: lang,
         }),
       );
     }
@@ -78,11 +78,12 @@ export class SubscriptionsService {
   async unsubscribe(
     user: User,
     { userId }: SubscriptionsUnsubscribeRequest,
+    lang: string,
   ): Promise<void> {
     if (user.id === userId) {
       throw new BadRequestException(
         this.i18n.t('exceptions.subscription.UnSubYourself', {
-          lang: I18nContext.current().lang,
+          lang: lang,
         }),
       );
     }
@@ -97,7 +98,7 @@ export class SubscriptionsService {
     if (!subscription) {
       throw new NotFoundException(
         this.i18n.t('exceptions.subscription.NotFound', {
-          lang: I18nContext.current().lang,
+          lang: lang,
         }),
       );
     }

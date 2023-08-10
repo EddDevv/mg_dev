@@ -22,7 +22,7 @@ import {
 } from '../../application/dto/likes/likes.response';
 import { LikesEntity } from '../likes/likes.entity';
 import { LikesRepository } from '../../infrastructure/repositories/likes.repository';
-import { I18nContext, I18nService } from 'nestjs-i18n';
+import { I18nService } from 'nestjs-i18n';
 
 @Injectable()
 export class PostsService {
@@ -33,7 +33,7 @@ export class PostsService {
     private readonly i18n: I18nService,
   ) {}
 
-  async getPost({ id }: PostsGetRequest): Promise<PostResponse> {
+  async getPost({ id }: PostsGetRequest, lang: string): Promise<PostResponse> {
     const post = await this.postsRepository.findOne({
       where: { id },
       relations: ['user'],
@@ -41,7 +41,7 @@ export class PostsService {
     if (!post) {
       throw new NotFoundException(
         this.i18n.t('exceptions.posts.NotFound', {
-          lang: I18nContext.current().lang,
+          lang: lang,
         }),
       );
     }
@@ -73,12 +73,15 @@ export class PostsService {
     return new PostListResponse(resPosts, count);
   }
 
-  async create({ userId, text }: PostsCreateRequest): Promise<PostResponse> {
+  async create(
+    { userId, text }: PostsCreateRequest,
+    lang: string,
+  ): Promise<PostResponse> {
     const user = await this.usersRepository.findOne({ where: { id: userId } });
     if (!user) {
       throw new NotFoundException(
         this.i18n.t('exceptions.user.NotFound', {
-          lang: I18nContext.current().lang,
+          lang: lang,
         }),
       );
     }
@@ -88,12 +91,12 @@ export class PostsService {
     return new PostResponse(new Post(post));
   }
 
-  async addView({ id }: PostsAddViewRequest): Promise<void> {
+  async addView({ id }: PostsAddViewRequest, lang: string): Promise<void> {
     const post = await this.postsRepository.findOne({ where: { id } });
     if (!post) {
       throw new NotFoundException(
         this.i18n.t('exceptions.posts.NotFound', {
-          lang: I18nContext.current().lang,
+          lang: lang,
         }),
       );
     }
@@ -106,12 +109,13 @@ export class PostsService {
   async update(
     id: number,
     { text }: PostsUpdateRequest,
+    lang: string,
   ): Promise<PostResponse> {
     const post = await this.postsRepository.findOne({ where: { id } });
     if (!post) {
       throw new NotFoundException(
         this.i18n.t('exceptions.posts.NotFound', {
-          lang: I18nContext.current().lang,
+          lang: lang,
         }),
       );
     }
@@ -122,12 +126,12 @@ export class PostsService {
     return new PostResponse(new Post(post));
   }
 
-  async deletePost(id: number): Promise<void> {
+  async deletePost(id: number, lang: string): Promise<void> {
     const post = await this.postsRepository.findOne({ where: { id } });
     if (!post) {
       throw new NotFoundException(
         this.i18n.t('exceptions.posts.NotFound', {
-          lang: I18nContext.current().lang,
+          lang: lang,
         }),
       );
     }
@@ -135,12 +139,16 @@ export class PostsService {
     await this.postsRepository.softDelete({ id: post.id });
   }
 
-  async like(user: User, { postId }: LikePostRequest): Promise<LikePost> {
+  async like(
+    user: User,
+    { postId }: LikePostRequest,
+    lang: string,
+  ): Promise<LikePost> {
     const post = await this.postsRepository.findOne({ where: { id: postId } });
     if (!post) {
       throw new NotFoundException(
         this.i18n.t('exceptions.posts.NotFound', {
-          lang: I18nContext.current().lang,
+          lang: lang,
         }),
       );
     }
@@ -155,14 +163,17 @@ export class PostsService {
     return new LikePost(user, new Post(post));
   }
 
-  async getLikes({ postId }: LikePostRequest): Promise<LikeListPostResponse> {
+  async getLikes(
+    { postId }: LikePostRequest,
+    lang: string,
+  ): Promise<LikeListPostResponse> {
     const post = await this.postsRepository.findOne({
       where: { id: postId },
     });
     if (!post) {
       throw new NotFoundException(
         this.i18n.t('exceptions.posts.NotFound', {
-          lang: I18nContext.current().lang,
+          lang: lang,
         }),
       );
     }

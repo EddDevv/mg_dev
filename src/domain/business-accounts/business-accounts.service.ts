@@ -30,16 +30,16 @@ export class BusinessAccountService {
     private readonly i18n: I18nService,
   ) {}
 
-  async create({
-    userId,
-    businessName,
-  }: BusinessAccountsCreateRequest): Promise<UserResponse> {
+  async create(
+    { userId, businessName }: BusinessAccountsCreateRequest,
+    lang: string,
+  ): Promise<UserResponse> {
     const user = await this.usersRepository.findOne({ where: { id: userId } });
 
     if (!user) {
       throw new NotFoundException(
         this.i18n.t('exceptions.user.NotFound', {
-          lang: I18nContext.current().lang,
+          lang: lang,
         }),
       );
     }
@@ -54,12 +54,12 @@ export class BusinessAccountService {
       );
 
       if (businessAccount) {
-        return await this.userService.updateRole(user);
+        return await this.userService.updateRole(user, lang);
       }
     } else {
       throw new BadRequestException(
         this.i18n.t('exceptions.businessAccount.AlreadyHave', {
-          lang: I18nContext.current().lang,
+          lang: lang,
         }),
       );
     }
@@ -84,16 +84,17 @@ export class BusinessAccountService {
     return new BusinessAccountsListResponse(accountsResponse, count);
   }
 
-  async findOne({
-    id,
-  }: BusinessAccountsGetRequest): Promise<BusinessAccountResponse> {
+  async findOne(
+    { id }: BusinessAccountsGetRequest,
+    lang: string,
+  ): Promise<BusinessAccountResponse> {
     const businessAccount = await this.businessAccountRepository.findOne({
       where: { id },
     });
     if (!businessAccount) {
       throw new NotFoundException(
         this.i18n.t('exceptions.user.NotFound', {
-          lang: I18nContext.current().lang,
+          lang: lang,
         }),
       );
     }

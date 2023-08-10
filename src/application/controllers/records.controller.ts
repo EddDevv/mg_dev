@@ -7,18 +7,15 @@ import {
   Post,
   Patch,
   UseGuards,
-  Req,
   Query,
+  Headers,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
-  ApiCreatedResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiTags,
-  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { JwtGuard } from '../guards/jwt.guard';
 import { CustomExceptions } from 'src/config/messages/custom.exceptions';
 import { AuthGuard } from '../guards/auth.guard';
 import {
@@ -45,8 +42,11 @@ export class RecordsController {
   })
   @ApiNotFoundResponse({ description: CustomExceptions.record.NotFound })
   @Get()
-  getPost(@Query() query: RecordsGetRequest): Promise<RecordResponse> {
-    return this.recordsService.getRecord(query);
+  getPost(
+    @Headers('accept-language') lang: string,
+    @Query() query: RecordsGetRequest,
+  ): Promise<RecordResponse> {
+    return this.recordsService.getRecord(query, lang);
   }
 
   @ApiOkResponse({
@@ -68,8 +68,11 @@ export class RecordsController {
   @ApiBearerAuth()
   @UseGuards(AuthGuard)
   @Post()
-  create(@Body() body: RecordCreateRequest): Promise<RecordResponse> {
-    return this.recordsService.create(body);
+  create(
+    @Headers('accept-language') lang: string,
+    @Body() body: RecordCreateRequest,
+  ): Promise<RecordResponse> {
+    return this.recordsService.create(body, lang);
   }
 
   @ApiOkResponse({
@@ -81,10 +84,11 @@ export class RecordsController {
   @UseGuards(AuthGuard)
   @Patch(':id')
   update(
+    @Headers('accept-language') lang: string,
     @Param('id') id: number,
     @Body() body: RecordUpdateRequest,
   ): Promise<RecordResponse> {
-    return this.recordsService.update(id, body);
+    return this.recordsService.update(id, body, lang);
   }
 
   @ApiOkResponse({ description: ResponseMessages.record.remove })
@@ -92,7 +96,10 @@ export class RecordsController {
   @ApiBearerAuth()
   @UseGuards(AuthGuard)
   @Delete(':id')
-  deletePost(@Param('id') id: number): Promise<void> {
-    return this.recordsService.delete(id);
+  deletePost(
+    @Headers('accept-language') lang: string,
+    @Param('id') id: number,
+  ): Promise<void> {
+    return this.recordsService.delete(id, lang);
   }
 }
