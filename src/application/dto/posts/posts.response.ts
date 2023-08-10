@@ -6,7 +6,7 @@ import {
 } from '../../../config/basic.response';
 import { Comment } from '../comments/comments.response';
 import { User } from '../users/users.response';
-import moment from 'moment';
+import * as moment from 'moment';
 
 export class Post
   implements Omit<IPost, 'user' | 'userId' | 'comments' | 'likes'>

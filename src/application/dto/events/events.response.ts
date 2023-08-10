@@ -5,7 +5,7 @@ import {
   BasicResponse,
   BasicResponseArray,
 } from '../../../config/basic.response';
-import moment from 'moment';
+import * as moment from 'moment';
 
 export class Event
   implements Omit<IEvent, 'categories' | 'records' | 'startDate' | 'endDate'>

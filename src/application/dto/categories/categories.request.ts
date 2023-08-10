@@ -1,7 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString } from 'class-validator';
 import { ICategory } from 'src/domain/categories/categories.entity';
-import { FindOptionsOrderValue } from 'typeorm';
 
 export class CategoriesCreateRequest
   implements Omit<ICategory, 'services' | 'portfolios'>

@@ -6,19 +6,11 @@ import {
   BasicResponse,
   BasicResponseArray,
 } from '../../../config/basic.response';
-import moment from 'moment';
+import * as moment from 'moment';
 
 export class User
   implements
-    Omit<
-      IUser,
-      | 'password'
-      | 'subscriptions'
-      | 'subscribers'
-      | 'dateOfBirth'
-      | 'lastOnline'
-      | 'createdAt'
-    >
+    Omit<IUser, 'password' | 'subscriptions' | 'subscribers' | 'lastOnline'>
 {
   @ApiProperty()
   id: number;
@@ -39,7 +31,7 @@ export class User
   role: UserRoleEnum;
 
   @ApiProperty()
-  dateOfBirth: string;
+  dateOfBirth: Date;
 
   @ApiProperty()
   email: string;
@@ -73,7 +65,7 @@ export class User
     this.gender = user.gender;
     this.role = user.role;
     this.email = user.email;
-    this.dateOfBirth = moment(user.dateOfBirth).format('YYYY-MM-DD');
+    this.dateOfBirth = user.dateOfBirth;
     this.phoneNumber = user.phoneNumber;
     this.websiteLink = user.websiteLink;
     this.isVerified = user.isVerified;

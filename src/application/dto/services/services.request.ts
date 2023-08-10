@@ -1,7 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDateString, IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsString } from 'class-validator';
 import { IService } from 'src/domain/services/services.entity';
-import { FindOptionsOrderValue } from 'typeorm';
 
 export class ServicesCreateRequest
   implements Omit<IService, 'category' | 'portfolios'>

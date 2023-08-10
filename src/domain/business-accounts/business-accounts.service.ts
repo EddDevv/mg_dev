@@ -18,7 +18,6 @@ import {
   BusinessAccountResponse,
 } from '../../application/dto/business-accounts/business-accounts.response';
 import { CustomExceptions } from '../../config/messages/custom.exceptions';
-import moment from 'moment';
 
 @Injectable()
 export class BusinessAccountService {

@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
-  IsDate,
   IsDateString,
   IsEmail,
   IsEnum,
@@ -13,7 +12,6 @@ import {
 } from 'class-validator';
 import { GenderEnum } from '../../../config/enums/gender.enum';
 import { IUser } from '../../../domain/users/user.entity';
-import { FindOptionsOrderValue } from 'typeorm';
 
 export class UserCreateRequest {
   @ApiProperty({ example: 'John', description: 'The first name of the user' })
