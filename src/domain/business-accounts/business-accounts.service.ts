@@ -19,6 +19,7 @@ import {
   BusinessAccountResponse,
 } from '../../application/dto/business-accounts/business-accounts.response';
 import { CustomExceptions } from '../../config/messages/custom.exceptions';
+import moment from 'moment';
 
 @Injectable()
 export class BusinessAccountService {
@@ -51,9 +52,7 @@ export class BusinessAccountService {
     createdAt,
   }: BusinessAccountsGetListRequest): Promise<BusinessAccountsListResponse> {
     const [businessAccounts, count] =
-      await this.businessAccountRepository.findAndCount({
-        order: { createdAt: createdAt },
-      });
+      await this.businessAccountRepository.findAndCount({});
 
     if (count == 0) {
       return new BusinessAccountsListResponse([], 0);

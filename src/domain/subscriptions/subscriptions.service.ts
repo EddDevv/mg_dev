@@ -89,7 +89,6 @@ export class SubscriptionsService {
 
   async getSubscribers({
     userId,
-    createdAt
   }: SubscriptionsGetRequest): Promise<SubscriptionsGetSubscribersResponse> {
     const [subs, count]: [SubscriptionsEntity[], number] =
       await this.subscriptionsRepository.findAndCount({
@@ -97,7 +96,6 @@ export class SubscriptionsService {
           userId,
         },
         relations: ['user'],
-        order: { createdAt: createdAt },
       });
 
     if (count == 0) {
@@ -113,14 +111,12 @@ export class SubscriptionsService {
 
   async getSubscriptions({
     userId,
-    createdAt,
   }: SubscriptionsGetRequest): Promise<SubscriptionsGetResponse> {
     const [subs, count] = await this.subscriptionsRepository.findAndCount({
       where: {
         subscriberId: userId,
       },
       relations: ['user'],
-      order: { createdAt: createdAt },
     });
     if (count == 0) {
       return new SubscriptionsGetResponse([], 0);

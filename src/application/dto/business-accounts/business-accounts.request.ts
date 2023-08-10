@@ -20,8 +20,3 @@ export class BusinessAccountsGetRequest {
   @ApiProperty()
   id: number;
 }
-
-export class BusinessAccountsGetListRequest {
-  @ApiProperty()
-  createdAt: string;
-}

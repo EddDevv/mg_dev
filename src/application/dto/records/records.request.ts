@@ -15,15 +15,6 @@ export class RecordsGetRequest {
   id: number;
 }
 
-export class RecordsGetListRequest {
-  @ApiProperty()
-  eventId: number;
-
-  @ApiProperty()
-  @IsDateString()
-  createdAt: string;
-}
-
 export class RecordUpdateRequest implements Omit<IRecord, 'user' | 'event'> {
   @ApiProperty()
   userId?: number;

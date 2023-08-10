@@ -57,12 +57,6 @@ export class UserGetRequest {
   id: number;
 }
 
-export class UserGetListRequest {
-  @ApiProperty()
-  @IsDateString()
-  createdAt: string;
-}
-
 export class UserUpdateRequest
   implements
     Omit<
@@ -102,7 +96,9 @@ export class UserUpdateRequest
 
   @ApiProperty({ nullable: true })
   @IsOptional()
-  @IsDateString()
+  @IsDateString({
+    strict: true,
+  })
   createdAt: string | null;
 
   @ApiProperty({ nullable: true })
