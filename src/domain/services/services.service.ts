@@ -13,7 +13,7 @@ import {
 import { CategoriesRepository } from 'src/infrastructure/repositories/categories.repository';
 import { ServicesRepository } from 'src/infrastructure/repositories/services.repository';
 import { ServicesEntity } from './services.entity';
-import { I18nContext, I18nService } from 'nestjs-i18n';
+import { I18nService } from 'nestjs-i18n';
 import { BusinessAccountsRepository } from 'src/infrastructure/repositories/business-accounts.repository';
 
 @Injectable()
@@ -25,14 +25,17 @@ export class ServicesService {
     private readonly i18n: I18nService,
   ) {}
 
-  async getService({ id }: ServicesGetRequest): Promise<ServiceResponse> {
+  async getService(
+    { id }: ServicesGetRequest,
+    lang: string,
+  ): Promise<ServiceResponse> {
     const service = await this.servicesRepository.findOne({
       where: { id },
     });
     if (!service) {
       throw new NotFoundException(
         this.i18n.t('exceptions.service.NotFound', {
-          lang: I18nContext.current().lang,
+          lang: lang,
         }),
       );
     }
@@ -62,21 +65,24 @@ export class ServicesService {
     return new ServiceListResponse(resServices, count);
   }
 
-  async create({
-    categoryId,
-    businessId,
-    title,
-    price,
-    description,
-    departureToClient
-  }: ServicesCreateRequest): Promise<ServiceResponse> {
+  async create(
+    {
+      categoryId,
+      businessId,
+      title,
+      price,
+      description,
+      departureToClient,
+    }: ServicesCreateRequest,
+    lang: string,
+  ): Promise<ServiceResponse> {
     const category = await this.categoriesRepository.findOne({
       where: { id: categoryId },
     });
     if (!category) {
       throw new NotFoundException(
         this.i18n.t('exceptions.category.NotFound', {
-          lang: I18nContext.current().lang,
+          lang: lang,
         }),
       );
     }
@@ -88,7 +94,7 @@ export class ServicesService {
     if (!business) {
       throw new NotFoundException(
         this.i18n.t('exceptions.businessAccount.NotFound', {
-          lang: I18nContext.current().lang,
+          lang: lang,
         }),
       );
     }
@@ -116,6 +122,7 @@ export class ServicesService {
       description,
       departureToClient,
     }: ServicesUpdateRequest,
+    lang: string,
   ): Promise<ServiceResponse> {
     const service = await this.servicesRepository.findOne({
       where: { id },
@@ -124,7 +131,7 @@ export class ServicesService {
     if (!service) {
       throw new NotFoundException(
         this.i18n.t('exceptions.service.NotFound', {
-          lang: I18nContext.current().lang,
+          lang: lang,
         }),
       );
     }
@@ -136,7 +143,7 @@ export class ServicesService {
       if (!category) {
         throw new NotFoundException(
           this.i18n.t('exceptions.category.NotFound', {
-            lang: I18nContext.current().lang,
+            lang: lang,
           }),
         );
       }
@@ -144,30 +151,22 @@ export class ServicesService {
       service.categoryId = categoryId;
     }
 
-    if (title) {
-      service.title = title;
-    }
-    if (price) {
-      service.price = price;
-    }
-    if (description) {
-      service.description = description;
-    }
-    if (departureToClient) {
-      service.departureToClient = departureToClient;
-    }
+    service.title = title ?? service.title;
+    service.price = price ?? service.price;
+    service.description = description ?? service.description;
+    service.departureToClient = departureToClient ?? service.departureToClient;
 
     await this.servicesRepository.save(service);
 
     return new ServiceResponse(new Service(service));
   }
 
-  async delete(id: number): Promise<void> {
+  async delete(id: number, lang: string): Promise<void> {
     const service = await this.servicesRepository.findOne({ where: { id } });
     if (!service) {
       throw new NotFoundException(
         this.i18n.t('exceptions.service.NotFound', {
-          lang: I18nContext.current().lang,
+          lang: lang,
         }),
       );
     }

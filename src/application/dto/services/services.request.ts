@@ -77,7 +77,7 @@ export class ServicesUpdateRequest
   title?: string;
 
   @ApiProperty({
-    example: 2000,
+    example: '2000',
     description: 'Price per service',
     nullable: true,
   })
