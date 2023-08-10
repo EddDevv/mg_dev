@@ -5,12 +5,14 @@ import {
   JoinTable,
   OneToMany,
   JoinColumn,
+  OneToOne,
 } from 'typeorm';
 import { BasicEntity } from '../../config/basic.entity';
 import { EventMeetType } from '../../config/enums/events.enum';
 import { CategoriesEntity } from '../categories/categories.entity';
 import { RecordsEntity } from '../records/records.entity';
 import { EventCreateRequest } from '../../application/dto/events/events.request';
+import { UserEntity } from '../users/user.entity';
 
 export interface IEvent {
   id: number;
@@ -39,6 +41,12 @@ export class EventsEntity extends BasicEntity {
   @Column()
   seatsNumber: number;
 
+  @OneToOne(() => UserEntity)
+  author: UserEntity;
+
+  @Column()
+  authorId: number;
+
   @Column()
   startDate: Date;
 
@@ -58,6 +66,8 @@ export class EventsEntity extends BasicEntity {
     description: string,
     meetType: EventMeetType,
     seatsNumber: number,
+    author: UserEntity,
+    authorId: number,
     startDate: Date,
     endDate: Date,
   ) {
@@ -66,6 +76,8 @@ export class EventsEntity extends BasicEntity {
     this.description = description;
     this.meetType = meetType;
     this.seatsNumber = seatsNumber;
+    this.author = author;
+    this.authorId = authorId;
     this.startDate = startDate;
     this.endDate = endDate;
   }

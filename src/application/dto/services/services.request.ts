@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsDateString, IsNotEmpty, IsString } from 'class-validator';
 import { IService } from 'src/domain/services/services.entity';
 import { FindOptionsOrderValue } from 'typeorm';
 
@@ -29,13 +29,13 @@ export class ServicesGetListRequest {
   categoryId: number;
 
   @ApiProperty()
-  createdAt: FindOptionsOrderValue;
+  @IsDateString()
+  createdAt: string;
 }
 
 export class ServicesUpdateRequest
   implements Omit<IService, 'category' | 'portfolios'>
 {
-
   @ApiProperty({ example: '2', description: 'The category id', nullable: true })
   categoryId?: number;
 
@@ -45,5 +45,4 @@ export class ServicesUpdateRequest
     nullable: true,
   })
   title?: string;
-
 }

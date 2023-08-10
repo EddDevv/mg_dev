@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsDate,
+  IsDateString,
   IsEmail,
   IsEnum,
   IsNotEmpty,
@@ -58,7 +59,8 @@ export class UserGetRequest {
 
 export class UserGetListRequest {
   @ApiProperty()
-  createdAt: FindOptionsOrderValue;
+  @IsDateString()
+  createdAt: string;
 }
 
 export class UserUpdateRequest
@@ -77,17 +79,17 @@ export class UserUpdateRequest
       | 'receiveNotifications'
     >
 {
-  @ApiProperty( { nullable: true })
+  @ApiProperty({ nullable: true })
   @IsOptional()
   @IsString()
   firstName?: string;
 
-  @ApiProperty( { nullable: true })
+  @ApiProperty({ nullable: true })
   @IsOptional()
   @IsString()
   lastName?: string | null;
 
-  @ApiProperty( { nullable: true })
+  @ApiProperty({ nullable: true })
   @IsOptional()
   @IsOptional()
   @IsPhoneNumber()
@@ -98,17 +100,17 @@ export class UserUpdateRequest
   @IsEnum(GenderEnum)
   gender?: GenderEnum;
 
-  @ApiProperty( { nullable: true })
+  @ApiProperty({ nullable: true })
   @IsOptional()
-  @IsDate()
-  dateOfBirth?: Date | null;
+  @IsDateString()
+  createdAt: string | null;
 
-  @ApiProperty( { nullable: true })
+  @ApiProperty({ nullable: true })
   @IsOptional()
   @IsEmail()
   email?: string;
 
-  @ApiProperty( { nullable: true })
+  @ApiProperty({ nullable: true })
   @IsOptional()
   @IsString()
   @MaxLength(880)

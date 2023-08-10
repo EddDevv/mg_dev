@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber } from 'class-validator';
+import { IsDateString, IsNumber } from 'class-validator';
 import { FindOptionsOrderValue } from 'typeorm';
 
 export class SubscriptionsSubscribeRequest {
@@ -18,7 +18,8 @@ export class SubscriptionsUnsubscribeRequest {
   userId: number;
 
   @ApiProperty()
-  createdAt: FindOptionsOrderValue;
+  @IsDateString()
+  createdAt: string;
 }
 
 export class SubscriptionsGetRequest {
@@ -26,5 +27,6 @@ export class SubscriptionsGetRequest {
   userId: number;
 
   @ApiProperty()
-  createdAt: FindOptionsOrderValue;
+  @IsDateString()
+  createdAt: string;
 }
