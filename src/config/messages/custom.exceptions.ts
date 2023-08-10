@@ -34,6 +34,7 @@ export const CustomExceptions = {
   },
   event: {
     NotFound: `Event not found`,
+    AuthorSignUp: 'Author can not to sign up on his event',
   },
   record: {
     NotFound: `Record not found`,
