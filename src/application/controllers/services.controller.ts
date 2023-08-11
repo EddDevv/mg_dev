@@ -51,7 +51,7 @@ export class ServicesController {
   getAllServices(
     @Query() query: ServiceListRequest,
   ): Promise<ServiceListResponse> {
-    return this.servicesService.getAllServices();
+    return this.servicesService.getAllServices(query);
   }
 
   @ApiCreatedResponse({

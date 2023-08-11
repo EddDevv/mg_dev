@@ -83,10 +83,17 @@ export class EventsService {
     return new EventResponse(new Event(event));
   }
 
-  async viewEventList({ page }: EventListRequest): Promise<EventListResponse> {
+  async viewEventList({
+    take,
+    page,
+    orderBy,
+  }: EventListRequest): Promise<EventListResponse> {
     const [events, count] = await this.eventsRepository.findAndCount({
-      skip: page * 10,
-      take: 10,
+      skip: page ? page * 10 : 0,
+      take: take || 10,
+      order: {
+        createdAt: orderBy || 'ASC',
+      },
     });
 
     if (events.length == 0) {

@@ -17,7 +17,11 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { UserGetRequest, UserUpdateRequest } from '../dto/users/users.request';
+import {
+  UserGetRequest,
+  UserListRequest,
+  UserUpdateRequest,
+} from '../dto/users/users.request';
 import {
   User,
   UserResponse,
@@ -38,8 +42,8 @@ export class UserController {
     description: ResponseMessages.user.findAll,
   })
   @Get('/list')
-  findAll(@Query() query): Promise<UsersListResponse> {
-    return this.userService.findAll();
+  findAll(@Query() query: UserListRequest): Promise<UsersListResponse> {
+    return this.userService.findAll(query);
   }
 
   @ApiOkResponse({
@@ -65,6 +69,7 @@ export class UserController {
     @Param('id') id: number,
     @Body() body: UserUpdateRequest,
   ): Promise<UserResponse> {
+    console.log(user);
     return this.userService.update(id, user, body);
   }
 

@@ -46,11 +46,19 @@ export class PostsService {
 
   async getAllPosts({
     userId,
+    page,
+    take,
+    orderBy,
   }: PostsGetListRequest): Promise<PostListResponse> {
     const [posts, count] = await this.postsRepository.findAndCount({
       relations: ['user', 'user.business'],
       where: {
         userId,
+      },
+      skip: page ? page * 10 : 0,
+      take: take || 10,
+      order: {
+        createdAt: orderBy || 'ASC',
       },
     });
 

@@ -51,7 +51,7 @@ export class CategoriesController {
   getAllCategories(
     @Query() query: CategoriesListRequest,
   ): Promise<CategoryListResponse> {
-    return this.categoriesService.getAllCategories();
+    return this.categoriesService.getAllCategories(query);
   }
 
   @ApiCreatedResponse({

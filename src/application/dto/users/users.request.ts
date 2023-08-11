@@ -12,6 +12,7 @@ import {
 } from 'class-validator';
 import { GenderEnum } from '../../../config/enums/gender.enum';
 import { IUser } from '../../../domain/users/user.entity';
+import { Pagination } from '../../../config/pagination';
 
 export class UserCreateRequest {
   @ApiProperty({ example: 'John', description: 'The first name of the user' })
@@ -54,6 +55,8 @@ export class UserGetRequest {
   @ApiProperty()
   id: number;
 }
+
+export class UserListRequest extends Pagination {}
 
 export class UserUpdateRequest
   implements
