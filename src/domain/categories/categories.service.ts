@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import {
   CategoriesCreateRequest,
   CategoriesGetRequest,
+  CategoriesListRequest,
   CategoriesUpdateRequest,
 } from 'src/application/dto/categories/categories.request';
 import {
@@ -28,10 +29,18 @@ export class CategoriesService {
     return new CategoryResponse(new Category(category));
   }
 
-  async getAllCategories(): Promise<CategoryListResponse> {
-    const [categories, count] = await this.categoriesRepository.findAndCount(
-      {},
-    );
+  async getAllCategories({
+    page,
+    take,
+    orderBy,
+  }: CategoriesListRequest): Promise<CategoryListResponse> {
+    const [categories, count] = await this.categoriesRepository.findAndCount({
+      take: take || 10,
+      skip: page ? page * 10 : 0,
+      order: {
+        createdAt: orderBy || 'ASC',
+      },
+    });
 
     if (count == 0) {
       return new CategoryListResponse([], 0);
