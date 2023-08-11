@@ -16,6 +16,7 @@ import {
   UserGetRequest,
   UserUpdateRequest,
 } from '../../application/dto/users/users.request';
+import { logger } from 'nestjs-i18n';
 
 @Injectable()
 export class UserService {
@@ -41,17 +42,15 @@ export class UserService {
   }
 
   async update(
-    id: number,
     user: User,
     updateUserDto: UserUpdateRequest,
   ): Promise<UserResponse> {
-    const bdUser = await this.userRepository.findOne({ where: { id } });
+    const bdUser = await this.userRepository.findOne({
+      where: { id: user.id },
+    });
+
     if (!bdUser) {
       throw new NotFoundException(CustomExceptions.user.NotFound);
-    }
-
-    if (user.id !== bdUser.id) {
-      throw new ForbiddenException(CustomExceptions.user.NotSelfUpdate);
     }
 
     Object.assign(bdUser, updateUserDto);
