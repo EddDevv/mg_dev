@@ -72,6 +72,7 @@ export class UserUpdateRequest
       | 'password'
       | 'onlineStatus'
       | 'receiveNotifications'
+      | 'dateOfBirth'
     >
 {
   @ApiProperty({ nullable: true })
@@ -97,10 +98,8 @@ export class UserUpdateRequest
 
   @ApiProperty({ nullable: true })
   @IsOptional()
-  @IsDateString({
-    strict: true,
-  })
-  createdAt: string | null;
+  @IsDateString()
+  dateOfBirth: string | null;
 
   @ApiProperty({ nullable: true })
   @IsOptional()
