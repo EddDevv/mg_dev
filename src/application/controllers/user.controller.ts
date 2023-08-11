@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   Patch,
+  Post,
   Query,
   Req,
   UseGuards,
@@ -63,14 +64,12 @@ export class UserController {
   @ApiForbiddenResponse({ description: CustomExceptions.user.NotSelfUpdate })
   @ApiUnauthorizedResponse({ description: CustomExceptions.auth.Unauthorized })
   @UseGuards(JwtGuard)
-  @Patch(':id')
+  @Post('/update')
   update(
     @Req() { user }: IRequestUser,
-    @Param('id') id: number,
     @Body() body: UserUpdateRequest,
   ): Promise<UserResponse> {
-    console.log(user);
-    return this.userService.update(id, user, body);
+    return this.userService.update(user, body);
   }
 
   @ApiOkResponse({ description: ResponseMessages.user.remove })
