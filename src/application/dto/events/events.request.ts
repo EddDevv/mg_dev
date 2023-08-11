@@ -7,6 +7,7 @@ import {
   IsString,
   MaxLength,
 } from 'class-validator';
+import { Pagination } from '../../../config/pagination';
 
 export class EventCreateRequest {
   @ApiProperty()
@@ -40,10 +41,7 @@ export class EventViewRequest {
   id: number;
 }
 
-export class EventListRequest {
-  @ApiProperty()
-  page: number;
-}
+export class EventListRequest extends Pagination {}
 
 export class EventUpdateRequest {
   @ApiProperty()

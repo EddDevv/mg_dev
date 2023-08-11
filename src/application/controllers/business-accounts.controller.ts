@@ -11,6 +11,7 @@ import { BusinessAccountService } from '../../domain/business-accounts/business-
 import {
   BusinessAccountsCreateRequest,
   BusinessAccountsGetRequest,
+  BusinessAccountsListRequest,
   BusinessAccountsUpdateRequest,
 } from '../dto/business-accounts/business-accounts.request';
 import { UserResponse } from '../dto/users/users.response';
@@ -52,7 +53,9 @@ export class BusinessAccountController {
     description: ResponseMessages.businessAccount.findAll,
   })
   @Get('/list')
-  findAll(@Query() query): Promise<BusinessAccountsListResponse> {
+  findAll(
+    @Query() query: BusinessAccountsListRequest,
+  ): Promise<BusinessAccountsListResponse> {
     return this.businessAccountService.findAll();
   }
 
@@ -62,9 +65,7 @@ export class BusinessAccountController {
   })
   @ApiNotFoundResponse({ description: CustomExceptions.user.NotFound })
   @Get()
-  findOne(
-    @Query() query: BusinessAccountsGetRequest,
-  ): Promise<BusinessAccountResponse> {
+  findOne(@Query() query): Promise<BusinessAccountResponse> {
     return this.businessAccountService.findOne(query);
   }
 

@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString } from 'class-validator';
 import { IPost } from '../../../domain/posts/post.entity';
+import { Pagination } from '../../../config/pagination';
 
 export class PostsCreateRequest
   implements Omit<IPost, 'user' | 'shareId' | 'comments' | 'views' | 'likes'>
@@ -24,7 +25,7 @@ export class PostsGetRequest {
   id: number;
 }
 
-export class PostsGetListRequest {
+export class PostsGetListRequest extends Pagination {
   @ApiProperty()
   userId: number;
 }

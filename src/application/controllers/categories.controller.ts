@@ -24,6 +24,7 @@ import { CustomExceptions } from 'src/config/messages/custom.exceptions';
 import {
   CategoriesCreateRequest,
   CategoriesGetRequest,
+  CategoriesListRequest,
   CategoriesUpdateRequest,
 } from '../dto/categories/categories.request';
 
@@ -47,7 +48,9 @@ export class CategoriesController {
     description: ResponseMessages.category.findAll,
   })
   @Get('/list')
-  getAllCategories(@Query() query): Promise<CategoryListResponse> {
+  getAllCategories(
+    @Query() query: CategoriesListRequest,
+  ): Promise<CategoryListResponse> {
     return this.categoriesService.getAllCategories();
   }
 
