@@ -89,6 +89,9 @@ export class SubscriptionsService {
 
   async getSubscribers({
     userId,
+    take,
+    page,
+    orderBy,
   }: SubscriptionsGetRequest): Promise<SubscriptionsGetSubscribersResponse> {
     const [subs, count]: [SubscriptionsEntity[], number] =
       await this.subscriptionsRepository.findAndCount({
@@ -96,6 +99,11 @@ export class SubscriptionsService {
           userId,
         },
         relations: ['user'],
+        skip: page ? page * 10 : 0,
+        take: take || 10,
+        order: {
+          createdAt: orderBy || 'ASC',
+        },
       });
 
     if (count == 0) {

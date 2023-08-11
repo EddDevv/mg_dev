@@ -12,6 +12,7 @@ import {
 } from 'class-validator';
 import { GenderEnum } from '../../../config/enums/gender.enum';
 import { IUser } from '../../../domain/users/user.entity';
+import { Pagination } from '../../../config/pagination';
 
 export class UserCreateRequest {
   @ApiProperty({ example: 'John', description: 'The first name of the user' })
@@ -55,6 +56,8 @@ export class UserGetRequest {
   id: number;
 }
 
+export class UserListRequest extends Pagination {}
+
 export class UserUpdateRequest
   implements
     Omit<
@@ -69,6 +72,7 @@ export class UserUpdateRequest
       | 'password'
       | 'onlineStatus'
       | 'receiveNotifications'
+      | 'dateOfBirth'
     >
 {
   @ApiProperty({ nullable: true })
@@ -94,10 +98,8 @@ export class UserUpdateRequest
 
   @ApiProperty({ nullable: true })
   @IsOptional()
-  @IsDateString({
-    strict: true,
-  })
-  createdAt: string | null;
+  @IsDateString()
+  dateOfBirth: string | null;
 
   @ApiProperty({ nullable: true })
   @IsOptional()

@@ -7,6 +7,7 @@ import { UserService } from 'src/domain/users/user.service';
 import {
   BusinessAccountsCreateRequest,
   BusinessAccountsGetRequest,
+  BusinessAccountsListRequest,
   BusinessAccountsUpdateRequest,
 } from '../../application/dto/business-accounts/business-accounts.request';
 import { BusinessAccountsRepository } from '../../infrastructure/repositories/business-accounts.repository';
@@ -46,9 +47,19 @@ export class BusinessAccountService {
     }
   }
 
-  async findAll(): Promise<BusinessAccountsListResponse> {
+  async findAll({
+    page,
+    take,
+    orderBy,
+  }: BusinessAccountsListRequest): Promise<BusinessAccountsListResponse> {
     const [businessAccounts, count] =
-      await this.businessAccountRepository.findAndCount({});
+      await this.businessAccountRepository.findAndCount({
+        take: take || 10,
+        skip: page ? page * 10 : 0,
+        order: {
+          createdAt: orderBy || 'ASC',
+        },
+      });
 
     if (count == 0) {
       return new BusinessAccountsListResponse([], 0);

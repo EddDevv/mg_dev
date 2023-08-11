@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   Patch,
+  Post,
   Query,
   Req,
   UseGuards,
@@ -17,7 +18,11 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { UserGetRequest, UserUpdateRequest } from '../dto/users/users.request';
+import {
+  UserGetRequest,
+  UserListRequest,
+  UserUpdateRequest,
+} from '../dto/users/users.request';
 import {
   User,
   UserResponse,
@@ -38,8 +43,8 @@ export class UserController {
     description: ResponseMessages.user.findAll,
   })
   @Get('/list')
-  findAll(@Query() query): Promise<UsersListResponse> {
-    return this.userService.findAll();
+  findAll(@Query() query: UserListRequest): Promise<UsersListResponse> {
+    return this.userService.findAll(query);
   }
 
   @ApiOkResponse({
@@ -59,13 +64,12 @@ export class UserController {
   @ApiForbiddenResponse({ description: CustomExceptions.user.NotSelfUpdate })
   @ApiUnauthorizedResponse({ description: CustomExceptions.auth.Unauthorized })
   @UseGuards(JwtGuard)
-  @Patch(':id')
+  @Post('/update')
   update(
     @Req() { user }: IRequestUser,
-    @Param('id') id: number,
     @Body() body: UserUpdateRequest,
   ): Promise<UserResponse> {
-    return this.userService.update(id, user, body);
+    return this.userService.update(user, body);
   }
 
   @ApiOkResponse({ description: ResponseMessages.user.remove })

@@ -14,15 +14,27 @@ import {
 import { CustomExceptions } from '../../config/messages/custom.exceptions';
 import {
   UserGetRequest,
+  UserListRequest,
   UserUpdateRequest,
 } from '../../application/dto/users/users.request';
+import { logger } from 'nestjs-i18n';
 
 @Injectable()
 export class UserService {
   constructor(private readonly userRepository: UsersRepository) {}
 
-  async findAll(): Promise<UsersListResponse> {
-    const users = await this.userRepository.find({});
+  async findAll({
+    page,
+    take,
+    orderBy,
+  }: UserListRequest): Promise<UsersListResponse> {
+    const users = await this.userRepository.find({
+      skip: page ? page * 10 : 0,
+      take: take || 10,
+      order: {
+        createdAt: orderBy || 'ASC',
+      },
+    });
 
     const resUser = users.map((user) => {
       return new User(user);
@@ -41,17 +53,15 @@ export class UserService {
   }
 
   async update(
-    id: number,
     user: User,
     updateUserDto: UserUpdateRequest,
   ): Promise<UserResponse> {
-    const bdUser = await this.userRepository.findOne({ where: { id } });
+    const bdUser = await this.userRepository.findOne({
+      where: { id: user.id },
+    });
+
     if (!bdUser) {
       throw new NotFoundException(CustomExceptions.user.NotFound);
-    }
-
-    if (user.id !== bdUser.id) {
-      throw new ForbiddenException(CustomExceptions.user.NotSelfUpdate);
     }
 
     Object.assign(bdUser, updateUserDto);

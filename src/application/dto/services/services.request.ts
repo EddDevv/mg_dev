@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString } from 'class-validator';
 import { IService } from 'src/domain/services/services.entity';
+import { Pagination } from '../../../config/pagination';
 
 export class ServicesCreateRequest
   implements Omit<IService, 'category' | 'portfolios'>
@@ -22,6 +23,8 @@ export class ServicesGetRequest {
   @ApiProperty()
   id: number;
 }
+
+export class ServiceListRequest extends Pagination {}
 
 export class ServicesUpdateRequest
   implements Omit<IService, 'category' | 'portfolios'>
