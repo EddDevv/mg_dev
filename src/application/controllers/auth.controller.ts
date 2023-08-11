@@ -13,13 +13,13 @@ import {
 import {
   ApiBadRequestResponse,
   ApiCreatedResponse,
+  ApiHeaders,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger';
 import { ResponseMessages } from '../../config/messages/response.messages';
 import { CustomExceptions } from '../../config/messages/custom.exceptions';
-import { request } from 'express';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -34,8 +34,11 @@ export class AuthController {
     description: CustomExceptions.auth.AlreadyRegistered,
   })
   @Post('register')
-  register(@Body() body: AuthRegisterRequest): Promise<AuthRegisterResponse> {
-    return this.authService.register(body);
+  register(
+    @Headers('accept-language') lang: string,
+    @Body() body: AuthRegisterRequest,
+  ): Promise<AuthRegisterResponse> {
+    return this.authService.register(body, lang);
   }
 
   @ApiOkResponse({
@@ -45,8 +48,11 @@ export class AuthController {
   @ApiNotFoundResponse({ description: CustomExceptions.user.NotFound })
   @ApiBadRequestResponse({ description: CustomExceptions.auth.InvalidCred })
   @Post('login')
-  login(@Body() body: AuthLoginRequest): Promise<AuthLoginResponse> {
-    return this.authService.login(body);
+  login(
+    @Headers('accept-language') lang: string,
+    @Body() body: AuthLoginRequest,
+  ): Promise<AuthLoginResponse> {
+    return this.authService.login(body, lang);
   }
 
   @ApiOkResponse({
@@ -55,7 +61,10 @@ export class AuthController {
   })
   @ApiBadRequestResponse({ description: CustomExceptions.auth.InvalidRefresh })
   @Post('refresh')
-  refreshToken(@Body() body: AuthRefreshRequest): Promise<AuthRefreshResponse> {
-    return this.authService.refreshToken(body.token);
+  refreshToken(
+    @Headers('accept-language') lang: string,
+    @Body() body: AuthRefreshRequest,
+  ): Promise<AuthRefreshResponse> {
+    return this.authService.refreshToken(body.token, lang);
   }
 }

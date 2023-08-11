@@ -18,7 +18,7 @@ import { EventsRepository } from 'src/infrastructure/repositories/events.reposit
 import { RecordsRepository } from 'src/infrastructure/repositories/records.repository';
 import { UsersRepository } from 'src/infrastructure/repositories/users.repository';
 import { RecordsEntity } from './records.entity';
-import { I18nContext, I18nService } from 'nestjs-i18n';
+import { I18nService } from 'nestjs-i18n';
 
 @Injectable()
 export class RecordsService {
@@ -29,7 +29,10 @@ export class RecordsService {
     private readonly i18n: I18nService,
   ) {}
 
-  async getRecord({ id }: RecordsGetRequest): Promise<RecordResponse> {
+  async getRecord(
+    { id }: RecordsGetRequest,
+    lang: string,
+  ): Promise<RecordResponse> {
     const record = await this.recordsRepository.findOne({
       where: { id },
       relations: ['event', 'user'],
@@ -37,7 +40,7 @@ export class RecordsService {
     if (!record) {
       throw new NotFoundException(
         this.i18n.t('exceptions.record.NotFound', {
-          lang: I18nContext.current().lang,
+          lang: lang,
         }),
       );
     }
@@ -68,10 +71,10 @@ export class RecordsService {
     return new RecordListEventResponse(resRecords, count);
   }
 
-  async create({
-    userId,
-    eventId,
-  }: RecordCreateRequest): Promise<RecordResponse> {
+  async create(
+    { userId, eventId }: RecordCreateRequest,
+    lang: string,
+  ): Promise<RecordResponse> {
     const recordExists = await this.recordsRepository.findOne({
       where: { userId, eventId },
     });
@@ -79,7 +82,7 @@ export class RecordsService {
     if (recordExists) {
       throw new BadRequestException(
         this.i18n.t('exceptions.record.AlreadyHave', {
-          lang: I18nContext.current().lang,
+          lang: lang,
         }),
       );
     }
@@ -90,7 +93,7 @@ export class RecordsService {
     if (!event) {
       throw new NotFoundException(
         this.i18n.t('exceptions.event.NotFound', {
-          lang: I18nContext.current().lang,
+          lang: lang,
         }),
       );
     }
@@ -101,7 +104,7 @@ export class RecordsService {
     if (!user) {
       throw new NotFoundException(
         this.i18n.t('exceptions.user.NotFound', {
-          lang: I18nContext.current().lang,
+          lang: lang,
         }),
       );
     }
@@ -115,6 +118,7 @@ export class RecordsService {
   async update(
     id: number,
     { userId, eventId }: RecordUpdateRequest,
+    lang: string,
   ): Promise<RecordResponse> {
     const recordExists = await this.recordsRepository.findOne({
       where: { userId, eventId },
@@ -123,7 +127,7 @@ export class RecordsService {
     if (recordExists) {
       throw new BadRequestException(
         this.i18n.t('exceptions.record.AlreadyHave', {
-          lang: I18nContext.current().lang,
+          lang: lang,
         }),
       );
     }
@@ -132,7 +136,7 @@ export class RecordsService {
     if (!record) {
       throw new NotFoundException(
         this.i18n.t('exceptions.record.NotFound', {
-          lang: I18nContext.current().lang,
+          lang: lang,
         }),
       );
     }
@@ -144,7 +148,7 @@ export class RecordsService {
       if (!user) {
         throw new NotFoundException(
           this.i18n.t('exceptions.user.NotFound', {
-            lang: I18nContext.current().lang,
+            lang: lang,
           }),
         );
       }
@@ -159,7 +163,7 @@ export class RecordsService {
       if (!event) {
         throw new NotFoundException(
           this.i18n.t('exceptions.event.NotFound', {
-            lang: I18nContext.current().lang,
+            lang: lang,
           }),
         );
       }
@@ -172,12 +176,12 @@ export class RecordsService {
     return new RecordResponse(new Record(record));
   }
 
-  async delete(id: number): Promise<void> {
+  async delete(id: number, lang: string): Promise<void> {
     const record = await this.recordsRepository.findOne({ where: { id } });
     if (!record) {
       throw new NotFoundException(
         this.i18n.t('exceptions.record.NotFound', {
-          lang: I18nContext.current().lang,
+          lang: lang,
         }),
       );
     }

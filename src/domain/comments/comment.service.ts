@@ -25,7 +25,7 @@ import {
   LikePost,
 } from '../../application/dto/likes/likes.response';
 import { LikesRepository } from '../../infrastructure/repositories/likes.repository';
-import { I18nContext, I18nService } from 'nestjs-i18n';
+import { I18nService } from 'nestjs-i18n';
 
 @Injectable()
 export class CommentsService {
@@ -40,11 +40,12 @@ export class CommentsService {
   async create(
     user: User,
     { postId, text, parentCommentId }: CommentsCreateRequest,
+    lang: string,
   ): Promise<CommentResponse> {
     if (!postId && !parentCommentId) {
       throw new BadRequestException(
         this.i18n.t('exceptions.comments.NotPasteData', {
-          lang: I18nContext.current().lang,
+          lang: lang,
         }),
       );
     }
@@ -66,7 +67,7 @@ export class CommentsService {
       if (!post) {
         throw new NotFoundException(
           this.i18n.t('exceptions.posts.NotFound', {
-            lang: I18nContext.current().lang,
+            lang: lang,
           }),
         );
       }
@@ -80,7 +81,7 @@ export class CommentsService {
       if (!parentComment) {
         throw new NotFoundException(
           this.i18n.t('exceptions.comments.NotFound', {
-            lang: I18nContext.current().lang,
+            lang: lang,
           }),
         );
       }
@@ -93,7 +94,10 @@ export class CommentsService {
     return new CommentResponse(new Comment(comment));
   }
 
-  async findOne({ id }: CommentsGetRequest): Promise<CommentResponse> {
+  async findOne(
+    { id }: CommentsGetRequest,
+    lang: string,
+  ): Promise<CommentResponse> {
     const comment = await this.commentsRepository.findOne({
       where: { id },
       relations: ['user', 'post'], //'replies'],
@@ -101,7 +105,7 @@ export class CommentsService {
     if (!comment) {
       throw new NotFoundException(
         this.i18n.t('exceptions.comments.NotFound', {
-          lang: I18nContext.current().lang,
+          lang: lang,
         }),
       );
     }
@@ -111,6 +115,7 @@ export class CommentsService {
   async update(
     id: number,
     { text }: CommentsUpdateRequest,
+    lang: string,
   ): Promise<CommentResponse> {
     const comment = await this.commentsRepository.findOne({
       where: { id: id },
@@ -119,7 +124,7 @@ export class CommentsService {
     if (!comment) {
       throw new NotFoundException(
         this.i18n.t('exceptions.comments.NotFound', {
-          lang: I18nContext.current().lang,
+          lang: lang,
         }),
       );
     }
@@ -130,12 +135,12 @@ export class CommentsService {
     return new CommentResponse(new Comment(comment));
   }
 
-  async remove(id: number): Promise<void> {
+  async remove(id: number, lang: string,): Promise<void> {
     const comment = await this.commentsRepository.findOne({ where: { id } });
     if (!comment) {
       throw new NotFoundException(
         this.i18n.t('exceptions.comments.NotFound', {
-          lang: I18nContext.current().lang,
+          lang: lang,
         }),
       );
     }
@@ -146,6 +151,7 @@ export class CommentsService {
   async likeComment(
     user: User,
     { commentId }: LikeCommentRequest,
+    lang: string,
   ): Promise<LikeComment> {
     const comment = await this.commentsRepository.findOne({
       where: { id: commentId },
@@ -153,7 +159,7 @@ export class CommentsService {
     if (!comment) {
       throw new NotFoundException(
         this.i18n.t('exceptions.comments.NotFound', {
-          lang: I18nContext.current().lang,
+          lang: lang,
         }),
       );
     }
@@ -168,16 +174,17 @@ export class CommentsService {
     return new LikeComment(user, new Comment(comment));
   }
 
-  async getLikes({
-    commentId,
-  }: LikeCommentRequest): Promise<LikeListCommentResponse> {
+  async getLikes(
+    { commentId }: LikeCommentRequest,
+    lang: string,
+  ): Promise<LikeListCommentResponse> {
     const comment = await this.commentsRepository.findOne({
       where: { id: commentId },
     });
     if (!comment) {
       throw new NotFoundException(
         this.i18n.t('exceptions.comments.NotFound', {
-          lang: I18nContext.current().lang,
+          lang: lang,
         }),
       );
     }

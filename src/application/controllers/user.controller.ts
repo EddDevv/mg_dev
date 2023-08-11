@@ -8,6 +8,7 @@ import {
   Query,
   Req,
   UseGuards,
+  Headers,
 } from '@nestjs/common';
 import { UserService } from '../../domain/users/user.service';
 import {
@@ -51,8 +52,11 @@ export class UserController {
     description: ResponseMessages.user.findOne,
   })
   @Get()
-  findOne(@Query() query: UserGetRequest): Promise<UserResponse> {
-    return this.userService.findOne(query);
+  findOne(
+    @Headers('accept-language') lang: string,
+    @Query() query: UserGetRequest,
+  ): Promise<UserResponse> {
+    return this.userService.findOne(query, lang);
   }
 
   @ApiOkResponse({
@@ -65,17 +69,18 @@ export class UserController {
   @UseGuards(JwtGuard)
   @Patch(':id')
   update(
+    @Headers('accept-language') lang: string,
     @Req() { user }: IRequestUser,
     @Param('id') id: number,
     @Body() body: UserUpdateRequest,
   ): Promise<UserResponse> {
-    return this.userService.update(id, user, body);
+    return this.userService.update(id, user, body, lang);
   }
 
   @ApiOkResponse({ description: ResponseMessages.user.remove })
   @ApiNotFoundResponse({ description: CustomExceptions.user.NotFound })
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userService.remove(+id);
+  remove(@Headers('accept-language') lang: string, @Param('id') id: string) {
+    return this.userService.remove(+id, lang);
   }
 }

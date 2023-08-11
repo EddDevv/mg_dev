@@ -11,13 +11,12 @@ import {
   UserResponse,
   UsersListResponse,
 } from '../../application/dto/users/users.response';
-import { CustomExceptions } from '../../config/messages/custom.exceptions';
 import {
   UserGetListRequest,
   UserGetRequest,
   UserUpdateRequest,
 } from '../../application/dto/users/users.request';
-import { I18nContext, I18nService } from 'nestjs-i18n';
+import { I18nService } from 'nestjs-i18n';
 import { UserEntity } from './user.entity';
 
 @Injectable()
@@ -39,10 +38,14 @@ export class UserService {
     return new UsersListResponse(resUser, 0);
   }
 
-  async findOne({ id }: UserGetRequest): Promise<UserResponse> {
+  async findOne({ id }: UserGetRequest, lang: string): Promise<UserResponse> {
     const user = await this.userRepository.findOne({ where: { id } });
     if (!user) {
-      throw new NotFoundException('User not found');
+      throw new NotFoundException(
+        this.i18n.t('exceptions.user.NotFound', {
+          lang: lang,
+        }),
+      );
     }
 
     return new UserResponse(new User(user));
@@ -52,12 +55,13 @@ export class UserService {
     id: number,
     user: User,
     updateUserDto: UserUpdateRequest,
+    lang: string,
   ): Promise<UserResponse> {
     const bdUser = await this.userRepository.findOne({ where: { id } });
     if (!bdUser) {
       throw new NotFoundException(
         this.i18n.t('exceptions.user.NotFound', {
-          lang: I18nContext.current().lang,
+          lang: lang,
         }),
       );
     }
@@ -65,7 +69,7 @@ export class UserService {
     if (user.id !== bdUser.id) {
       throw new ForbiddenException(
         this.i18n.t('exceptions.user.NotSelfUpdate', {
-          lang: I18nContext.current().lang,
+          lang: lang,
         }),
       );
     }
@@ -76,7 +80,7 @@ export class UserService {
     return new UserResponse(new User(bdUser));
   }
 
-  async updateRole(user: UserEntity): Promise<UserResponse> {
+  async updateRole(user: UserEntity, lang: string): Promise<UserResponse> {
     if (user && user.role !== UserRoleEnum.Business) {
       user.role = UserRoleEnum.Business;
       await this.userRepository.save(user);
@@ -85,18 +89,18 @@ export class UserService {
     } else {
       throw new BadRequestException(
         this.i18n.t('exceptions.businessAccount.AlreadyHave', {
-          lang: I18nContext.current().lang,
+          lang: lang,
         }),
       );
     }
   }
 
-  async remove(id: number): Promise<void> {
+  async remove(id: number, lang: string): Promise<void> {
     const user = await this.userRepository.findOne({ where: { id } });
     if (!user) {
       throw new NotFoundException(
         this.i18n.t('exceptions.user.NotFound', {
-          lang: I18nContext.current().lang,
+          lang: lang,
         }),
       );
     }
