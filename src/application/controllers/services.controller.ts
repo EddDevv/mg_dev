@@ -9,6 +9,7 @@ import {
   Query,
   UseGuards,
   Headers,
+  Req,
 } from '@nestjs/common';
 import {
   ApiNotFoundResponse,
@@ -32,6 +33,7 @@ import {
   ServicesUpdateRequest,
 } from '../dto/services/services.request';
 import { JwtGuard } from '../guards/jwt.guard';
+import { IRequestUser } from 'src/config/user-request.interface';
 
 @ApiTags('Services')
 @Controller('services')
@@ -73,9 +75,10 @@ export class ServicesController {
   @Post()
   create(
     @Headers('accept-language') lang: string,
+    @Req() { user }: IRequestUser,
     @Body() body: ServicesCreateRequest,
   ): Promise<ServiceResponse> {
-    return this.servicesService.create(body, lang);
+    return this.servicesService.create(body, lang, user);
   }
 
   @ApiOkResponse({
@@ -89,10 +92,11 @@ export class ServicesController {
   @Patch(':id')
   update(
     @Headers('accept-language') lang: string,
+    @Req() { user }: IRequestUser,
     @Param('id') id: number,
     @Body() body: ServicesUpdateRequest,
   ): Promise<ServiceResponse> {
-    return this.servicesService.update(id, body, lang);
+    return this.servicesService.update(id, body, lang, user);
   }
 
   @ApiOkResponse({ description: ResponseMessages.service.remove })
@@ -103,8 +107,9 @@ export class ServicesController {
   @Delete(':id')
   delete(
     @Headers('accept-language') lang: string,
+    @Req() { user }: IRequestUser,
     @Param('id') id: number,
   ): Promise<void> {
-    return this.servicesService.delete(id, lang);
+    return this.servicesService.delete(id, lang, user);
   }
 }

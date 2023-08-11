@@ -15,6 +15,6 @@ export class AppController {
   @UseGuards(JwtGuard)
   @Get('/profile')
   getProfile(@Req() { user }: IRequestUser) {
-    return user;
+    return new UserResponse(user);
   }
 }
