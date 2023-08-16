@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsBoolean, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 import { IService } from 'src/domain/services/services.entity';
 import { FindOptionsOrderValue } from 'typeorm';
 
@@ -42,8 +42,6 @@ export class ServicesCreateRequest
     example: 'true',
     description: 'Availability of the opportunity to drive up to the client',
   })
-  @IsNotEmpty()
-  @IsBoolean()
   departureToClient: boolean;
 }
 
