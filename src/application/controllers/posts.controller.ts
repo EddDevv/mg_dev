@@ -9,6 +9,7 @@ import {
   UseGuards,
   Req,
   Query,
+  Headers,
 } from '@nestjs/common';
 import { PostsService } from 'src/domain/posts/post.service';
 import {
@@ -49,9 +50,12 @@ export class PostsController {
     description: ResponseMessages.posts.findOne,
   })
   @ApiNotFoundResponse({ description: CustomExceptions.posts.NotFound })
-  @Get('/view')
-  getPost(@Query() query: PostsGetRequest): Promise<PostResponse> {
-    return this.postsService.getPost(query);
+  @Get()
+  getPost(
+    @Headers('accept-language') lang: string,
+    @Query() query: PostsGetRequest,
+  ): Promise<PostResponse> {
+    return this.postsService.getPost(query, lang);
   }
 
   @ApiOkResponse({
@@ -73,9 +77,10 @@ export class PostsController {
   @UseGuards(JwtGuard)
   create(
     @Req() { user }: IRequestUser,
+    @Headers('accept-language') lang: string,
     @Body() body: PostsCreateRequest,
   ): Promise<PostResponse> {
-    return this.postsService.create(user, body);
+    return this.postsService.create(user, body, lang);
   }
 
   @ApiOkResponse({
@@ -87,10 +92,11 @@ export class PostsController {
   @UseGuards(AuthGuard)
   @Patch('/update/:id')
   update(
+    @Headers('accept-language') lang: string,
     @Param('id') id: number,
     @Body() body: PostsUpdateRequest,
   ): Promise<PostResponse> {
-    return this.postsService.update(id, body);
+    return this.postsService.update(id, body, lang);
   }
 
   @ApiOkResponse({ description: ResponseMessages.posts.addView })
@@ -99,8 +105,12 @@ export class PostsController {
   @ApiBearerAuth()
   @UseGuards(JwtGuard)
   @Post('/view')
-  addView(@Req() { user }: IRequestUser, @Body() body: PostsAddViewRequest) {
-    return this.postsService.addView(user, body);
+  addView(
+    @Req() { user }: IRequestUser,
+    @Headers('accept-language') lang: string,
+    @Body() body: PostsAddViewRequest,
+  ) {
+    return this.postsService.addView(user, body, lang);
   }
 
   @ApiOkResponse({ description: ResponseMessages.posts.remove })
@@ -111,9 +121,10 @@ export class PostsController {
   @Delete(':id')
   deletePost(
     @Req() { user }: IRequestUser,
+    @Headers('accept-language') lang: string,
     @Param('id') id: number,
   ): Promise<void> {
-    return this.postsService.deletePost(user, id);
+    return this.postsService.deletePost(user, id, lang);
   }
 
   @ApiOkResponse({ type: LikePost, description: ResponseMessages.posts.like })
@@ -123,10 +134,11 @@ export class PostsController {
   @UseGuards(JwtGuard)
   @Post('/like')
   likePost(
+    @Headers('accept-language') lang: string,
     @Req() { user }: IRequestUser,
     @Body() body: LikePostRequest,
   ): Promise<LikePost> {
-    return this.postsService.like(user, body);
+    return this.postsService.like(user, body, lang);
   }
 
   @ApiOkResponse({
@@ -135,7 +147,10 @@ export class PostsController {
   })
   @ApiNotFoundResponse({ description: CustomExceptions.comments.NotFound })
   @Get('/likes')
-  getLikes(@Query() query: LikePostListRequest): Promise<LikeListPostResponse> {
-    return this.postsService.getLikes(query);
+  getLikes(
+    @Headers('accept-language') lang: string,
+    @Query() query: LikePostRequest,
+  ): Promise<LikeListPostResponse> {
+    return this.postsService.getLikes(query, lang);
   }
 }

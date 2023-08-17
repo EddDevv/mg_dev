@@ -8,6 +8,7 @@ import {
   Patch,
   UseGuards,
   Query,
+  Headers,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -43,9 +44,10 @@ export class PortfolioController {
   @ApiNotFoundResponse({ description: CustomExceptions.portfolio.NotFound })
   @Get()
   getPortfolio(
+    @Headers('accept-language') lang: string,
     @Query() query: PortfolioGetRequest,
   ): Promise<PortfolioResponse> {
-    return this.portfolioService.getPortfolio(query);
+    return this.portfolioService.getPortfolio(query, lang);
   }
 
   @ApiOkResponse({
@@ -66,8 +68,11 @@ export class PortfolioController {
   @Post()
   @ApiBearerAuth()
   @UseGuards(AuthGuard)
-  create(@Body() body: PortfolioCreateRequest): Promise<PortfolioResponse> {
-    return this.portfolioService.create(body);
+  create(
+    @Headers('accept-language') lang: string,
+    @Body() body: PortfolioCreateRequest,
+  ): Promise<PortfolioResponse> {
+    return this.portfolioService.create(body, lang);
   }
 
   @ApiOkResponse({
@@ -80,10 +85,11 @@ export class PortfolioController {
   @UseGuards(AuthGuard)
   @Patch(':id')
   update(
+    @Headers('accept-language') lang: string,
     @Param('id') id: number,
     @Body() body: PortfolioUpdateRequest,
   ): Promise<PortfolioResponse> {
-    return this.portfolioService.update(id, body);
+    return this.portfolioService.update(id, body, lang);
   }
 
   @ApiOkResponse({ description: ResponseMessages.portfolio.remove })
@@ -92,7 +98,10 @@ export class PortfolioController {
   @ApiBearerAuth()
   @UseGuards(AuthGuard)
   @Delete(':id')
-  delete(@Param('id') id: number): Promise<void> {
-    return this.portfolioService.delete(id);
+  delete(
+    @Headers('accept-language') lang: string,
+    @Param('id') id: number,
+  ): Promise<void> {
+    return this.portfolioService.delete(id, lang);
   }
 }

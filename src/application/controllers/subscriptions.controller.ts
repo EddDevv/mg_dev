@@ -6,6 +6,7 @@ import {
   Query,
   Req,
   UseGuards,
+  Headers,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -27,7 +28,6 @@ import {
 } from '../dto/subscriptions/subscriptions.response';
 import { CustomExceptions } from '../../config/messages/custom.exceptions';
 import { IRequestUser } from '../../config/user-request.interface';
-import { AuthGuard } from '../guards/auth.guard';
 import { ResponseMessages } from '../../config/messages/response.messages';
 import { JwtGuard } from '../guards/jwt.guard';
 
@@ -47,9 +47,10 @@ export class SubscriptionsController {
   @Post('/subscribe')
   subscribe(
     @Req() { user }: IRequestUser,
+    @Headers('accept-language') lang: string,
     @Body() body: SubscriptionsSubscribeRequest,
   ): Promise<Subscription> {
-    return this.subscriptionService.subscribe(user, body);
+    return this.subscriptionService.subscribe(user, body, lang);
   }
 
   @ApiOkResponse({ description: ResponseMessages.subscriptions.unsubscribe })
@@ -57,10 +58,11 @@ export class SubscriptionsController {
   @UseGuards(JwtGuard)
   @Post('/unsubscribe')
   unsubscribe(
+    @Headers('accept-language') lang: string,
     @Req() { user }: IRequestUser,
     @Body() body: SubscriptionsUnsubscribeRequest,
   ): Promise<void> {
-    return this.subscriptionService.unsubscribe(user, body);
+    return this.subscriptionService.unsubscribe(user, body, lang);
   }
 
   @ApiOkResponse({

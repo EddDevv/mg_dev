@@ -6,6 +6,7 @@ import {
   Patch,
   Post,
   Query,
+  Headers,
 } from '@nestjs/common';
 import { BusinessAccountService } from '../../domain/business-accounts/business-accounts.service';
 import {
@@ -44,8 +45,11 @@ export class BusinessAccountController {
     description: CustomExceptions.businessAccount.AlreadyHave,
   })
   @Post('create')
-  create(@Body() body: BusinessAccountsCreateRequest): Promise<UserResponse> {
-    return this.businessAccountService.create(body);
+  create(
+    @Headers('accept-language') lang: string,
+    @Body() body: BusinessAccountsCreateRequest,
+  ): Promise<UserResponse> {
+    return this.businessAccountService.create(body, lang);
   }
 
   @ApiOkResponse({
@@ -65,8 +69,11 @@ export class BusinessAccountController {
   })
   @ApiNotFoundResponse({ description: CustomExceptions.user.NotFound })
   @Get()
-  findOne(@Query() query): Promise<BusinessAccountResponse> {
-    return this.businessAccountService.findOne(query);
+  findOne(
+    @Headers('accept-language') lang: string,
+    @Query() query: BusinessAccountsGetRequest,
+  ): Promise<BusinessAccountResponse> {
+    return this.businessAccountService.findOne(query, lang);
   }
 
   @ApiOkResponse({ description: ResponseMessages.businessAccount.update })

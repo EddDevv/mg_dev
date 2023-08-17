@@ -3,6 +3,7 @@ import { BasicEntity } from '../../config/basic.entity';
 import { Column, Entity, JoinColumn, OneToMany, OneToOne } from 'typeorm';
 import { UserEntity } from '../users/user.entity';
 import { PortfolioEntity } from '../portfolio/portfolio.entity';
+import { ServicesEntity } from '../services/services.entity';
 
 export interface IBusinessAccount {
   id: number;
@@ -39,6 +40,9 @@ export class BusinessAccountEntity
 
   @OneToMany(() => PortfolioEntity, (portfolio) => portfolio.business)
   portfolios: PortfolioEntity[];
+
+  @OneToMany(() => ServicesEntity, (services) => services.business)
+  services: ServicesEntity[];
 
   constructor(userId: number, businessName: string) {
     super();
