@@ -1,5 +1,6 @@
 import { ILike } from '../../../domain/likes/likes.entity';
 import { ApiProperty } from '@nestjs/swagger';
+import { Pagination } from '../../../config/pagination';
 
 export class LikePostRequest
   implements Omit<ILike, 'comment' | 'commentId' | 'post' | 'user' | 'userId'>
@@ -13,4 +14,9 @@ export class LikeCommentRequest
 {
   @ApiProperty()
   commentId: number;
+}
+
+export class LikePostListRequest extends Pagination {
+  @ApiProperty()
+  postId: number;
 }

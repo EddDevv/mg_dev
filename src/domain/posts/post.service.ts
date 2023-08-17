@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PostEntity } from './post.entity';
 import { UsersRepository } from 'src/infrastructure/repositories/users.repository';
 import { PostsRepository } from 'src/infrastructure/repositories/posts.repository';
@@ -16,7 +20,10 @@ import {
 } from 'src/application/dto/posts/posts.response';
 import { CustomExceptions } from 'src/config/messages/custom.exceptions';
 import { User } from '../../application/dto/users/users.response';
-import { LikePostRequest } from '../../application/dto/likes/likes.request';
+import {
+  LikePostListRequest,
+  LikePostRequest,
+} from '../../application/dto/likes/likes.request';
 import {
   LikePost,
   LikeListPostResponse,
@@ -41,7 +48,7 @@ export class PostsService {
       throw new NotFoundException(CustomExceptions.posts.NotFound);
     }
 
-    return new PostResponse(new Post(post));
+    return new PostResponse(new Post(post.id, post));
   }
 
   async getAllPosts({
@@ -56,38 +63,48 @@ export class PostsService {
         userId,
       },
       skip: page ? page * 10 : 0,
-      take: take || 10,
+      take: take ?? 10,
       order: {
-        createdAt: orderBy || 'ASC',
+        createdAt: orderBy ?? 'ASC',
       },
     });
 
-    if (count == 0) {
+    if (posts.length == 0) {
       return new PostListResponse([], 0);
     }
 
     const resPosts = posts.map((post) => {
-      return new Post(post);
+      return new Post(post.id, post);
     });
 
     return new PostListResponse(resPosts, count);
   }
 
-  async create({ userId, text }: PostsCreateRequest): Promise<PostResponse> {
-    const user = await this.usersRepository.findOne({ where: { id: userId } });
-    if (!user) {
+  async create(
+    current: User,
+    { text }: PostsCreateRequest,
+  ): Promise<PostResponse> {
+    const currentUser = await this.usersRepository.findOne({
+      where: { id: current.id },
+    });
+    if (!currentUser) {
       throw new NotFoundException(CustomExceptions.user.NotFound);
     }
 
-    const post = new PostEntity(user, userId, text);
+    const post = new PostEntity(currentUser, currentUser.id, text);
     await this.postsRepository.save(post);
-    return new PostResponse(new Post(post));
+
+    return new PostResponse(new Post(post.id, post));
   }
 
-  async addView({ id }: PostsAddViewRequest): Promise<void> {
+  async addView(user: User, { id }: PostsAddViewRequest): Promise<void> {
     const post = await this.postsRepository.findOne({ where: { id } });
     if (!post) {
       throw new NotFoundException(CustomExceptions.posts.NotFound);
+    }
+
+    if (post.userId == user.id) {
+      throw new ForbiddenException(CustomExceptions.posts.ViewYourOwn);
     }
 
     post.views += 1;
@@ -99,7 +116,12 @@ export class PostsService {
     id: number,
     { text }: PostsUpdateRequest,
   ): Promise<PostResponse> {
-    const post = await this.postsRepository.findOne({ where: { id } });
+    const post = await this.postsRepository.findOne({
+      where: {
+        id,
+      },
+      relations: ['user'],
+    });
     if (!post) {
       throw new NotFoundException(CustomExceptions.posts.NotFound);
     }
@@ -107,20 +129,27 @@ export class PostsService {
     post.text = text;
     await this.postsRepository.save(post);
 
-    return new PostResponse(new Post(post));
+    return new PostResponse(new Post(post.id, post));
   }
 
-  async deletePost(id: number): Promise<void> {
+  async deletePost(user: User, id: number): Promise<void> {
     const post = await this.postsRepository.findOne({ where: { id } });
     if (!post) {
       throw new NotFoundException(CustomExceptions.posts.NotFound);
+    }
+
+    if (post.userId !== user.id) {
+      throw new ForbiddenException(CustomExceptions.posts.DeleteOnlyOwn);
     }
 
     await this.postsRepository.softDelete({ id: post.id });
   }
 
   async like(user: User, { postId }: LikePostRequest): Promise<LikePost> {
-    const post = await this.postsRepository.findOne({ where: { id: postId } });
+    const post = await this.postsRepository.findOne({
+      where: { id: postId },
+      relations: ['user'],
+    });
     if (!post) {
       throw new NotFoundException(CustomExceptions.posts.NotFound);
     }
@@ -129,13 +158,29 @@ export class PostsService {
       where: { id: user.id },
     });
 
+    const existLike = await this.likesRepository.findOne({
+      where: {
+        postId,
+        userId: user.id,
+      },
+    });
+
+    if (existLike) {
+      throw new ForbiddenException(CustomExceptions.posts.AlreadyHaveLike);
+    }
+
     const like = new LikesEntity(existUser, user.id, post, null);
     await this.likesRepository.save(like);
 
-    return new LikePost(user, new Post(post));
+    return new LikePost(user, new Post(post.id, post));
   }
 
-  async getLikes({ postId }: LikePostRequest): Promise<LikeListPostResponse> {
+  async getLikes({
+    postId,
+    take,
+    orderBy,
+    page,
+  }: LikePostListRequest): Promise<LikeListPostResponse> {
     const post = await this.postsRepository.findOne({
       where: { id: postId },
     });
@@ -145,12 +190,24 @@ export class PostsService {
 
     const [likes, count] = await this.likesRepository.findAndCount({
       where: { postId: post.id },
+      take: take ?? 10,
+      skip: page ? page * 10 : 0,
+      order: {
+        createdAt: orderBy ?? 'ASC',
+      },
       relations: ['user'],
     });
 
     const likesResponse = likes.map((like) => {
-      return new LikePost(new User(like.user), new Post(like.post));
+      return new LikePost(
+        new User(like.user),
+        new Post(like.post.id, like.post),
+      );
     });
+
+    if (likesResponse.length == 0) {
+      return new LikeListPostResponse([], 0);
+    }
 
     return new LikeListPostResponse(likesResponse, count);
   }

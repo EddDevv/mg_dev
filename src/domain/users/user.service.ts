@@ -28,11 +28,11 @@ export class UserService {
     take,
     orderBy,
   }: UserListRequest): Promise<UsersListResponse> {
-    const users = await this.userRepository.find({
+    const [users, count] = await this.userRepository.findAndCount({
       skip: page ? page * 10 : 0,
-      take: take || 10,
+      take: take ?? 10,
       order: {
-        createdAt: orderBy || 'ASC',
+        createdAt: orderBy ?? 'ASC',
       },
     });
 
@@ -40,7 +40,11 @@ export class UserService {
       return new User(user);
     });
 
-    return new UsersListResponse(resUser, 0);
+    if (resUser.length == 0) {
+      return new UsersListResponse([], 0);
+    }
+
+    return new UsersListResponse(resUser, count);
   }
 
   async findOne({ id }: UserGetRequest): Promise<UserResponse> {
@@ -81,13 +85,5 @@ export class UserService {
     } else {
       throw new BadRequestException('You already have a business account');
     }
-  }
-
-  async remove(id: number): Promise<void> {
-    const user = await this.userRepository.findOne({ where: { id } });
-    if (!user) {
-      throw new NotFoundException(CustomExceptions.user.NotFound);
-    }
-    await this.userRepository.softDelete({ id: user.id });
   }
 }

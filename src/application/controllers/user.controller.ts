@@ -71,11 +71,4 @@ export class UserController {
   ): Promise<UserResponse> {
     return this.userService.update(user, body);
   }
-
-  @ApiOkResponse({ description: ResponseMessages.user.remove })
-  @ApiNotFoundResponse({ description: CustomExceptions.user.NotFound })
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userService.remove(+id);
-  }
 }

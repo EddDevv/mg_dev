@@ -23,6 +23,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       where: { id: payload.id },
     });
 
-    return new UserResponse(new User(user));
+    return new User(user);
   }
 }

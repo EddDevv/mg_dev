@@ -19,6 +19,7 @@ import { SubscriptionsEntity } from './subscriptions.entity';
 import { CustomExceptions } from '../../config/messages/custom.exceptions';
 import { UsersRepository } from '../../infrastructure/repositories/users.repository';
 import { User } from '../../application/dto/users/users.response';
+import { UserEntity } from '../users/user.entity';
 
 @Injectable()
 export class SubscriptionsService {
@@ -27,28 +28,31 @@ export class SubscriptionsService {
     private readonly usersRepository: UsersRepository,
   ) {}
 
-  async subscribe({
-    userId,
-    subscriberId,
-  }: SubscriptionsSubscribeRequest): Promise<Subscription> {
-    if (userId === subscriberId) {
+  async subscribe(
+    current: User,
+    { userId }: SubscriptionsSubscribeRequest,
+  ): Promise<Subscription> {
+    console.log(current);
+
+    if (current.id === userId) {
       throw new BadRequestException('Cannot subscribe from yourself');
     }
 
-    const user = await this.usersRepository.findOne({ where: { id: userId } });
+    const currentUser = await this.usersRepository.findOne({
+      where: {
+        id: current.id,
+      },
+    });
+
+    const user: UserEntity = await this.usersRepository.findOne({
+      where: { id: userId },
+    });
     if (!user) {
       throw new NotFoundException(CustomExceptions.user.NotFound);
     }
 
-    const subscriber = await this.usersRepository.findOne({
-      where: { id: subscriberId },
-    });
-    if (!subscriber) {
-      throw new NotFoundException(CustomExceptions.user.NotFound);
-    }
-
     const existingSubscription = await this.subscriptionsRepository.findOne({
-      where: { userId, subscriberId },
+      where: { userId, subscriberId: current.id },
     });
     if (existingSubscription) {
       throw new ForbiddenException('You already have a subscription');
@@ -57,8 +61,8 @@ export class SubscriptionsService {
     const subscription = new SubscriptionsEntity(
       user,
       user.id,
-      subscriber,
-      subscriberId,
+      currentUser,
+      currentUser.id,
     );
     await this.subscriptionsRepository.save(subscription);
 

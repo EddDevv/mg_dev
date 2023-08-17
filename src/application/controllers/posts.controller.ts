@@ -22,6 +22,7 @@ import { PostListResponse, PostResponse } from '../dto/posts/posts.response';
 import {
   ApiBearerAuth,
   ApiCreatedResponse,
+  ApiForbiddenResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiTags,
@@ -31,7 +32,10 @@ import { CustomExceptions } from 'src/config/messages/custom.exceptions';
 import { AuthGuard } from '../guards/auth.guard';
 import { ResponseMessages } from '../../config/messages/response.messages';
 import { IRequestUser } from '../../config/user-request.interface';
-import { LikePostRequest } from '../dto/likes/likes.request';
+import {
+  LikePostListRequest,
+  LikePostRequest,
+} from '../dto/likes/likes.request';
 import { JwtGuard } from '../guards/jwt.guard';
 import { LikePost, LikeListPostResponse } from '../dto/likes/likes.response';
 
@@ -45,7 +49,7 @@ export class PostsController {
     description: ResponseMessages.posts.findOne,
   })
   @ApiNotFoundResponse({ description: CustomExceptions.posts.NotFound })
-  @Get()
+  @Get('/view')
   getPost(@Query() query: PostsGetRequest): Promise<PostResponse> {
     return this.postsService.getPost(query);
   }
@@ -64,11 +68,14 @@ export class PostsController {
     description: ResponseMessages.posts.create,
   })
   @ApiNotFoundResponse({ description: CustomExceptions.posts.NotFound })
-  @Post()
+  @Post('/create')
   @ApiBearerAuth()
-  @UseGuards(AuthGuard)
-  create(@Body() body: PostsCreateRequest): Promise<PostResponse> {
-    return this.postsService.create(body);
+  @UseGuards(JwtGuard)
+  create(
+    @Req() { user }: IRequestUser,
+    @Body() body: PostsCreateRequest,
+  ): Promise<PostResponse> {
+    return this.postsService.create(user, body);
   }
 
   @ApiOkResponse({
@@ -78,7 +85,7 @@ export class PostsController {
   @ApiNotFoundResponse({ description: CustomExceptions.posts.NotFound })
   @ApiBearerAuth()
   @UseGuards(AuthGuard)
-  @Patch(':id')
+  @Patch('/update/:id')
   update(
     @Param('id') id: number,
     @Body() body: PostsUpdateRequest,
@@ -88,25 +95,31 @@ export class PostsController {
 
   @ApiOkResponse({ description: ResponseMessages.posts.addView })
   @ApiUnauthorizedResponse({ description: CustomExceptions.auth.Unauthorized })
+  @ApiForbiddenResponse({ description: CustomExceptions.posts.ViewYourOwn })
   @ApiBearerAuth()
   @UseGuards(JwtGuard)
   @Post('/view')
-  addView(@Body() body: PostsAddViewRequest) {
-    return this.postsService.addView(body);
+  addView(@Req() { user }: IRequestUser, @Body() body: PostsAddViewRequest) {
+    return this.postsService.addView(user, body);
   }
 
   @ApiOkResponse({ description: ResponseMessages.posts.remove })
   @ApiNotFoundResponse({ description: CustomExceptions.posts.NotFound })
+  @ApiForbiddenResponse({ description: CustomExceptions.posts.DeleteOnlyOwn })
   @ApiBearerAuth()
-  @UseGuards(AuthGuard)
+  @UseGuards(JwtGuard)
   @Delete(':id')
-  deletePost(@Param('id') id: number): Promise<void> {
-    return this.postsService.deletePost(id);
+  deletePost(
+    @Req() { user }: IRequestUser,
+    @Param('id') id: number,
+  ): Promise<void> {
+    return this.postsService.deletePost(user, id);
   }
 
   @ApiOkResponse({ type: LikePost, description: ResponseMessages.posts.like })
   @ApiUnauthorizedResponse({ description: CustomExceptions.auth.Unauthorized })
   @ApiNotFoundResponse({ description: CustomExceptions.posts.NotFound })
+  @ApiForbiddenResponse({ description: CustomExceptions.posts.AlreadyHaveLike })
   @UseGuards(JwtGuard)
   @Post('/like')
   likePost(
@@ -122,7 +135,7 @@ export class PostsController {
   })
   @ApiNotFoundResponse({ description: CustomExceptions.comments.NotFound })
   @Get('/likes')
-  getLikes(@Query() query: LikePostRequest): Promise<LikeListPostResponse> {
+  getLikes(@Query() query: LikePostListRequest): Promise<LikeListPostResponse> {
     return this.postsService.getLikes(query);
   }
 }

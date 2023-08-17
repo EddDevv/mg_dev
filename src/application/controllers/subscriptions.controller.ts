@@ -29,6 +29,7 @@ import { CustomExceptions } from '../../config/messages/custom.exceptions';
 import { IRequestUser } from '../../config/user-request.interface';
 import { AuthGuard } from '../guards/auth.guard';
 import { ResponseMessages } from '../../config/messages/response.messages';
+import { JwtGuard } from '../guards/jwt.guard';
 
 @ApiTags('Subscriptions')
 @Controller('subscriptions')
@@ -42,17 +43,18 @@ export class SubscriptionsController {
   @ApiNotFoundResponse({ description: CustomExceptions.user.NotFound })
   @ApiForbiddenResponse({ description: 'You already have a subscription' })
   @ApiBearerAuth()
-  @UseGuards(AuthGuard)
+  @UseGuards(JwtGuard)
   @Post('/subscribe')
   subscribe(
+    @Req() { user }: IRequestUser,
     @Body() body: SubscriptionsSubscribeRequest,
   ): Promise<Subscription> {
-    return this.subscriptionService.subscribe(body);
+    return this.subscriptionService.subscribe(user, body);
   }
 
   @ApiOkResponse({ description: ResponseMessages.subscriptions.unsubscribe })
   @ApiBearerAuth()
-  @UseGuards(AuthGuard)
+  @UseGuards(JwtGuard)
   @Post('/unsubscribe')
   unsubscribe(
     @Req() { user }: IRequestUser,
