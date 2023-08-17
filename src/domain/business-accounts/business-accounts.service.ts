@@ -18,7 +18,7 @@ import {
   BusinessAccounts,
   BusinessAccountResponse,
 } from '../../application/dto/business-accounts/business-accounts.response';
-import { I18nContext, I18nService } from 'nestjs-i18n';
+import { I18nService } from 'nestjs-i18n';
 import { UsersRepository } from 'src/infrastructure/repositories/users.repository';
 
 @Injectable()

@@ -22,7 +22,6 @@ import { LikesEntity } from '../likes/likes.entity';
 import {
   LikeComment,
   LikeListCommentResponse,
-  LikePost,
 } from '../../application/dto/likes/likes.response';
 import { LikesRepository } from '../../infrastructure/repositories/likes.repository';
 import { I18nService } from 'nestjs-i18n';

@@ -13,7 +13,6 @@ import {
 import {
   ApiBadRequestResponse,
   ApiCreatedResponse,
-  ApiHeaders,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiTags,

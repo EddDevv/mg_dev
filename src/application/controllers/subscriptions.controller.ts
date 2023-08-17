@@ -28,7 +28,6 @@ import {
 } from '../dto/subscriptions/subscriptions.response';
 import { CustomExceptions } from '../../config/messages/custom.exceptions';
 import { IRequestUser } from '../../config/user-request.interface';
-import { AuthGuard } from '../guards/auth.guard';
 import { ResponseMessages } from '../../config/messages/response.messages';
 import { JwtGuard } from '../guards/jwt.guard';
 
