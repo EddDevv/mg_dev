@@ -195,7 +195,7 @@ export class CommentsService {
     });
 
     const likesResponse = likes.map((like) => {
-      return new LikePost(like.user, like.post);
+      return new LikeComment(like.user, like.comment);
     });
 
     return new LikeListCommentResponse(likesResponse, count);

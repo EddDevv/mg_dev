@@ -30,7 +30,9 @@
   },
   "service": {
     "NotFound": "Service not found",
-    "NotConform": "Service not conform category"
+    "NotConform": "Service not conform category",
+    "NotSelfCreate": "Only the own service can be created",
+    "NotSelfUpdate": "Only the own service can be changed"
   },
   "event": {
     "NotFound": "Event not found"

@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import {
   ServicesCreateRequest,
   ServicesGetListRequest,
@@ -14,12 +18,15 @@ import { CategoriesRepository } from 'src/infrastructure/repositories/categories
 import { ServicesRepository } from 'src/infrastructure/repositories/services.repository';
 import { ServicesEntity } from './services.entity';
 import { I18nService } from 'nestjs-i18n';
+import { BusinessAccountsRepository } from 'src/infrastructure/repositories/business-accounts.repository';
+import { User } from 'src/application/dto/users/users.response';
 
 @Injectable()
 export class ServicesService {
   constructor(
     private readonly servicesRepository: ServicesRepository,
     private readonly categoriesRepository: CategoriesRepository,
+    private readonly businessAccountsRepository: BusinessAccountsRepository,
     private readonly i18n: I18nService,
   ) {}
 
@@ -43,13 +50,11 @@ export class ServicesService {
 
   async getAllServices({
     categoryId,
-    createdAt,
   }: ServicesGetListRequest): Promise<ServiceListResponse> {
     const [services, count] = await this.servicesRepository.findAndCount({
       where: {
         categoryId,
       },
-      order: { createdAt: createdAt },
     });
 
     if (count == 0) {
@@ -64,8 +69,16 @@ export class ServicesService {
   }
 
   async create(
-    { categoryId, title }: ServicesCreateRequest,
+    {
+      categoryId,
+      businessId,
+      title,
+      price,
+      description,
+      departureToClient,
+    }: ServicesCreateRequest,
     lang: string,
+    user: User,
   ): Promise<ServiceResponse> {
     const category = await this.categoriesRepository.findOne({
       where: { id: categoryId },
@@ -78,23 +91,66 @@ export class ServicesService {
       );
     }
 
-    const service = new ServicesEntity(category, categoryId, title);
+    const business = await this.businessAccountsRepository.findOne({
+      where: { id: businessId },
+    });
+    if (!business) {
+      throw new NotFoundException(
+        this.i18n.t('exceptions.businessAccount.NotFound', {
+          lang: lang,
+        }),
+      );
+    }
+
+    if (business.userId !== user.id) {
+      throw new ForbiddenException(
+        this.i18n.t('exceptions.service.NotSelfCreate', {
+          lang: lang,
+        }),
+      );
+    }
+
+    const service = new ServicesEntity(
+      category,
+      categoryId,
+      business,
+      businessId,
+      title,
+      price,
+      description,
+      departureToClient,
+    );
     await this.servicesRepository.save(service);
     return new ServiceResponse(new Service(service));
   }
 
   async update(
     id: number,
-    { categoryId, title }: ServicesUpdateRequest,
+    {
+      categoryId,
+      title,
+      price,
+      description,
+      departureToClient,
+    }: ServicesUpdateRequest,
     lang: string,
+    user: User,
   ): Promise<ServiceResponse> {
     const service = await this.servicesRepository.findOne({
       where: { id },
-      relations: ['category'],
+      relations: ['category', 'business'],
     });
     if (!service) {
       throw new NotFoundException(
         this.i18n.t('exceptions.service.NotFound', {
+          lang: lang,
+        }),
+      );
+    }
+
+    if (service.business.userId !== user.id) {
+      throw new ForbiddenException(
+        this.i18n.t('exceptions.service.NotSelfUpdate', {
           lang: lang,
         }),
       );
@@ -115,20 +171,32 @@ export class ServicesService {
       service.categoryId = categoryId;
     }
 
-    if (title) {
-      service.title = title;
-    }
+    service.title = title ?? service.title;
+    service.price = price ?? service.price;
+    service.description = description ?? service.description;
+    service.departureToClient = departureToClient ?? service.departureToClient;
 
     await this.servicesRepository.save(service);
 
     return new ServiceResponse(new Service(service));
   }
 
-  async delete(id: number, lang: string): Promise<void> {
-    const service = await this.servicesRepository.findOne({ where: { id } });
+  async delete(id: number, lang: string, user: User): Promise<void> {
+    const service = await this.servicesRepository.findOne({
+      where: { id },
+      relations: ['business'],
+    });
     if (!service) {
       throw new NotFoundException(
         this.i18n.t('exceptions.service.NotFound', {
+          lang: lang,
+        }),
+      );
+    }
+
+    if (service.business.userId !== user.id) {
+      throw new ForbiddenException(
+        this.i18n.t('exceptions.service.NotSelfUpdate', {
           lang: lang,
         }),
       );

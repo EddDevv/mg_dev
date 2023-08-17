@@ -7,13 +7,17 @@ import {
   Post,
   Delete,
   Query,
+  UseGuards,
   Headers,
+  Req,
 } from '@nestjs/common';
 import {
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiCreatedResponse,
   ApiTags,
+  ApiBearerAuth,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { ResponseMessages } from 'src/config/messages/response.messages';
 import { CustomExceptions } from 'src/config/messages/custom.exceptions';
@@ -28,6 +32,8 @@ import {
   ServicesGetRequest,
   ServicesUpdateRequest,
 } from '../dto/services/services.request';
+import { JwtGuard } from '../guards/jwt.guard';
+import { IRequestUser } from 'src/config/user-request.interface';
 
 @ApiTags('Services')
 @Controller('services')
@@ -63,12 +69,16 @@ export class ServicesController {
     description: ResponseMessages.service.create,
   })
   @ApiNotFoundResponse({ description: CustomExceptions.service.NotFound })
+  @ApiUnauthorizedResponse({ description: CustomExceptions.auth.Unauthorized })
+  @ApiBearerAuth()
+  @UseGuards(JwtGuard)
   @Post()
   create(
     @Headers('accept-language') lang: string,
+    @Req() { user }: IRequestUser,
     @Body() body: ServicesCreateRequest,
   ): Promise<ServiceResponse> {
-    return this.servicesService.create(body, lang);
+    return this.servicesService.create(body, lang, user);
   }
 
   @ApiOkResponse({
@@ -76,22 +86,30 @@ export class ServicesController {
     description: ResponseMessages.service.update,
   })
   @ApiNotFoundResponse({ description: CustomExceptions.service.NotFound })
+  @ApiUnauthorizedResponse({ description: CustomExceptions.auth.Unauthorized })
+  @ApiBearerAuth()
+  @UseGuards(JwtGuard)
   @Patch(':id')
   update(
     @Headers('accept-language') lang: string,
+    @Req() { user }: IRequestUser,
     @Param('id') id: number,
     @Body() body: ServicesUpdateRequest,
   ): Promise<ServiceResponse> {
-    return this.servicesService.update(id, body, lang);
+    return this.servicesService.update(id, body, lang, user);
   }
 
   @ApiOkResponse({ description: ResponseMessages.service.remove })
   @ApiNotFoundResponse({ description: CustomExceptions.service.NotFound })
+  @ApiUnauthorizedResponse({ description: CustomExceptions.auth.Unauthorized })
+  @ApiBearerAuth()
+  @UseGuards(JwtGuard)
   @Delete(':id')
   delete(
     @Headers('accept-language') lang: string,
+    @Req() { user }: IRequestUser,
     @Param('id') id: number,
   ): Promise<void> {
-    return this.servicesService.delete(id, lang);
+    return this.servicesService.delete(id, lang, user);
   }
 }
