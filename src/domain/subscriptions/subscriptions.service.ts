@@ -19,46 +19,61 @@ import { SubscriptionsEntity } from './subscriptions.entity';
 import { CustomExceptions } from '../../config/messages/custom.exceptions';
 import { UsersRepository } from '../../infrastructure/repositories/users.repository';
 import { User } from '../../application/dto/users/users.response';
+import { UserEntity } from '../users/user.entity';
+import { I18nService } from 'nestjs-i18n';
 
 @Injectable()
 export class SubscriptionsService {
   constructor(
     private readonly subscriptionsRepository: SubscriptionsRepository,
     private readonly usersRepository: UsersRepository,
+    private readonly i18n: I18nService,
   ) {}
 
-  async subscribe({
-    userId,
-    subscriberId,
-  }: SubscriptionsSubscribeRequest): Promise<Subscription> {
-    if (userId === subscriberId) {
-      throw new BadRequestException('Cannot subscribe from yourself');
+  async subscribe(
+    current: User,
+    { userId }: SubscriptionsSubscribeRequest,
+    lang: string,
+  ): Promise<Subscription> {
+    console.log(current);
+
+    if (current.id === userId) {
+      throw new BadRequestException(
+        this.i18n.t('exceptions.subscription.SubYourself', {
+          lang: lang,
+        }),
+      );
     }
 
-    const user = await this.usersRepository.findOne({ where: { id: userId } });
+    const currentUser = await this.usersRepository.findOne({
+      where: {
+        id: current.id,
+      },
+    });
+
+    const user: UserEntity = await this.usersRepository.findOne({
+      where: { id: userId },
+    });
     if (!user) {
       throw new NotFoundException(CustomExceptions.user.NotFound);
     }
 
-    const subscriber = await this.usersRepository.findOne({
-      where: { id: subscriberId },
-    });
-    if (!subscriber) {
-      throw new NotFoundException(CustomExceptions.user.NotFound);
-    }
-
     const existingSubscription = await this.subscriptionsRepository.findOne({
-      where: { userId, subscriberId },
+      where: { userId, subscriberId: current.id },
     });
     if (existingSubscription) {
-      throw new ForbiddenException('You already have a subscription');
+      throw new ForbiddenException(
+        this.i18n.t('exceptions.subscription.AlreadyHave', {
+          lang: lang,
+        }),
+      );
     }
 
     const subscription = new SubscriptionsEntity(
       user,
       user.id,
-      subscriber,
-      subscriberId,
+      currentUser,
+      currentUser.id,
     );
     await this.subscriptionsRepository.save(subscription);
 
@@ -68,9 +83,14 @@ export class SubscriptionsService {
   async unsubscribe(
     user: User,
     { userId }: SubscriptionsUnsubscribeRequest,
+    lang: string,
   ): Promise<void> {
     if (user.id === userId) {
-      throw new BadRequestException('Cannot unsubscribe from yourself');
+      throw new BadRequestException(
+        this.i18n.t('exceptions.subscription.UnSubYourself', {
+          lang: lang,
+        }),
+      );
     }
 
     const subscription = await this.subscriptionsRepository.findOne({
@@ -81,7 +101,11 @@ export class SubscriptionsService {
     });
 
     if (!subscription) {
-      throw new NotFoundException('Subscription not found');
+      throw new NotFoundException(
+        this.i18n.t('exceptions.subscription.NotFound', {
+          lang: lang,
+        }),
+      );
     }
 
     await this.subscriptionsRepository.softDelete({ id: subscription.id });

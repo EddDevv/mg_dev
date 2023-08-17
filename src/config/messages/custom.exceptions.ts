@@ -17,6 +17,9 @@ export const CustomExceptions = {
   },
   posts: {
     NotFound: `Post not found`,
+    ViewYourOwn: 'View can be added only by another user',
+    DeleteOnlyOwn: 'Post can be deleted only by owner',
+    AlreadyHaveLike: 'Post already have like',
   },
   comments: {
     NotPasteData: 'Not data where paste comment',

@@ -34,7 +34,7 @@ export class PostEntity extends BasicEntity implements IPost {
 
   @OneToMany(() => CommentEntity, (comment) => comment.post)
   comments: CommentEntity[];
-  
+
   @Column({ default: 0 })
   views: number;
 

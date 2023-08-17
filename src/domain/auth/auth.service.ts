@@ -16,9 +16,9 @@ import {
   AuthRegisterResponse,
   AuthTokensResponse,
 } from '../../application/dto/auth/auth.response';
-import { CustomExceptions } from '../../config/messages/custom.exceptions';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { I18nService } from 'nestjs-i18n';
 
 @Injectable()
 export class AuthService {
@@ -26,22 +26,29 @@ export class AuthService {
     private readonly userService: UsersRepository,
     private jwtService: JwtService,
     private readonly configService: ConfigService,
+    private readonly i18n: I18nService,
   ) {}
 
-  async register({
-    firstName,
-    email,
-    password,
-    repeatPassword,
-  }: AuthRegisterRequest): Promise<AuthRegisterResponse> {
+  async register(
+    { firstName, email, password, repeatPassword }: AuthRegisterRequest,
+    lang: string,
+  ): Promise<AuthRegisterResponse> {
     const existingUser = await this.userService.findOne({ where: { email } });
 
     if (existingUser) {
-      throw new BadRequestException(CustomExceptions.auth.AlreadyRegistered);
+      throw new BadRequestException(
+        this.i18n.t('exceptions.auth.AlreadyRegistered', {
+          lang: lang,
+        }),
+      );
     }
 
     if (!this.checkPasswordRepeat(password, repeatPassword)) {
-      throw new BadRequestException(CustomExceptions.auth.NotTheSamePasswords);
+      throw new BadRequestException(
+        this.i18n.t('exceptions.auth.NotTheSamePasswords', {
+          lang: lang,
+        }),
+      );
     }
 
     const hashedPassword = await this.hashPassword(password);
@@ -68,18 +75,26 @@ export class AuthService {
     return await bcrypt.compare(password, hash);
   }
 
-  async login({
-    email,
-    password,
-  }: AuthLoginRequest): Promise<AuthLoginResponse> {
+  async login(
+    { email, password }: AuthLoginRequest,
+    lang: string,
+  ): Promise<AuthLoginResponse> {
     const user = await this.userService.findOne({ where: { email } });
 
     if (!user) {
-      throw new NotFoundException(CustomExceptions.user.NotFound);
+      throw new NotFoundException(
+        this.i18n.t('exceptions.user.NotFound', {
+          lang: lang,
+        }),
+      );
     }
 
     if (!(await this.comparePassword(password, user.password))) {
-      throw new BadRequestException(CustomExceptions.auth.InvalidCred);
+      throw new BadRequestException(
+        this.i18n.t('exceptions.auth.InvalidCred', {
+          lang: lang,
+        }),
+      );
     }
 
     const tokens = await this.generateTokens(user);
@@ -87,7 +102,10 @@ export class AuthService {
     return new AuthLoginResponse(user, tokens);
   }
 
-  async refreshToken(refreshToken: string): Promise<AuthRefreshResponse> {
+  async refreshToken(
+    refreshToken: string,
+    lang: string,
+  ): Promise<AuthRefreshResponse> {
     try {
       const decodedToken = (await this.jwtService.verifyAsync(refreshToken, {
         secret: this.configService.get<string>('JWT_SECRET'),
@@ -97,14 +115,22 @@ export class AuthService {
         where: { id: decodedToken.id },
       });
       if (!user) {
-        throw new BadRequestException(CustomExceptions.auth.InvalidRefresh);
+        throw new BadRequestException(
+          this.i18n.t('exceptions.auth.InvalidRefresh', {
+            lang: lang,
+          }),
+        );
       }
 
       const accessToken = await this.generateAccessToken(user);
 
       return new AuthRefreshResponse(accessToken);
     } catch (error) {
-      throw new BadRequestException(CustomExceptions.auth.InvalidRefresh);
+      throw new BadRequestException(
+        this.i18n.t('exceptions.auth.InvalidRefresh', {
+          lang: lang,
+        }),
+      );
     }
   }
 

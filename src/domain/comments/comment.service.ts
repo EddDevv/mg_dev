@@ -17,16 +17,15 @@ import {
   CommentsUpdateRequest,
 } from '../../application/dto/comments/comments.request';
 import { User } from '../../application/dto/users/users.response';
-import { CustomExceptions } from '../../config/messages/custom.exceptions';
 import { LikeCommentRequest } from '../../application/dto/likes/likes.request';
 import { LikesEntity } from '../likes/likes.entity';
 import {
   LikeComment,
   LikeListCommentResponse,
-  LikePost,
 } from '../../application/dto/likes/likes.response';
 import { LikesRepository } from '../../infrastructure/repositories/likes.repository';
 import { Post } from '../../application/dto/posts/posts.response';
+import { I18nService } from 'nestjs-i18n';
 
 @Injectable()
 export class CommentsService {
@@ -35,14 +34,20 @@ export class CommentsService {
     private readonly postsRepository: PostsRepository,
     private readonly usersRepository: UsersRepository,
     private readonly likesRepository: LikesRepository,
+    private readonly i18n: I18nService,
   ) {}
 
   async create(
     user: User,
     { postId, text, parentCommentId }: CommentsCreateRequest,
+    lang: string,
   ): Promise<CommentResponse> {
     if (!postId && !parentCommentId) {
-      throw new BadRequestException(CustomExceptions.comments.NotPasteData);
+      throw new BadRequestException(
+        this.i18n.t('exceptions.comments.NotPasteData', {
+          lang: lang,
+        }),
+      );
     }
 
     const existUser = await this.usersRepository.findOne({
@@ -60,7 +65,11 @@ export class CommentsService {
         where: { id: postId },
       });
       if (!post) {
-        throw new NotFoundException(CustomExceptions.posts.NotFound);
+        throw new NotFoundException(
+          this.i18n.t('exceptions.posts.NotFound', {
+            lang: lang,
+          }),
+        );
       }
       comment.addPostInfo(post);
     }
@@ -70,7 +79,11 @@ export class CommentsService {
         where: { id: parentCommentId },
       });
       if (!parentComment) {
-        throw new NotFoundException(CustomExceptions.comments.NotFound);
+        throw new NotFoundException(
+          this.i18n.t('exceptions.comments.NotFound', {
+            lang: lang,
+          }),
+        );
       }
 
       comment.addParentCommentInfo(parentComment);
@@ -81,13 +94,20 @@ export class CommentsService {
     return new CommentResponse(new Comment(comment));
   }
 
-  async findOne({ id }: CommentsGetRequest): Promise<CommentResponse> {
+  async findOne(
+    { id }: CommentsGetRequest,
+    lang: string,
+  ): Promise<CommentResponse> {
     const comment = await this.commentsRepository.findOne({
       where: { id },
       relations: ['user', 'post'], //'replies'],
     });
     if (!comment) {
-      throw new NotFoundException(CustomExceptions.comments.NotFound);
+      throw new NotFoundException(
+        this.i18n.t('exceptions.comments.NotFound', {
+          lang: lang,
+        }),
+      );
     }
     return new CommentResponse(new Comment(comment));
   }
@@ -95,13 +115,18 @@ export class CommentsService {
   async update(
     id: number,
     { text }: CommentsUpdateRequest,
+    lang: string,
   ): Promise<CommentResponse> {
     const comment = await this.commentsRepository.findOne({
       where: { id: id },
     });
 
     if (!comment) {
-      throw new NotFoundException(CustomExceptions.comments.NotFound);
+      throw new NotFoundException(
+        this.i18n.t('exceptions.comments.NotFound', {
+          lang: lang,
+        }),
+      );
     }
     comment.text = text;
 
@@ -110,10 +135,14 @@ export class CommentsService {
     return new CommentResponse(new Comment(comment));
   }
 
-  async remove(id: number): Promise<void> {
+  async remove(id: number, lang: string,): Promise<void> {
     const comment = await this.commentsRepository.findOne({ where: { id } });
     if (!comment) {
-      throw new NotFoundException(CustomExceptions.comments.NotFound);
+      throw new NotFoundException(
+        this.i18n.t('exceptions.comments.NotFound', {
+          lang: lang,
+        }),
+      );
     }
 
     await this.commentsRepository.softDelete({ id: comment.id });
@@ -122,12 +151,17 @@ export class CommentsService {
   async likeComment(
     user: User,
     { commentId }: LikeCommentRequest,
+    lang: string,
   ): Promise<LikeComment> {
     const comment = await this.commentsRepository.findOne({
       where: { id: commentId },
     });
     if (!comment) {
-      throw new NotFoundException(CustomExceptions.comments.NotFound);
+      throw new NotFoundException(
+        this.i18n.t('exceptions.comments.NotFound', {
+          lang: lang,
+        }),
+      );
     }
 
     const existUser = await this.usersRepository.findOne({
@@ -140,14 +174,19 @@ export class CommentsService {
     return new LikeComment(user, new Comment(comment));
   }
 
-  async getLikes({
-    commentId,
-  }: LikeCommentRequest): Promise<LikeListCommentResponse> {
+  async getLikes(
+    { commentId }: LikeCommentRequest,
+    lang: string,
+  ): Promise<LikeListCommentResponse> {
     const comment = await this.commentsRepository.findOne({
       where: { id: commentId },
     });
     if (!comment) {
-      throw new NotFoundException(CustomExceptions.comments.NotFound);
+      throw new NotFoundException(
+        this.i18n.t('exceptions.comments.NotFound', {
+          lang: lang,
+        }),
+      );
     }
 
     const [likes, count] = await this.likesRepository.findAndCount({
@@ -156,7 +195,7 @@ export class CommentsService {
     });
 
     const likesResponse = likes.map((like) => {
-      return new LikePost(new User(like.user), new Post(like.post));
+      return new LikeComment( new User(like.user), new Comment (like.comment));
     });
 
     return new LikeListCommentResponse(likesResponse, count);

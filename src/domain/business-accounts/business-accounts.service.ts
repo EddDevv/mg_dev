@@ -18,31 +18,49 @@ import {
   BusinessAccounts,
   BusinessAccountResponse,
 } from '../../application/dto/business-accounts/business-accounts.response';
-import { CustomExceptions } from '../../config/messages/custom.exceptions';
+import { I18nService } from 'nestjs-i18n';
+import { UsersRepository } from 'src/infrastructure/repositories/users.repository';
 
 @Injectable()
 export class BusinessAccountService {
   constructor(
     private businessAccountRepository: BusinessAccountsRepository,
-    private userService: UserService,
+    private readonly usersRepository: UsersRepository,
+    private readonly userService: UserService,
+    private readonly i18n: I18nService,
   ) {}
 
-  async create(data: BusinessAccountsCreateRequest): Promise<UserResponse> {
+  async create(
+    { userId, businessName }: BusinessAccountsCreateRequest,
+    lang: string,
+  ): Promise<UserResponse> {
+    const user = await this.usersRepository.findOne({ where: { id: userId } });
+
+    if (!user) {
+      throw new NotFoundException(
+        this.i18n.t('exceptions.user.NotFound', {
+          lang: lang,
+        }),
+      );
+    }
+
     const isBusiness = await this.businessAccountRepository.findOne({
-      where: { userId: data.userId },
+      where: { userId: userId },
     });
 
     if (!isBusiness) {
       const businessAccount = await this.businessAccountRepository.save(
-        new BusinessAccountEntity(data.userId, data.businessName),
+        new BusinessAccountEntity(userId, businessName),
       );
 
       if (businessAccount) {
-        return await this.userService.updateRole(data.userId);
+        return await this.userService.updateRole(user, lang);
       }
     } else {
       throw new BadRequestException(
-        CustomExceptions.businessAccount.AlreadyHave,
+        this.i18n.t('exceptions.businessAccount.AlreadyHave', {
+          lang: lang,
+        }),
       );
     }
   }
@@ -72,14 +90,19 @@ export class BusinessAccountService {
     return new BusinessAccountsListResponse(accountsResponse, count);
   }
 
-  async findOne({
-    id,
-  }: BusinessAccountsGetRequest): Promise<BusinessAccountResponse> {
+  async findOne(
+    { id }: BusinessAccountsGetRequest,
+    lang: string,
+  ): Promise<BusinessAccountResponse> {
     const businessAccount = await this.businessAccountRepository.findOne({
       where: { id },
     });
     if (!businessAccount) {
-      throw new NotFoundException(CustomExceptions.user.NotFound);
+      throw new NotFoundException(
+        this.i18n.t('exceptions.user.NotFound', {
+          lang: lang,
+        }),
+      );
     }
 
     return new BusinessAccountResponse(new BusinessAccounts(businessAccount));

@@ -19,7 +19,6 @@ import {
 } from '../../application/dto/events/events.request';
 import { EventsEntity } from './events.entity';
 import { CustomExceptions } from '../../config/messages/custom.exceptions';
-import { count } from 'rxjs';
 import { User } from '../../application/dto/users/users.response';
 import { RecordsEntity } from '../records/records.entity';
 import { UsersRepository } from '../../infrastructure/repositories/users.repository';
@@ -28,6 +27,7 @@ import {
   Record,
   RecordResponse,
 } from '../../application/dto/records/records.response';
+import { I18nService } from 'nestjs-i18n';
 
 @Injectable()
 export class EventsService {
@@ -35,6 +35,7 @@ export class EventsService {
     private readonly eventsRepository: EventsRepository,
     private readonly usersRepository: UsersRepository,
     private readonly recordsRepository: RecordsRepository,
+    private readonly i18n: I18nService,
   ) {}
 
   async createEvent(
@@ -69,7 +70,10 @@ export class EventsService {
     return new EventResponse(new Event(event));
   }
 
-  async viewEvent({ id }: EventViewRequest): Promise<EventResponse> {
+  async viewEvent(
+    { id }: EventViewRequest,
+    lang: string,
+  ): Promise<EventResponse> {
     const event = await this.eventsRepository.findOne({
       where: {
         id,
@@ -77,7 +81,11 @@ export class EventsService {
     });
 
     if (!event) {
-      throw new NotFoundException(CustomExceptions.event.NotFound);
+      throw new NotFoundException(
+        this.i18n.t('exceptions.event.NotFound', {
+          lang: lang,
+        }),
+      );
     }
 
     return new EventResponse(new Event(event));
@@ -110,6 +118,7 @@ export class EventsService {
   async updateEvent(
     { id }: EventViewRequest,
     body: EventUpdateRequest,
+    lang: string,
   ): Promise<EventResponse> {
     const event = await this.eventsRepository.findOne({
       where: {
@@ -117,7 +126,11 @@ export class EventsService {
       },
     });
     if (!event) {
-      throw new NotFoundException(CustomExceptions.event.NotFound);
+      throw new NotFoundException(
+        this.i18n.t('exceptions.event.NotFound', {
+          lang: lang,
+        }),
+      );
     }
 
     Object.assign(event, body);

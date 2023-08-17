@@ -22,6 +22,12 @@ export class UsersRepository implements BasicRepository<UserEntity> {
     return this.repo.find(options);
   }
 
+  async findAndCount(
+    options: FindManyOptions<UserEntity>,
+  ): Promise<[UserEntity[], number]> {
+    return await this.repo.findAndCount(options);
+  }
+
   findOne(
     options: FindOneOptions<UserEntity>,
   ): Promise<UserEntity | undefined> {

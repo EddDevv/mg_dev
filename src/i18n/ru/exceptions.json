@@ -1,0 +1,53 @@
+{
+  "auth": {
+    "AlreadyRegistered": "Пользователь с таким email уже существует",
+    "NotTheSamePasswords": "Не те же пароли",
+    "InvalidCred": "Неверные учетные данные",
+    "InvalidRefresh": "Неверный маркер обновления",
+    "Unauthorized": " Неавторизованный"
+  },
+  "businessAccount": {
+    "AlreadyHave": "У вас уже есть бизнес-аккаунт",
+    "NotFound": " Бизнес аккаунт не найден"
+  },
+  "locations": {},
+  "user": {
+    "NotFound": "Пользователь не найден",
+    "NotSelfUpdate": "Обновлять только себя"
+  },
+  "posts": {
+    "NotFound": "Пост не найден",
+    "ViewYourOwn": "Просмотр может быть добавлен только другим пользователем",
+    "DeleteOnlyOwn": "Пост может быть удален только владельцем",
+    "AlreadyHaveLike": "Пост уже имеет лайк"
+  },
+  "comments": {
+    "NotPasteData": "Нет данных, куда вставить комментарий",
+    "NotFound": "Комментарий не найден"
+  },
+  "portfolio": {
+    "NotFound": "Портфолио не найдено"
+  },
+  "category": {
+    "NotFound": "Категория не найдена"
+  },
+  "service": {
+    "NotFound": " Услуга не найдена",
+    "NotConform": "Услуга не соответствует категории",
+    "NotSelfCreate": "Только собственная услуга может быть создана",
+    "NotSelfUpdate": "Только собственная услуга может быть изменена"
+  },
+  "event": {
+    "NotFound": "Событие не найдено"
+  },
+  "record": {
+    "NotFound": "Запись не найдена",
+    "AlreadyHave": "У вас уже есть запись"
+  },
+  "subscription": {
+    "SubYourself": "Невозможно подписаться на себя",
+    "AlreadyHave": "У вас уже есть подписка",
+    "UnSubYourself": "Невозможно отписаться от себя",
+    "NotFound": "Подписка не найдена"
+  }
+}

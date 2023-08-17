@@ -32,8 +32,8 @@ export class Post
   @ApiProperty()
   createdAt: string;
 
-  constructor(post: PostEntity) {
-    this.id = post.id;
+  constructor(postId: number, post: PostEntity) {
+    this.id = postId;
     this.shareId = post.shareId;
     this.text = post.text;
     this.user = new User(post.user);

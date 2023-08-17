@@ -7,6 +7,7 @@ import {
   Post,
   Delete,
   Query,
+  Headers,
 } from '@nestjs/common';
 import {
   ApiNotFoundResponse,
@@ -39,8 +40,11 @@ export class CategoriesController {
   })
   @ApiNotFoundResponse({ description: CustomExceptions.category.NotFound })
   @Get()
-  getCategory(@Query() query: CategoriesGetRequest): Promise<CategoryResponse> {
-    return this.categoriesService.getCategory(query);
+  getCategory(
+    @Headers('accept-language') lang: string,
+    @Query() query: CategoriesGetRequest,
+  ): Promise<CategoryResponse> {
+    return this.categoriesService.getCategory(query, lang);
   }
 
   @ApiOkResponse({
@@ -70,16 +74,20 @@ export class CategoriesController {
   @ApiNotFoundResponse({ description: CustomExceptions.category.NotFound })
   @Patch(':id')
   update(
+    @Headers('accept-language') lang: string,
     @Param('id') id: number,
     @Body() body: CategoriesUpdateRequest,
   ): Promise<CategoryResponse> {
-    return this.categoriesService.update(id, body);
+    return this.categoriesService.update(id, body, lang);
   }
 
   @ApiOkResponse({ description: ResponseMessages.category.remove })
   @ApiNotFoundResponse({ description: CustomExceptions.category.NotFound })
   @Delete(':id')
-  delete(@Param('id') id: number): Promise<void> {
-    return this.categoriesService.delete(id);
+  delete(
+    @Headers('accept-language') lang: string,
+    @Param('id') id: number,
+  ): Promise<void> {
+    return this.categoriesService.delete(id, lang);
   }
 }

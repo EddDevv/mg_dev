@@ -99,7 +99,7 @@ export class UserUpdateRequest
   @ApiProperty({ nullable: true })
   @IsOptional()
   @IsDateString()
-  dateOfBirth: string | null;
+  dateOfBirth?: string | null;
 
   @ApiProperty({ nullable: true })
   @IsOptional()
