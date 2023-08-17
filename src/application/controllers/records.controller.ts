@@ -21,14 +21,10 @@ import { AuthGuard } from '../guards/auth.guard';
 import {
   RecordCreateRequest,
   RecordUpdateRequest,
-  RecordsGetListRequest,
   RecordsGetRequest,
 } from '../dto/records/records.request';
 import { RecordsService } from 'src/domain/records/records.service';
-import {
-  RecordListEventResponse,
-  RecordResponse,
-} from '../dto/records/records.response';
+import { RecordResponse } from '../dto/records/records.response';
 import { ResponseMessages } from 'src/config/messages/response.messages';
 
 @ApiTags('Records')
@@ -47,17 +43,6 @@ export class RecordsController {
     @Query() query: RecordsGetRequest,
   ): Promise<RecordResponse> {
     return this.recordsService.getRecord(query, lang);
-  }
-
-  @ApiOkResponse({
-    type: RecordListEventResponse,
-    description: ResponseMessages.record.findAll,
-  })
-  @Get('/list')
-  getAllPosts(
-    @Query() query: RecordsGetListRequest,
-  ): Promise<RecordListEventResponse> {
-    return this.recordsService.getAllRecords(query);
   }
 
   @ApiOkResponse({

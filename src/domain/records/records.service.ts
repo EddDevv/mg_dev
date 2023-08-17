@@ -6,12 +6,10 @@ import {
 import {
   RecordCreateRequest,
   RecordUpdateRequest,
-  RecordsGetListRequest,
   RecordsGetRequest,
 } from 'src/application/dto/records/records.request';
 import {
   Record,
-  RecordListEventResponse,
   RecordResponse,
 } from 'src/application/dto/records/records.response';
 import { EventsRepository } from 'src/infrastructure/repositories/events.repository';
@@ -46,29 +44,6 @@ export class RecordsService {
     }
 
     return new RecordResponse(new Record(record));
-  }
-
-  async getAllRecords({
-    eventId,
-    createdAt,
-  }: RecordsGetListRequest): Promise<RecordListEventResponse> {
-    const [records, count] = await this.recordsRepository.findAndCount({
-      relations: ['event', 'user'],
-      where: {
-        eventId,
-      },
-      order: { createdAt: createdAt },
-    });
-
-    if (count == 0) {
-      return new RecordListEventResponse([], 0);
-    }
-
-    const resRecords = records.map((record) => {
-      return new Record(record);
-    });
-
-    return new RecordListEventResponse(resRecords, count);
   }
 
   async create(
