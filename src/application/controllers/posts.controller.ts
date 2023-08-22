@@ -38,7 +38,7 @@ import {
   LikePostRequest,
 } from '../dto/likes/likes.request';
 import { JwtGuard } from '../guards/jwt.guard';
-import { LikePost, LikeListPostResponse } from '../dto/likes/likes.response';
+import { LikePost, LikeListResponse } from '../dto/likes/likes.response';
 
 @ApiTags('Posts')
 @Controller('posts')
@@ -142,15 +142,15 @@ export class PostsController {
   }
 
   @ApiOkResponse({
-    type: LikeListPostResponse,
+    type: LikeListResponse,
     description: ResponseMessages.posts.getLikes,
   })
   @ApiNotFoundResponse({ description: CustomExceptions.comments.NotFound })
   @Get('/likes')
   getLikes(
     @Headers('accept-language') lang: string,
-    @Query() query: LikePostRequest,
-  ): Promise<LikeListPostResponse> {
+    @Query() query: LikePostListRequest,
+  ): Promise<LikeListResponse> {
     return this.postsService.getLikes(query, lang);
   }
 }

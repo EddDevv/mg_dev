@@ -29,10 +29,7 @@ import { CommentResponse } from '../dto/comments/comments.response';
 import { CustomExceptions } from '../../config/messages/custom.exceptions';
 import { ResponseMessages } from '../../config/messages/response.messages';
 import { LikeCommentRequest } from '../dto/likes/likes.request';
-import {
-  LikeComment,
-  LikeListCommentResponse,
-} from '../dto/likes/likes.response';
+import { LikeComment, LikeListResponse } from '../dto/likes/likes.response';
 
 @ApiTags('Comments')
 @Controller('comments')
@@ -112,7 +109,7 @@ export class CommentsController {
   }
 
   @ApiOkResponse({
-    type: LikeListCommentResponse,
+    type: LikeListResponse,
     description: ResponseMessages.comments.getLikes,
   })
   @ApiNotFoundResponse({ description: CustomExceptions.comments.NotFound })
@@ -120,7 +117,7 @@ export class CommentsController {
   getLikes(
     @Headers('accept-language') lang: string,
     @Query() query: LikeCommentRequest,
-  ): Promise<LikeListCommentResponse> {
+  ): Promise<LikeListResponse> {
     return this.commentsService.getLikes(query, lang);
   }
 }
