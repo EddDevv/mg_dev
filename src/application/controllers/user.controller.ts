@@ -68,7 +68,7 @@ export class UserController {
   @ApiForbiddenResponse({ description: CustomExceptions.user.NotSelfUpdate })
   @ApiUnauthorizedResponse({ description: CustomExceptions.auth.Unauthorized })
   @UseGuards(JwtGuard)
-  @Post('/update')
+  @Patch('/update')
   update(
     @Headers('accept-language') lang: string,
     @Req() { user }: IRequestUser,

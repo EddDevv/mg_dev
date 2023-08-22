@@ -122,7 +122,7 @@ export class SubscriptionsService {
         where: {
           userId,
         },
-        relations: ['user'],
+        relations: ['subscriber'],
         skip: page ? page * 10 : 0,
         take: take || 10,
         order: {
@@ -135,7 +135,7 @@ export class SubscriptionsService {
     }
 
     const subscribers = subs.map((sub) => {
-      return new User(sub.user);
+      return new User(sub.subscriber);
     });
 
     return new SubscriptionsGetSubscribersResponse(subscribers, count);
