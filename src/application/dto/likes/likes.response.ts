@@ -35,20 +35,15 @@ export class LikeComment extends OmitType(Like, ['comment']) {
   }
 }
 
-export class LikeListPostResponse extends BasicResponseArray<LikePost> {
-  constructor(likes: LikePost[], count: number) {
-    super(likes, count);
+export class LikeListResponse {
+  @ApiProperty({ type: User, isArray: true })
+  users: User[];
+
+  @ApiProperty()
+  count: number;
+
+  constructor(users: User[], count: number) {
+    this.users = users;
+    this.count = count;
   }
-
-  @ApiProperty({ type: LikePost, isArray: true })
-  items: LikePost[];
-}
-
-export class LikeListCommentResponse extends BasicResponseArray<LikeComment> {
-  constructor(likes: LikeComment[], count) {
-    super(likes, count);
-  }
-
-  @ApiProperty({ type: LikeComment, isArray: true })
-  items: LikeComment[];
 }

@@ -21,7 +21,7 @@ import { LikeCommentRequest } from '../../application/dto/likes/likes.request';
 import { LikesEntity } from '../likes/likes.entity';
 import {
   LikeComment,
-  LikeListCommentResponse,
+  LikeListResponse,
 } from '../../application/dto/likes/likes.response';
 import { LikesRepository } from '../../infrastructure/repositories/likes.repository';
 import { Post } from '../../application/dto/posts/posts.response';
@@ -177,7 +177,7 @@ export class CommentsService {
   async getLikes(
     { commentId }: LikeCommentRequest,
     lang: string,
-  ): Promise<LikeListCommentResponse> {
+  ): Promise<LikeListResponse> {
     const comment = await this.commentsRepository.findOne({
       where: { id: commentId },
     });
@@ -195,9 +195,13 @@ export class CommentsService {
     });
 
     const likesResponse = likes.map((like) => {
-      return new LikeComment( new User(like.user), new Comment (like.comment));
+      return new User(like.user);
     });
 
-    return new LikeListCommentResponse(likesResponse, count);
+    if (likesResponse.length == 0) {
+      return new LikeListResponse([], 0);
+    }
+
+    return new LikeListResponse(likesResponse, count);
   }
 }

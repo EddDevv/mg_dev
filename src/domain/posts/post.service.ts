@@ -1,8 +1,4 @@
-import {
-  ForbiddenException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PostEntity } from './post.entity';
 import { UsersRepository } from 'src/infrastructure/repositories/users.repository';
 import { PostsRepository } from 'src/infrastructure/repositories/posts.repository';
@@ -25,7 +21,7 @@ import {
 } from '../../application/dto/likes/likes.request';
 import {
   LikePost,
-  LikeListPostResponse,
+  LikeListResponse,
 } from '../../application/dto/likes/likes.response';
 import { LikesEntity } from '../likes/likes.entity';
 import { LikesRepository } from '../../infrastructure/repositories/likes.repository';
@@ -98,7 +94,7 @@ export class PostsService {
         this.i18n.t('exceptions.user.NotFound', {
           lang: lang,
         }),
-      )
+      );
     }
 
     const post = new PostEntity(currentUser, currentUser.id, text);
@@ -107,7 +103,11 @@ export class PostsService {
     return new PostResponse(new Post(post.id, post));
   }
 
-  async addView(user: User, { id }: PostsAddViewRequest, lang: string): Promise<void> {
+  async addView(
+    user: User,
+    { id }: PostsAddViewRequest,
+    lang: string,
+  ): Promise<void> {
     const post = await this.postsRepository.findOne({ where: { id } });
     if (!post) {
       throw new NotFoundException(
@@ -181,7 +181,10 @@ export class PostsService {
     { postId }: LikePostRequest,
     lang: string,
   ): Promise<LikePost> {
-    const post = await this.postsRepository.findOne({ where: { id: postId }, relations: ['user'], });
+    const post = await this.postsRepository.findOne({
+      where: { id: postId },
+      relations: ['user'],
+    });
     if (!post) {
       throw new NotFoundException(
         this.i18n.t('exceptions.posts.NotFound', {
@@ -216,16 +219,12 @@ export class PostsService {
   }
 
   async getLikes(
-    {
-      postId,
-      take,
-      orderBy,
-      page,
-    }: LikePostListRequest,
+    { postId, take, orderBy, page }: LikePostListRequest,
     lang: string,
-  ): Promise<LikeListPostResponse> {
+  ): Promise<LikeListResponse> {
     const post = await this.postsRepository.findOne({
       where: { id: postId },
+      relations: ['user'],
     });
     if (!post) {
       throw new NotFoundException(
@@ -246,16 +245,13 @@ export class PostsService {
     });
 
     const likesResponse = likes.map((like) => {
-      return new LikePost(
-        new User(like.user),
-        new Post(like.post.id, like.post),
-      );
+      return new User(like.user);
     });
 
     if (likesResponse.length == 0) {
-      return new LikeListPostResponse([], 0);
+      return new LikeListResponse([], 0);
     }
 
-    return new LikeListPostResponse(likesResponse, count);
+    return new LikeListResponse(likesResponse, count);
   }
 }
