@@ -32,6 +32,9 @@ export class Post
   @ApiProperty()
   createdAt: string;
 
+  @ApiProperty({ nullable: true })
+  image: string;
+
   constructor(postId: number, post: PostEntity) {
     this.id = postId;
     this.shareId = post.shareId;
@@ -39,6 +42,7 @@ export class Post
     this.user = new User(post.user);
     this.views = post.views;
     this.createdAt = moment(post.createdAt).format('YYYY-MM-DD');
+    this.image = post.image;
   }
 }
 

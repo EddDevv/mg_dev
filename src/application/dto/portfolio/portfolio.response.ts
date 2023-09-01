@@ -32,12 +32,16 @@ export class Portfolio
   @ApiProperty({ type: Service })
   service: Service;
 
+  @ApiProperty({ nullable: true })
+  image: string;
+
   constructor(portfolio: PortfolioEntity) {
     this.id = portfolio.id;
     this.description = portfolio.description;
     this.businessId = portfolio.businessId;
     this.category = new Category(portfolio.category);
     this.service = new Service(portfolio.service);
+    this.image = portfolio.image;
   }
 }
 

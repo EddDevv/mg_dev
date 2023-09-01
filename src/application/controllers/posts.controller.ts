@@ -10,6 +10,8 @@ import {
   Req,
   Query,
   Headers,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { PostsService } from 'src/domain/posts/post.service';
 import {
@@ -39,11 +41,16 @@ import {
 } from '../dto/likes/likes.request';
 import { JwtGuard } from '../guards/jwt.guard';
 import { LikePost, LikeListResponse } from '../dto/likes/likes.response';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ImagesService } from '../../domain/images/images.service';
 
 @ApiTags('Posts')
 @Controller('posts')
 export class PostsController {
-  constructor(private readonly postsService: PostsService) {}
+  constructor(
+    private readonly postsService: PostsService,
+    private readonly imagesService: ImagesService,
+  ) {}
 
   @ApiOkResponse({
     type: PostResponse,

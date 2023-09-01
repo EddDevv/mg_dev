@@ -12,6 +12,7 @@ export interface IPortfolio {
   categoryId?: number;
   service: ServicesEntity;
   serviceId?: number;
+  image: string;
 }
 
 @Entity('portfolio')
@@ -42,6 +43,9 @@ export class PortfolioEntity extends BasicEntity implements IPortfolio {
 
   @Column()
   serviceId: number;
+
+  @Column({ nullable: true })
+  image: string;
 
   constructor(
     business: BusinessAccountEntity,

@@ -11,7 +11,6 @@ import { BasicEntity } from '../../config/basic.entity';
 import { EventMeetType } from '../../config/enums/events.enum';
 import { CategoriesEntity } from '../categories/categories.entity';
 import { RecordsEntity } from '../records/records.entity';
-import { EventCreateRequest } from '../../application/dto/events/events.request';
 import { UserEntity } from '../users/user.entity';
 
 export interface IEvent {
@@ -25,6 +24,7 @@ export interface IEvent {
   endDate: Date;
   categories: CategoriesEntity[];
   records: RecordsEntity[];
+  image: string;
 }
 
 @Entity('events')
@@ -60,6 +60,9 @@ export class EventsEntity extends BasicEntity {
   @OneToMany(() => RecordsEntity, (record) => record.event)
   @JoinColumn()
   records: RecordsEntity[];
+
+  @Column({ nullable: true })
+  image: string;
 
   constructor(
     title: string,
