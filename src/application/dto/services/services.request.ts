@@ -1,10 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 import { IService } from 'src/domain/services/services.entity';
 import { Pagination } from '../../../config/pagination';
 
 export class ServicesCreateRequest
-  implements Omit<IService, 'category' | 'portfolios' | 'business'>
+  implements Omit<IService, 'category' | 'portfolios' | 'business' | 'image'>
 {
   @ApiProperty({ example: '2', description: 'The category id' })
   @IsNotEmpty()
@@ -88,4 +88,8 @@ export class ServicesUpdateRequest
     nullable: true,
   })
   departureToClient?: boolean;
+
+  @ApiProperty()
+  @IsOptional()
+  image: string;
 }

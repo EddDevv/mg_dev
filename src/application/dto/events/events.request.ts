@@ -4,6 +4,7 @@ import {
   IsDateString,
   IsEnum,
   IsNumber,
+  IsOptional,
   IsString,
   MaxLength,
 } from 'class-validator';
@@ -59,6 +60,10 @@ export class EventUpdateRequest {
   @ApiProperty()
   @IsDateString()
   endDate: string;
+
+  @ApiProperty({ nullable: true })
+  @IsOptional()
+  image: string;
 }
 
 export class EventDeleteRequest {

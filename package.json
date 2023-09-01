@@ -1,6 +1,6 @@
 {
   "name": "mg-back",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "",
   "author": "",
   "private": true,
@@ -60,6 +60,7 @@
     "@types/cors": "^2.8.13",
     "@types/express": "^4.17.17",
     "@types/jest": "^29.5.2",
+    "@types/multer": "^1.4.7",
     "@types/node": "^20.3.1",
     "@types/passport-local": "^1.0.35",
     "@types/supertest": "^2.0.12",

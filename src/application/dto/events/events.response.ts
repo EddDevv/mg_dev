@@ -34,6 +34,9 @@ export class Event
   @ApiProperty()
   endDate: string;
 
+  @ApiProperty({ nullable: true })
+  image: string;
+
   constructor(event: EventsEntity) {
     this.id = event.id;
     this.title = event.title;
@@ -42,6 +45,7 @@ export class Event
     this.seatsNumber = event.seatsNumber;
     this.startDate = moment(event.startDate).format('YYYY-MM-DD');
     this.endDate = moment(event.endDate).format('YYYY-MM-DD');
+    this.image = event.image;
   }
 }
 

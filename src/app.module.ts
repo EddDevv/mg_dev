@@ -16,6 +16,7 @@ import * as path from 'path';
 import { EventsModule } from './domain/events/events.module';
 import { RecordsModule } from './domain/records/records.module';
 import { ServicesModule } from './domain/services/services.module';
+import { ImagesModule } from './domain/images/images.module';
 
 @Module({
   controllers: [],
@@ -50,6 +51,7 @@ import { ServicesModule } from './domain/services/services.module';
     ServicesModule,
     EventsModule,
     RecordsModule,
+    ImagesModule,
   ],
 })
 export class AppModule {}

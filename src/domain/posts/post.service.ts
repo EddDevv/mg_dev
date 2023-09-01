@@ -254,4 +254,6 @@ export class PostsService {
 
     return new LikeListResponse(likesResponse, count);
   }
+
+  async updateImages() {}
 }

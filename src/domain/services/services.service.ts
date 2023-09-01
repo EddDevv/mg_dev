@@ -136,6 +136,7 @@ export class ServicesService {
       price,
       description,
       departureToClient,
+      image,
     }: ServicesUpdateRequest,
     lang: string,
     user: User,
@@ -179,6 +180,7 @@ export class ServicesService {
     service.price = price ?? service.price;
     service.description = description ?? service.description;
     service.departureToClient = departureToClient ?? service.departureToClient;
+    service.image = image;
 
     await this.servicesRepository.save(service);
 

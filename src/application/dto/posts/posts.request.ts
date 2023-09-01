@@ -1,11 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { IPost } from '../../../domain/posts/post.entity';
 import { Pagination } from '../../../config/pagination';
 
 export class PostsCreateRequest
   implements
-    Omit<IPost, 'user' | 'userId' | 'shareId' | 'comments' | 'views' | 'likes'>
+    Omit<
+      IPost,
+      'user' | 'userId' | 'shareId' | 'comments' | 'views' | 'likes' | 'image'
+    >
 {
   @ApiProperty({
     example:
@@ -38,6 +41,10 @@ export class PostsUpdateRequest
   })
   @IsString()
   text: string;
+
+  @ApiProperty({ nullable: true })
+  @IsOptional()
+  image: string;
 }
 
 export class PostsAddViewRequest {
