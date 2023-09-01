@@ -14,6 +14,7 @@ export interface IService {
   business: BusinessAccountEntity;
   businessId?: number;
   portfolios: PortfolioEntity[];
+  image: string;
 }
 
 @Entity('services')
@@ -48,6 +49,9 @@ export class ServicesEntity extends BasicEntity implements IService {
 
   @OneToMany(() => PortfolioEntity, (portfolio) => portfolio.service)
   portfolios: PortfolioEntity[];
+
+  @Column({ nullable: true })
+  image: string;
 
   constructor(
     category: CategoriesEntity,

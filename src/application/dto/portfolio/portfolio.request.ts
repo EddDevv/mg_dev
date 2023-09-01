@@ -1,9 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { IPortfolio } from 'src/domain/portfolio/portfolio.entity';
 
 export class PortfolioCreateRequest
-  implements Omit<IPortfolio, 'business' | 'category' | 'service'>
+  implements Omit<IPortfolio, 'business' | 'category' | 'service' | 'image'>
 {
   @ApiProperty({ example: '2', description: 'The Business id' })
   @IsNotEmpty()
@@ -44,6 +44,10 @@ export class PortfolioUpdateRequest
     nullable: true,
   })
   description?: string;
+
+  @ApiProperty()
+  @IsOptional()
+  image: string;
 }
 
 export class PortfolioGetRequest {

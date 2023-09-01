@@ -29,6 +29,9 @@ export class Service
   @ApiProperty()
   businessId: number;
 
+  @ApiProperty({ nullable: true })
+  image: string;
+
   constructor(service: ServicesEntity) {
     this.id = service.id;
     this.title = service.title;
@@ -37,6 +40,7 @@ export class Service
     this.departureToClient = service.departureToClient;
     this.categoryId = service.categoryId;
     this.businessId = service.businessId;
+    this.image = service.image;
   }
 }
 
