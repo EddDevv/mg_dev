@@ -17,7 +17,7 @@ export class BusinessAccountsUpdateRequest extends PartialType(
   BusinessAccountsCreateRequest,
 ) {}
 
-export class BusinessAccountsGetRequest extends Pagination {
+export class BusinessAccountsGetRequest {
   @ApiProperty()
   id: number;
 }

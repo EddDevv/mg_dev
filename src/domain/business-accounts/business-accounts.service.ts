@@ -95,14 +95,10 @@ export class BusinessAccountService {
     lang: string,
   ): Promise<BusinessAccountResponse> {
     const businessAccount = await this.businessAccountRepository.findOne({
-      where: { id },
+      where: { userId: id },
     });
     if (!businessAccount) {
-      throw new NotFoundException(
-        this.i18n.t('exceptions.user.NotFound', {
-          lang: lang,
-        }),
-      );
+      return new BusinessAccountResponse(null);
     }
 
     return new BusinessAccountResponse(new BusinessAccounts(businessAccount));
